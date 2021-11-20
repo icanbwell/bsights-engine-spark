@@ -11,7 +11,7 @@ def test_simple(spark_session: SparkSession) -> None:
     j = {'num1': 2, 'num2': 3}
     a = [json.dumps(j)]
     jsonRDD = spark_session.sparkContext.parallelize(a)
-    df = spark.read.json(jsonRDD)
-    df.registerTempTable("numbersdata")
-    df1 = spark.sql("SELECT numMultiply(num1) As num1, numAdd(num2) AS num2 from numbersdata")
+    df = spark_session.read.json(jsonRDD)
+    df.createOrReplaceTempView("numbersdata")
+    df1 = spark_session.sql("SELECT numMultiply(num1) As num1, numAdd(num2) AS num2 from numbersdata")
     df1.show(10)
