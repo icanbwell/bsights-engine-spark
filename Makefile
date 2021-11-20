@@ -5,9 +5,22 @@ build:
 shell:
 	docker run -it imranq2/cql-spark sh
 
-up:
+up1:
 	docker build -t imranq2/cql-spark . && \
 	docker run --name cql-spark --rm imranq2/cql-spark
+
+.PHONY:up
+up: ## Brings up all the services in docker-compose
+	echo "`docker-compose --version | awk '{print $$4;}'`" && \
+	if [[ "`docker-compose --version | awk '{print $$4;}'`" == "v2."* ]]; then echo "ERROR: Docker Compose version should be < 2.  Uncheck Use Docker Compose V2 checkbox in Docker Settings and restart Docker." && exit 1; fi && \
+	docker-compose -f docker-compose.yml up --build --no-start --no-recreate && \
+	docker-compose -f docker-compose.yml up -d --no-recreate
+
+.PHONY:down
+down: ## Brings down all the services in docker-compose
+	export DOCKER_CLIENT_TIMEOUT=240 && export COMPOSE_HTTP_TIMEOUT=240 && \
+	docker-compose down --remove-orphans && \
+	docker system prune -f
 
 Pipfile.lock: Pipfile
 	docker-compose run --rm --name helix_pipenv dev rm -f Pipfile.lock && pipenv lock --dev --clear
