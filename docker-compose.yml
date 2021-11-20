@@ -1,0 +1,12 @@
+version: '3.5'
+services:
+  dev:
+    user: root
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - ./:/helix.pipelines/
+    container_name: cql_spark_dev
+    environment:
+      LOGLEVEL: DEBUG

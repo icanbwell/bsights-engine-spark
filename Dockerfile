@@ -6,7 +6,7 @@ ENV PYTHONPATH=/helix.pipelines
 ENV PYTHONPATH "/opt/project:${PYTHONPATH}"
 ENV CLASSPATH=/helix.pipelines/jars:$CLASSPATH
 
-COPY python/Pipfile* /helix.pipelines/
+COPY Pipfile* /helix.pipelines/
 WORKDIR /helix.pipelines
 
 RUN df -h # for space monitoring
