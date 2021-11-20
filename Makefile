@@ -28,3 +28,9 @@ Pipfile.lock: Pipfile
 .PHONY:update
 update:  ## Updates all the packages using Pipfile # (it takes a long time) make run-pre-commit
 	docker-compose run --rm --name helix_pipenv dev pipenv sync
+
+.PHONY:buildjar
+buildjar:  ## Updates all the packages using Pipfile # (it takes a long time) make run-pre-commit
+	mvn clean && mvn package && \
+	mvn dependency:copy-dependencies -DoutputDirectory=target/jars -Dhttps.protocols=TLSv1.2
+
