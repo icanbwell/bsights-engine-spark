@@ -11,7 +11,7 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <apache-spark.version>3.1.1</apache-spark.version>
+        <spark.version>3.1.1</spark.version>
         <cql-translator.version>1.5.4</cql-translator.version>
         <cql-engine.version>1.5.2</cql-engine.version>
         <cql-evaluator.version>1.3.0</cql-evaluator.version>
@@ -28,12 +28,12 @@
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_2.12</artifactId>
-            <version>${apache-spark.version}</version>
+            <version>${spark.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_2.12</artifactId>
-            <version>${apache-spark.version}</version>
+            <version>${spark.version}</version>
         </dependency>
         <dependency>
             <groupId>org.opencds.cqf.cql</groupId>
@@ -85,6 +85,13 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>7.4.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://github.com/holdenk/spark-testing-base -->
+        <dependency>
+            <groupId>com.holdenkarau</groupId>
+            <artifactId>spark-testing-base_2.12</artifactId>
+            <version>${spark.version}_1.1.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
