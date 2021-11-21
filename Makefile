@@ -22,13 +22,6 @@ down: ## Brings down all the services in docker-compose
 	docker-compose down --remove-orphans && \
 	docker system prune -f
 
-Pipfile.lock: Pipfile
-	docker-compose run --rm --name helix_pipenv dev rm -f Pipfile.lock && pipenv lock --dev --clear
-
-.PHONY:update
-update:  ## Updates all the packages using Pipfile # (it takes a long time) make run-pre-commit
-	docker-compose run --rm --name helix_pipenv dev pipenv sync
-
 .PHONY:buildjar
 buildjar:  ## Updates all the packages using Pipfile # (it takes a long time) make run-pre-commit
 	mvn clean && mvn package && \

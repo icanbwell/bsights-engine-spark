@@ -9,9 +9,6 @@ ENV CLASSPATH=/helix.pipelines/jars:/opt/bitnami/spark/jars/:$CLASSPATH
 COPY Pipfile* /helix.pipelines/
 WORKDIR /helix.pipelines
 
-RUN df -h # for space monitoring
-RUN pipenv sync --dev --system
-
 COPY ./target/helix.cql_spark-1.0-SNAPSHOT.jar /opt/bitnami/spark/jars/
 
 #COPY . /helix.pipelines
