@@ -34,8 +34,11 @@ public class RunCqlTest extends SharedJavaSparkContext {
         Dataset<Row> df = sqlContext.createDataFrame(rows, schema);
         df.show();
         df.createOrReplaceTempView("numbersdata");
-        Dataset<Row> result_df = sqlContext.sql("SELECT runCql('cqlLibraryUrl', 'terminologyUrl', patientBundle) As num1 from numbersdata");
+        Dataset<Row> result_df = sqlContext.sql("SELECT runCql('cqlLibraryUrl', 'terminologyUrl', patientBundle) As ruleResults from numbersdata");
         result_df.printSchema();
         result_df.show(10, false);
+
+        result_df.selectExpr("ruleResults['key1'] as key1").show();
+        result_df.selectExpr("ruleResults['key2'] as key2").show();
     }
 }
