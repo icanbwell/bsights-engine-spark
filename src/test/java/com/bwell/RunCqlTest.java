@@ -10,27 +10,27 @@ import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.MapType;
 import org.apache.spark.sql.types.StringType;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RunCqlTest extends SharedJavaSparkContext {
+
+    @BeforeClass
+    public void setup() {
+        this.runBefore();
+    }
+
     @Test
     public void testRunCqlUdf() {
-        SparkConf conf = new SparkConf()
-                .setMaster("local[*]")
-                .setAppName("test")
-                .set("spark.ui.enabled", "false");
-
-        JavaSparkContext jsc = new JavaSparkContext(conf);
-
-
         List<String> data = new ArrayList<String>();
         data.add("green");
         data.add("red");
-        JavaRDD<String> jsonRDD = jsc.parallelize(data);
-        SQLContext sqlContext = new SQLContext(jsc);
+        JavaRDD<String> jsonRDD = jsc().parallelize(data);
+        SQLContext sqlContext = new SQLContext(jsc());
         sqlContext.sparkSession().udf().register("runCql", new RunCql(), DataTypes.createMapType(DataTypes.StringType, DataTypes.StringType));
 
         Dataset<Row> df = sqlContext.read().json(jsonRDD);
@@ -38,7 +38,5 @@ public class RunCqlTest extends SharedJavaSparkContext {
         Dataset<Row> result_df = sqlContext.sql("SELECT runCql('cqlLibraryUrl', 'terminologyUrl', 'patient') As num1 from numbersdata");
         result_df.printSchema();
         result_df.show(10, false);
-
-        jsc.stop();
     }
 }
