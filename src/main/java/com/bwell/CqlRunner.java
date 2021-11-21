@@ -21,6 +21,7 @@ import org.opencds.cqf.cql.evaluator.dagger.CqlEvaluatorComponent;
 import org.opencds.cqf.cql.evaluator.dagger.DaggerCqlEvaluatorComponent;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
@@ -89,9 +90,19 @@ public class CqlRunner {
             if (library.model != null) {
                 if (library.model.modelText != null){
                     File f = new File("/usr/local/bin/geeks");
-                    String resource = FileUtils.readFileToString(f, Charset.forName("UTF-8"));
+                    String resource = null;
+                    try {
+                        resource = FileUtils.readFileToString(f, Charset.forName("UTF-8"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     JsonParser parser = new JsonParser();
-                    IBaseBundle bundle = parser.parse(resource);
+                    IBaseBundle bundle = null;
+                    try {
+                        bundle = (IBaseBundle) parser.parse(resource);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     dataProvider = dataProviderFactory.create(bundle);
                 }
                 else {
