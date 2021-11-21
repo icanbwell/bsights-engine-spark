@@ -9,7 +9,7 @@ ENV CLASSPATH=/helix.pipelines/jars:/opt/bitnami/spark/jars/:$CLASSPATH
 COPY Pipfile* /helix.pipelines/
 WORKDIR /helix.pipelines
 
-COPY ./target/helix.cql_spark-1.0-SNAPSHOT.jar /opt/bitnami/spark/jars/
+COPY ./target/helix.bSights.cql_spark_engine-1.0-SNAPSHOT.jar /opt/bitnami/spark/jars/
 
 #COPY . /helix.pipelines
 

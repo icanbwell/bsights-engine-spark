@@ -7,6 +7,6 @@ services:
       context: .
     volumes:
       - ./:/helix.pipelines/
-    container_name: cql_spark_dev
+    container_name: helix.bSights.cql_spark_engine
     environment:
       LOGLEVEL: DEBUG
