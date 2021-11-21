@@ -29,12 +29,12 @@ public class RunCqlTest extends SharedJavaSparkContext {
 
         List<Row> rows = Arrays.asList(RowFactory.create("green"), RowFactory.create("red"));
         StructType schema = DataTypes.createStructType(
-                new StructField[]{DataTypes.createStructField("color", DataTypes.StringType, false)});
+                new StructField[]{DataTypes.createStructField("patientBundle", DataTypes.StringType, false)});
 
         Dataset<Row> df = sqlContext.createDataFrame(rows, schema);
         df.show();
         df.createOrReplaceTempView("numbersdata");
-        Dataset<Row> result_df = sqlContext.sql("SELECT runCql('cqlLibraryUrl', 'terminologyUrl', 'patient') As num1 from numbersdata");
+        Dataset<Row> result_df = sqlContext.sql("SELECT runCql('cqlLibraryUrl', 'terminologyUrl', patientBundle) As num1 from numbersdata");
         result_df.printSchema();
         result_df.show(10, false);
     }
