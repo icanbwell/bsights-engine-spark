@@ -132,4 +132,12 @@ public class CqlRunner {
         }
         return null;
     }
+
+    Map<String, String> runCql2(String cqlLibraryUrl, String terminologyUrl, String fhirBundle) {
+        java.util.Map<String, String> newMap = new java.util.HashMap<>();
+        newMap.put("key1", fhirBundle + "_1");
+        newMap.put("key2", fhirBundle + "_2");
+
+        return newMap;
+    }
 }
