@@ -6,16 +6,19 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseDatatype;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.Patient;
 import org.opencds.cqf.cql.engine.execution.EvaluationResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 public class CqlRunnerTest {
@@ -28,7 +31,7 @@ public class CqlRunnerTest {
     private static String testResourcePath = null;
 
     @BeforeClass
-    public void setup(){
+    public void setup() {
         File file = new File(testResourceRelativePath);
         testResourcePath = file.getAbsolutePath();
         System.out.println(String.format("Test resource directory: %s", testResourcePath));
@@ -75,8 +78,17 @@ public class CqlRunnerTest {
 
         EvaluationResult result = new CqlRunner().runCql(fhirVersion, libraries);
 
-        for (Map.Entry<String, Object> libraryEntry : result.expressionResults.entrySet()) {
-            System.out.println(libraryEntry.getKey() + "=" + tempConvert(libraryEntry.getValue()));
+        Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
+        for (Map.Entry<String, Object> libraryEntry : entrySet) {
+            String key = libraryEntry.getKey();
+            Object value = libraryEntry.getValue();
+            if (key.equals("Patient")) {
+                Patient patient = (Patient) value;
+                String identifier_value = patient.getIdentifier().get(0).getValue();
+                System.out.println(key + " = " + identifier_value);
+                assertEquals(identifier_value, "12345");
+            }
+            System.out.println(key + "=" + tempConvert(value));
         }
 
         System.out.println();
