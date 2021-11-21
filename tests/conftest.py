@@ -3,7 +3,6 @@ import os
 import shutil
 import random
 import string
-from os import path
 from pathlib import Path
 from typing import Any, Generator
 
