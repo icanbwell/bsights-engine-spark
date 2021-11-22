@@ -2,15 +2,22 @@ package com.bwell;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
 import org.hl7.fhir.instance.model.api.IBase;
+import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseDatatype;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.formats.JsonParser;
+import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Patient;
 import org.opencds.cqf.cql.engine.execution.EvaluationResult;
 import org.testng.annotations.AfterMethod;
@@ -18,8 +25,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 public class CqlRunnerTest {
     private ByteArrayOutputStream outContent;
@@ -142,5 +148,26 @@ public class CqlRunnerTest {
         }
 
         return result;
+    }
+
+    @Test
+    public void testLoadingBundle() {
+        File f = new File(testResourcePath + "/bmi001" + "/example/expected1.json");
+        String resource = null;
+        try {
+            resource = FileUtils.readFileToString(f, Charset.forName("UTF-8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        JsonParser parser = new JsonParser();
+        IBaseBundle bundle = null;
+        try {
+            bundle = (IBaseBundle) parser.parse(resource);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        assertNotNull(bundle);
+        String patient_first_identifier = ((Identifier) ((java.util.ArrayList) ((Patient) ((Bundle.BundleEntryComponent) ((java.util.ArrayList) ((Bundle) bundle).getEntry()).get(0)).getResource()).getIdentifier()).get(0)).getValue();
+        assertEquals("M888888", patient_first_identifier);
     }
 }
