@@ -1,6 +1,3 @@
--- noinspection SqlDialectInspectionForFile
--- noinspection SqlNoDataSourceInspectionForFile
-
 library BMI001 version '1.0.0'
 
 using FHIR version '4.0.1'
@@ -19,15 +16,3 @@ define InDemographic:
           and exists([Observation: "BMI Over 35"] observation
                         where observation.status in {'final', 'amended'}
                     )
-
-
-filter(
-patient,
-age_in_years {clause} &
-    exists {clause} (
-        filter {clause} (
-            observation,
-            bmi_over_35 {clause} & status_in {clause}
-        )
-    )
-)

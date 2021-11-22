@@ -9,11 +9,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hl7.fhir.instance.model.api.IBase;
-import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseDatatype;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Patient;
 import org.opencds.cqf.cql.engine.execution.EvaluationResult;
 import org.testng.annotations.AfterMethod;
@@ -144,6 +141,57 @@ public class CqlRunnerTest {
         }
 
         return result;
+    }
+
+    @Test
+    public void testBMI() {
+        String fhirVersion = "BMI";
+        List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
+        CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
+        libraryParameter.libraryName = "TestFHIR";
+        libraryParameter.libraryUrl = testResourcePath + "/bmi001";
+//        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
+        libraryParameter.terminologyUrl = testResourcePath + "/bmi001/vocabulary/vocabulary";
+        libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
+        libraryParameter.model.modelName = "FHIR";
+        libraryParameter.model.modelUrl = testResourcePath + "/r4";
+        libraryParameter.context = new CqlRunner.LibraryParameter.ContextParameter();
+        libraryParameter.context.contextName = "Patient";
+        libraryParameter.context.contextValue = "example";
+
+        libraries.add(libraryParameter);
+
+        EvaluationResult result = new CqlRunner().runCql(fhirVersion, libraries);
+
+        Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
+        for (Map.Entry<String, Object> libraryEntry : entrySet) {
+            String key = libraryEntry.getKey();
+            Object value = libraryEntry.getValue();
+            if (key.equals("Patient")) {
+                Patient patient = (Patient) value;
+                String identifier_value = patient.getIdentifier().get(0).getValue();
+                System.out.println(key + " = " + identifier_value);
+                assertEquals(identifier_value, "12345");
+            }
+            System.out.println(key + "=" + tempConvert(value));
+        }
+
+        System.out.println();
+
+//        String output = outContent.toString();
+//
+//        assertTrue(output.contains("Patient=Patient(id=example)"));
+//        assertTrue(output.contains("TestAdverseEvent=[AdverseEvent(id=example)]"));
+//        assertTrue(output.contains("TestPatientGender=Patient(id=example)"));
+//        assertTrue(output.contains("TestPatientActive=Patient(id=example)"));
+//        assertTrue(output.contains("TestPatientBirthDate=Patient(id=example)"));
+//        assertTrue(output.contains("TestPatientMaritalStatusMembership=Patient(id=example)"));
+//        assertTrue(output.contains("TestPatientMartialStatusComparison=Patient(id=example)"));
+//        assertTrue(output.contains("TestPatientDeceasedAsBoolean=Patient(id=example)"));
+//        assertTrue(output.contains("TestPatientDeceasedAsDateTime=null"));
+//        assertTrue(output.contains("TestSlices=[Observation(id=blood-pressure)]"));
+//        assertTrue(output.contains("TestSimpleExtensions=Patient(id=example)"));
+//        assertTrue(output.contains("TestComplexExtensions=Patient(id=example)"));
     }
 
 }
