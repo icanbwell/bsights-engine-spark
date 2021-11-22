@@ -145,16 +145,16 @@ public class CqlRunnerTest {
 
     @Test
     public void testBMI() {
-        String fhirVersion = "BMI";
+        String fhirVersion = "R4";
         List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
         CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
         libraryParameter.libraryName = "TestFHIR";
         libraryParameter.libraryUrl = testResourcePath + "/bmi001";
 //        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
-        libraryParameter.terminologyUrl = testResourcePath + "/bmi001/vocabulary/vocabulary";
+        libraryParameter.terminologyUrl = testResourcePath + "/bmi001/vocabulary/ValueSet";
         libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
         libraryParameter.model.modelName = "FHIR";
-        libraryParameter.model.modelUrl = testResourcePath + "/r4";
+        libraryParameter.model.modelUrl = testResourcePath + "/bmi001";
         libraryParameter.context = new CqlRunner.LibraryParameter.ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";

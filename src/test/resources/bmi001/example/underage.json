@@ -1,412 +1,417 @@
 {
-  "patient": {
-    "resourceType": "Patient",
-    "id": "underage",
-    "meta": {
-      "source": "http://www.icanbwell.com/app_member_master",
-      "security": [
-        {
-          "system": "https://www.icanbwell.com/owner",
-          "code": "bwell"
-        },
-        {
-          "system": "https://www.icanbwell.com/access",
-          "code": "bwell"
-        }
-      ]
-    },
-    "identifier": [
-      {
-        "use": "usual",
-        "type": {
-          "coding": [
-            {
-              "code": "BLN"
-            }
-          ]
-        },
-        "system": "urn:oid:1.2.840.114350.1.13.79.2.7.5.737384.577",
-        "value": "M888888"
-      },
-      {
-        "use": "usual",
-        "type": {
-          "coding": [
-            {
-              "code": "CEID"
-            }
-          ]
-        },
-        "value": "TCE-888-8888"
-      },
-      {
-        "use": "usual",
-        "type": {
-          "coding": [
-            {
-              "code": "CEID"
-            }
-          ]
-        },
-        "value": "SSM-888-8888"
-      },
-      {
-        "use": "usual",
-        "type": {
-          "coding": [
-            {
-              "code": "CEID"
-            }
-          ]
-        },
-        "value": "EXT-888-8888"
-      },
-      {
-        "use": "usual",
-        "type": {
-          "coding": [
-            {
-              "code": "EMPI"
-            }
-          ]
-        },
-        "system": "urn:oid:1.2.840.114350.1.13.79.2.7.5.737384.0",
-        "value": "E88888888"
-      },
-      {
-        "use": "usual",
-        "type": {
-          "coding": [
-            {
-              "code": "EXTERNAL"
-            }
-          ]
-        },
-        "value": "Z88888888"
-      },
-      {
-        "use": "usual",
-        "type": {
-          "coding": [
-            {
-              "code": "FHIR"
-            }
-          ]
-        },
-        "value": "T-.gDLBICC9gGq1uiZ1NUdLsy.Gsxsk.bZ1VoMMZXP-0B"
-      },
-      {
-        "use": "usual",
-        "type": {
-          "coding": [
-            {
-              "code": "FHIR STU3"
-            }
-          ]
-        },
-        "value": "eipez5ea-S8eTWiQm1SQfZ6b1Z9SBQWMpcHAXLZL9COI3"
-      },
-      {
-        "use": "usual",
-        "type": {
-          "coding": [
-            {
-              "code": "FLU"
-            }
-          ]
-        },
-        "system": "urn:oid:1.2.840.114350.1.13.79.2.7.5.737384.977",
-        "value": "40558"
-      },
-      {
-        "use": "usual",
-        "type": {
-          "coding": [
-            {
-              "code": "HealthPartners"
-            }
-          ]
-        },
-        "system": "urn:oid:1.2.840.114350.1.13.79.2.7.5.737384.1208",
-        "value": "88888888"
-      },
-      {
-        "use": "usual",
-        "type": {
-          "coding": [
-            {
-              "code": "INTERNAL"
-            }
-          ]
-        },
-        "value": "  Z88888888"
-      },
-      {
-        "use": "usual",
-        "type": {
-          "coding": [
-            {
-              "code": "MYCHARTLOGIN"
-            }
-          ]
-        },
-        "value": "FirstName21"
-      },
-      {
-        "use": "usual",
-        "type": {
-          "coding": [
-            {
-              "code": "WPRINTERNAL"
-            }
-          ]
-        },
-        "value": "888888"
-      }
-    ],
-    "extension": [
-      {
-        "extension": [
-          {
-            "url": "ombCategory",
-            "valueCoding": {
-              "system": "http://hl7.org/fhir/us/core/ValueSet/omb-race-category",
-              "code": "2106-3",
-              "display": "White"
-            }
-          },
-          {
-            "url": "text",
-            "valueString": "White"
-          }
-        ],
-        "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-race"
-      },
-      {
-        "extension": [
-          {
-            "url": "ombCategory",
-            "valueCoding": {
-              "system": "http://hl7.org/fhir/us/core/ValueSet/omb-ethnicity-category",
-              "code": "2186-5",
-              "display": "Not Hispanic or Latino"
-            }
-          },
-          {
-            "url": "text",
-            "valueString": "Not Hispanic or Latino"
-          }
-        ],
-        "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity"
-      },
-      {
-        "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex",
-        "valueCode": "F"
-      }
-    ],
-    "active": true,
-    "name": [
-      {
-        "use": "official",
-        "text": "FirstName2 M LastName2",
-        "family": "LastName2",
-        "given": [
-          "FirstName2",
-          "M"
-        ]
-      },
-      {
-        "use": "usual",
-        "text": "FirstName2 M LastName2",
-        "family": "LastName2",
-        "given": [
-          "FirstName2",
-          "M"
-        ]
-      }
-    ],
-    "telecom": [
-      {
-        "system": "phone",
-        "value": "888-888-8888",
-        "use": "home"
-      },
-      {
-        "system": "email",
-        "value": "FirstName2LastName2@gmail.com"
-      }
-    ],
-    "gender": "female",
-    "birthDate": "2010-01-01",
-    "deceasedBoolean": false,
-    "address": [
-      {
-        "use": "home",
-        "line": [
-          "845 MYSTREET"
-        ],
-        "city": "MYCITY",
-        "district": "MYDISTRICT",
-        "state": "WI",
-        "postalCode": "99999",
-        "country": "USA"
-      }
-    ],
-    "maritalStatus": {
-      "text": "Single"
-    },
-    "generalPractitioner": [
-      {
-        "reference": "https://arr.thedacare.org/FHIR/api/FHIR/STU3/Practitioner/en5fWcACtuAal-nTvRtdPgQ3",
-        "display": "Jack C Anderson, MD"
-      },
-      {
-        "reference": "https://arr.thedacare.org/FHIR/api/FHIR/STU3/Practitioner/eMvngNzqL0VvPmo6GX3tBqg3",
-        "display": "Amy E Schmidt, MD"
-      }
-    ],
-    "managingOrganization": {
-      "reference": "https://arr.thedacare.org/FHIR/api/FHIR/STU3/Organization/e5zBsFV.o1p7LMbQylJy09A3",
-      "display": "THEDACARE HOSPITALS AND CLINICS"
-    }
-  },
-  "observation": [
+  "resourceType": "Bundle",
+  "entry": [
     {
-      "resourceType": "Observation",
-      "id": "egb8B-kaMx4E-IBZ8hObgCO3UaMPQerwQI9WZLCaxWI3AR9gWJdnlUPv20lSNVg",
-      "meta": {
-        "source": "http://www.icanbwell.com/app_member_master",
-        "security": [
+      "resource": {
+        "resourceType": "Patient",
+        "id": "underage",
+        "meta": {
+          "source": "http://www.icanbwell.com/app_member_master",
+          "security": [
+            {
+              "system": "https://www.icanbwell.com/owner",
+              "code": "bwell"
+            },
+            {
+              "system": "https://www.icanbwell.com/access",
+              "code": "bwell"
+            }
+          ]
+        },
+        "identifier": [
           {
-            "system": "https://www.icanbwell.com/owner",
-            "code": "bwell"
+            "use": "usual",
+            "type": {
+              "coding": [
+                {
+                  "code": "BLN"
+                }
+              ]
+            },
+            "system": "urn:oid:1.2.840.114350.1.13.79.2.7.5.737384.577",
+            "value": "M888888"
           },
           {
-            "system": "https://www.icanbwell.com/access",
-            "code": "bwell"
-          }
-        ]
-      },
-      "status": "final",
-      "code": {
-        "coding": [
-          {
-            "system": "urn:oid:1.2.840.114350.1.13.79.2.7.2.707679",
-            "code": "5",
-            "display": "Blood Pressure"
+            "use": "usual",
+            "type": {
+              "coding": [
+                {
+                  "code": "CEID"
+                }
+              ]
+            },
+            "value": "TCE-888-8888"
           },
           {
-            "system": "http://open.epic.com/FHIR/STU3/StructureDefinition/observation-flowsheet-id",
-            "code": "tcNazG9sQ2.uDVcAfiLCIpw0",
-            "display": "Blood Pressure"
+            "use": "usual",
+            "type": {
+              "coding": [
+                {
+                  "code": "CEID"
+                }
+              ]
+            },
+            "value": "SSM-888-8888"
           },
           {
-            "system": "urn:oid:1.2.246.537.6.96",
-            "code": "8462-4"
+            "use": "usual",
+            "type": {
+              "coding": [
+                {
+                  "code": "CEID"
+                }
+              ]
+            },
+            "value": "EXT-888-8888"
           },
           {
-            "system": "urn:oid:1.2.246.537.6.96",
-            "code": "8480-6"
+            "use": "usual",
+            "type": {
+              "coding": [
+                {
+                  "code": "EMPI"
+                }
+              ]
+            },
+            "system": "urn:oid:1.2.840.114350.1.13.79.2.7.5.737384.0",
+            "value": "E88888888"
           },
           {
-            "system": "http://loinc.org",
-            "code": "55284-4",
-            "display": "Blood pressure systolic and diastolic"
+            "use": "usual",
+            "type": {
+              "coding": [
+                {
+                  "code": "EXTERNAL"
+                }
+              ]
+            },
+            "value": "Z88888888"
           },
           {
-            "system": "http://loinc.org",
-            "code": "85354-9",
-            "display": "Blood pressure panel with all children optional"
+            "use": "usual",
+            "type": {
+              "coding": [
+                {
+                  "code": "FHIR"
+                }
+              ]
+            },
+            "value": "T-.gDLBICC9gGq1uiZ1NUdLsy.Gsxsk.bZ1VoMMZXP-0B"
           },
           {
-            "system": "http://loinc.org",
-            "code": "8716-3",
-            "display": "Vital signs"
+            "use": "usual",
+            "type": {
+              "coding": [
+                {
+                  "code": "FHIR STU3"
+                }
+              ]
+            },
+            "value": "eipez5ea-S8eTWiQm1SQfZ6b1Z9SBQWMpcHAXLZL9COI3"
           },
           {
-            "system": "ICD10CM",
-            "code": "Z68.36",
-            "display": "Body mass index [BMI] 36.0-36.9, adult"
+            "use": "usual",
+            "type": {
+              "coding": [
+                {
+                  "code": "FLU"
+                }
+              ]
+            },
+            "system": "urn:oid:1.2.840.114350.1.13.79.2.7.5.737384.977",
+            "value": "40558"
+          },
+          {
+            "use": "usual",
+            "type": {
+              "coding": [
+                {
+                  "code": "HealthPartners"
+                }
+              ]
+            },
+            "system": "urn:oid:1.2.840.114350.1.13.79.2.7.5.737384.1208",
+            "value": "88888888"
+          },
+          {
+            "use": "usual",
+            "type": {
+              "coding": [
+                {
+                  "code": "INTERNAL"
+                }
+              ]
+            },
+            "value": "  Z88888888"
+          },
+          {
+            "use": "usual",
+            "type": {
+              "coding": [
+                {
+                  "code": "MYCHARTLOGIN"
+                }
+              ]
+            },
+            "value": "FirstName21"
+          },
+          {
+            "use": "usual",
+            "type": {
+              "coding": [
+                {
+                  "code": "WPRINTERNAL"
+                }
+              ]
+            },
+            "value": "888888"
           }
         ],
-        "text": "Blood Pressure"
-      },
-      "encounter": {
-        "reference": "Observation/https---arr.thedacare.org-FHIR-api-FHIR-STU3-Encounter-eiZLZGPH"
-      },
-      "extension": [
-        {
-          "url": "http://open.epic.com/FHIR/STU3/StructreDefinition/temperature-in-fahrenheit",
-          "valueQuantity": {
-            "value": 98.4,
-            "unit": "[degF]",
-            "system": "http://unitsofmeasure.org",
-            "code": "[degF]"
+        "extension": [
+          {
+            "extension": [
+              {
+                "url": "ombCategory",
+                "valueCoding": {
+                  "system": "http://hl7.org/fhir/us/core/ValueSet/omb-race-category",
+                  "code": "2106-3",
+                  "display": "White"
+                }
+              },
+              {
+                "url": "text",
+                "valueString": "White"
+              }
+            ],
+            "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-race"
+          },
+          {
+            "extension": [
+              {
+                "url": "ombCategory",
+                "valueCoding": {
+                  "system": "http://hl7.org/fhir/us/core/ValueSet/omb-ethnicity-category",
+                  "code": "2186-5",
+                  "display": "Not Hispanic or Latino"
+                }
+              },
+              {
+                "url": "text",
+                "valueString": "Not Hispanic or Latino"
+              }
+            ],
+            "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity"
+          },
+          {
+            "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex",
+            "valueCode": "F"
           }
+        ],
+        "active": true,
+        "name": [
+          {
+            "use": "official",
+            "text": "FirstName2 M LastName2",
+            "family": "LastName2",
+            "given": [
+              "FirstName2",
+              "M"
+            ]
+          },
+          {
+            "use": "usual",
+            "text": "FirstName2 M LastName2",
+            "family": "LastName2",
+            "given": [
+              "FirstName2",
+              "M"
+            ]
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "888-888-8888",
+            "use": "home"
+          },
+          {
+            "system": "email",
+            "value": "FirstName2LastName2@gmail.com"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "2010-01-01",
+        "deceasedBoolean": false,
+        "address": [
+          {
+            "use": "home",
+            "line": [
+              "845 MYSTREET"
+            ],
+            "city": "MYCITY",
+            "district": "MYDISTRICT",
+            "state": "WI",
+            "postalCode": "99999",
+            "country": "USA"
+          }
+        ],
+        "maritalStatus": {
+          "text": "Single"
+        },
+        "generalPractitioner": [
+          {
+            "reference": "https://arr.thedacare.org/FHIR/api/FHIR/STU3/Practitioner/en5fWcACtuAal-nTvRtdPgQ3",
+            "display": "Jack C Anderson, MD"
+          },
+          {
+            "reference": "https://arr.thedacare.org/FHIR/api/FHIR/STU3/Practitioner/eMvngNzqL0VvPmo6GX3tBqg3",
+            "display": "Amy E Schmidt, MD"
+          }
+        ],
+        "managingOrganization": {
+          "reference": "https://arr.thedacare.org/FHIR/api/FHIR/STU3/Organization/e5zBsFV.o1p7LMbQylJy09A3",
+          "display": "THEDACARE HOSPITALS AND CLINICS"
         }
-      ],
-      "category": [
-        {
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "egb8B-kaMx4E-IBZ8hObgCO3UaMPQerwQI9WZLCaxWI3AR9gWJdnlUPv20lSNVg",
+        "meta": {
+          "source": "http://www.icanbwell.com/app_member_master",
+          "security": [
+            {
+              "system": "https://www.icanbwell.com/owner",
+              "code": "bwell"
+            },
+            {
+              "system": "https://www.icanbwell.com/access",
+              "code": "bwell"
+            }
+          ]
+        },
+        "status": "final",
+        "code": {
           "coding": [
             {
-              "system": "http://hl7.org/fhir/observation-category",
-              "code": "vital-signs",
-              "display": "Vital Signs"
+              "system": "urn:oid:1.2.840.114350.1.13.79.2.7.2.707679",
+              "code": "5",
+              "display": "Blood Pressure"
+            },
+            {
+              "system": "http://open.epic.com/FHIR/STU3/StructureDefinition/observation-flowsheet-id",
+              "code": "tcNazG9sQ2.uDVcAfiLCIpw0",
+              "display": "Blood Pressure"
+            },
+            {
+              "system": "urn:oid:1.2.246.537.6.96",
+              "code": "8462-4"
+            },
+            {
+              "system": "urn:oid:1.2.246.537.6.96",
+              "code": "8480-6"
+            },
+            {
+              "system": "http://loinc.org",
+              "code": "55284-4",
+              "display": "Blood pressure systolic and diastolic"
+            },
+            {
+              "system": "http://loinc.org",
+              "code": "85354-9",
+              "display": "Blood pressure panel with all children optional"
+            },
+            {
+              "system": "http://loinc.org",
+              "code": "8716-3",
+              "display": "Vital signs"
+            },
+            {
+              "system": "ICD10CM",
+              "code": "Z68.36",
+              "display": "Body mass index [BMI] 36.0-36.9, adult"
             }
           ],
-          "text": "Vital Signs"
-        }
-      ],
-      "subject": {
-        "reference": "https://arr.thedacare.org/FHIR/api/FHIR/STU3/Patient/eipez5ea-S8eTWiQm1SQfZ6b1Z9SBQWMpcHAXLZL9COI3",
-        "display": "LastName2, FirstName2 M"
-      },
-      "effectiveDateTime": "2021-02-04T16:00:00.000Z",
-      "issued": "2021-02-04T16:01:27Z",
-      "performer": [
-        {
-          "reference": "https://arr.thedacare.org/FHIR/api/FHIR/STU3/Practitioner/eysz.KyzDlCU.DHX52poONg3",
-          "display": "Sarah"
-        }
-      ],
-      "component": [
-        {
-          "code": {
-            "coding": [
-              {
-                "system": "http://loinc.org",
-                "code": "8480-6",
-                "display": "Systolic blood pressure"
-              }
-            ],
-            "text": "Systolic blood pressure"
-          },
-          "valueQuantity": {
-            "value": 118.0,
-            "unit": "mm[Hg]",
-            "system": "http://unitsofmeasure.org",
-            "code": "mm[Hg]"
-          }
+          "text": "Blood Pressure"
         },
-        {
-          "code": {
+        "encounter": {
+          "reference": "Observation/https---arr.thedacare.org-FHIR-api-FHIR-STU3-Encounter-eiZLZGPH"
+        },
+        "extension": [
+          {
+            "url": "http://open.epic.com/FHIR/STU3/StructreDefinition/temperature-in-fahrenheit",
+            "valueQuantity": {
+              "value": 98.4,
+              "unit": "[degF]",
+              "system": "http://unitsofmeasure.org",
+              "code": "[degF]"
+            }
+          }
+        ],
+        "category": [
+          {
             "coding": [
               {
-                "system": "http://loinc.org",
-                "code": "8462-4",
-                "display": "Diastolic blood pressure"
+                "system": "http://hl7.org/fhir/observation-category",
+                "code": "vital-signs",
+                "display": "Vital Signs"
               }
             ],
-            "text": "Diastolic blood pressure"
-          },
-          "valueQuantity": {
-            "value": 80.0,
-            "unit": "mm[Hg]",
-            "system": "http://unitsofmeasure.org",
-            "code": "mm[Hg]"
+            "text": "Vital Signs"
           }
-        }
-      ]
+        ],
+        "subject": {
+          "reference": "https://arr.thedacare.org/FHIR/api/FHIR/STU3/Patient/eipez5ea-S8eTWiQm1SQfZ6b1Z9SBQWMpcHAXLZL9COI3",
+          "display": "LastName2, FirstName2 M"
+        },
+        "effectiveDateTime": "2021-02-04T16:00:00.000Z",
+        "issued": "2021-02-04T16:01:27Z",
+        "performer": [
+          {
+            "reference": "https://arr.thedacare.org/FHIR/api/FHIR/STU3/Practitioner/eysz.KyzDlCU.DHX52poONg3",
+            "display": "Sarah"
+          }
+        ],
+        "component": [
+          {
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "8480-6",
+                  "display": "Systolic blood pressure"
+                }
+              ],
+              "text": "Systolic blood pressure"
+            },
+            "valueQuantity": {
+              "value": 118.0,
+              "unit": "mm[Hg]",
+              "system": "http://unitsofmeasure.org",
+              "code": "mm[Hg]"
+            }
+          },
+          {
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "8462-4",
+                  "display": "Diastolic blood pressure"
+                }
+              ],
+              "text": "Diastolic blood pressure"
+            },
+            "valueQuantity": {
+              "value": 80.0,
+              "unit": "mm[Hg]",
+              "system": "http://unitsofmeasure.org",
+              "code": "mm[Hg]"
+            }
+          }
+        ]
+      }
     }
   ]
 }
