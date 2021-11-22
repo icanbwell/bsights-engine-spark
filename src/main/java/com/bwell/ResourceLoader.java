@@ -11,7 +11,7 @@ import java.nio.charset.Charset;
 
 public class ResourceLoader {
     @Nullable
-    public static IBaseBundle loadResource(String path) {
+    public static IBaseBundle loadResourceFromFile(String path) {
         File f = new File(path);
         String resource = null;
         try {
@@ -19,6 +19,11 @@ public class ResourceLoader {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return loadResourceFromString(resource);
+    }
+
+    @Nullable
+    private static IBaseBundle loadResourceFromString(String resource) {
         JsonParser parser = new JsonParser();
         IBaseBundle bundle = null;
         try {

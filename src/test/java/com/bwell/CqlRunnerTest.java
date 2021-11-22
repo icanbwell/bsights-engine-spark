@@ -2,24 +2,19 @@ package com.bwell;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.io.FileUtils;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseDatatype;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r4.formats.JsonParser;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Patient;
-import org.jetbrains.annotations.Nullable;
 import org.opencds.cqf.cql.engine.execution.EvaluationResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -153,7 +148,7 @@ public class CqlRunnerTest {
 
     @Test
     public void testLoadingBundle() {
-        IBaseBundle bundle = ResourceLoader.loadResource(testResourcePath + "/bmi001" + "/example/expected1.json");
+        IBaseBundle bundle = ResourceLoader.loadResourceFromFile(testResourcePath + "/bmi001" + "/example/expected1.json");
         assertNotNull(bundle);
         String patient_first_identifier = ((Identifier) ((java.util.ArrayList) ((Patient) ((Bundle.BundleEntryComponent) ((java.util.ArrayList) ((Bundle) bundle).getEntry()).get(0)).getResource()).getIdentifier()).get(0)).getValue();
         assertEquals("M888888", patient_first_identifier);
