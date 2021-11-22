@@ -1,12 +1,11 @@
 package com.bwell;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
+import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
-import org.hl7.fhir.r4.formats.JsonParser;
 import org.opencds.cqf.cql.engine.execution.EvaluationResult;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.opencds.cqf.cql.engine.retrieve.RetrieveProvider;
@@ -20,9 +19,6 @@ import org.opencds.cqf.cql.evaluator.cql2elm.content.LibraryContentProvider;
 import org.opencds.cqf.cql.evaluator.dagger.CqlEvaluatorComponent;
 import org.opencds.cqf.cql.evaluator.dagger.DaggerCqlEvaluatorComponent;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +42,7 @@ public class CqlRunner {
             public String modelName;
 
             public String modelUrl;
-            public String modelText;
+            public String modelBundle;
         }
     }
     private Map<String, LibraryContentProvider> libraryContentProviderIndex = new HashMap<>();
@@ -100,21 +96,8 @@ public class CqlRunner {
             DataProviderFactory dataProviderFactory = cqlEvaluatorComponent.createDataProviderFactory();
             if (library.model != null) {
                 // if model is provided as text then use it
-                if (library.model.modelText != null){
-                    File f = new File("/usr/local/bin/geeks");
-                    String resource = null;
-                    try {
-                        resource = FileUtils.readFileToString(f, Charset.forName("UTF-8"));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    JsonParser parser = new JsonParser();
-                    IBaseBundle bundle = null;
-                    try {
-                        bundle = (IBaseBundle) parser.parse(resource);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                if (library.model.modelBundle != null){
+                    IBaseBundle bundle = ResourceLoader.loadResourceFromString(library.model.modelBundle);
                     dataProvider = dataProviderFactory.create(bundle);
                 }
                 else {

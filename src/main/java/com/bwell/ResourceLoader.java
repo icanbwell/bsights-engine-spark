@@ -23,7 +23,7 @@ public class ResourceLoader {
     }
 
     @Nullable
-    private static IBaseBundle loadResourceFromString(String resource) {
+    public static IBaseBundle loadResourceFromString(String resource) {
         JsonParser parser = new JsonParser();
         IBaseBundle bundle = null;
         try {
