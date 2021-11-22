@@ -19,6 +19,7 @@ import org.hl7.fhir.r4.formats.JsonParser;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Patient;
+import org.jetbrains.annotations.Nullable;
 import org.opencds.cqf.cql.engine.execution.EvaluationResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -152,22 +153,10 @@ public class CqlRunnerTest {
 
     @Test
     public void testLoadingBundle() {
-        File f = new File(testResourcePath + "/bmi001" + "/example/expected1.json");
-        String resource = null;
-        try {
-            resource = FileUtils.readFileToString(f, Charset.forName("UTF-8"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        JsonParser parser = new JsonParser();
-        IBaseBundle bundle = null;
-        try {
-            bundle = (IBaseBundle) parser.parse(resource);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        IBaseBundle bundle = ResourceLoader.loadResource(testResourcePath + "/bmi001" + "/example/expected1.json");
         assertNotNull(bundle);
         String patient_first_identifier = ((Identifier) ((java.util.ArrayList) ((Patient) ((Bundle.BundleEntryComponent) ((java.util.ArrayList) ((Bundle) bundle).getEntry()).get(0)).getResource()).getIdentifier()).get(0)).getValue();
         assertEquals("M888888", patient_first_identifier);
     }
+
 }
