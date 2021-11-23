@@ -2,12 +2,15 @@ package com.bwell;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseDatatype;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -145,18 +148,29 @@ public class CqlRunnerTest {
 
 
     @Test
-    public void testBMI() {
+    public void testBMIBundle() {
+
         String fhirVersion = "R4";
         List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
         CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
         libraryParameter.libraryName = "TestFHIR";
         String folder = "bmi001";
+
+        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
+        String bundleJson = null;
+        try {
+            bundleJson = FileUtils.readFileToString(f, Charset.forName("UTF-8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         libraryParameter.libraryUrl = testResourcePath + "/" + folder;
 //        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
         libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/vocabulary/ValueSet";
         libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
         libraryParameter.model.modelName = "FHIR";
-        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
+//        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
+        libraryParameter.model.modelBundle = bundleJson;
         libraryParameter.context = new CqlRunner.LibraryParameter.ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
