@@ -126,8 +126,15 @@ public class CqlRunner {
                 contextParameter = Pair.of(library.context.contextName, library.context.contextValue);
             }
 
-            // run evaluator and return result
-            return evaluator.evaluate(identifier, contextParameter);
+            try {
+                // run evaluator and return result
+                return evaluator.evaluate(identifier, contextParameter);
+            }
+            catch (Exception e) {
+                int foo = 1;
+                throw e;
+            }
+
         }
         return null;
     }
