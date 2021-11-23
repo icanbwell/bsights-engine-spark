@@ -1,0 +1,26 @@
+{
+  "resourceType": "CodeSystem",
+  "id": "451061000124104",
+  "url": "http://snomed.info/sct",
+  "identifier": [
+    {
+      "system": "urn:ietf:rfc:3986",
+      "value": "urn:oid:2.16.840.1.113883.6.96"
+    }
+  ],
+  "name": "SNOMED_CT",
+  "title": "SNOMED CT (all versions)",
+  "status": "active",
+  "experimental": false,
+  "description": "blah",
+  "caseSensitive": false,
+  "content": "complete",
+  "publisher": "IHTSDO",
+  "concept": [
+    {
+      "code": "451061000124104",
+      "display": "Hemoglobin A1c greater than 9% indicating poor diabetic control (finding)",
+      "definition": "Hemoglobin A1c greater than 9% indicating poor diabetic control (finding)"
+    }
+  ]
+}

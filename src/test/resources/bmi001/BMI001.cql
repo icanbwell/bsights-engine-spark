@@ -1,4 +1,4 @@
-library TestFHIR
+library BMI001
 
 /*
 Every expression in this library should return non-null or a list with at least one element,
