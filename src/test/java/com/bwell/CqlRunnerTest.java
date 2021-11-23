@@ -166,7 +166,7 @@ public class CqlRunnerTest {
 
         libraryParameter.libraryUrl = testResourcePath + "/" + folder;
 //        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
-//        libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/vocabulary/ValueSet";
+        libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/vocabulary/ValueSet";
         libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
         libraryParameter.model.modelName = "FHIR";
 //        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
