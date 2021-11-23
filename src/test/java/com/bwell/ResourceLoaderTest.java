@@ -25,9 +25,9 @@ public class ResourceLoaderTest {
 
     @Test
     public void testLoadingBundle() {
-        IBaseBundle bundle = ResourceLoader.loadResourceFromFile(testResourcePath + "/bmi001" + "/example/expected1.json");
+        IBaseBundle bundle = ResourceLoader.loadResourceFromFile(testResourcePath + "/bmi001" + "/bundles/expected.json");
         assertNotNull(bundle);
         String patient_first_identifier = ((Identifier) ((java.util.ArrayList) ((Patient) ((Bundle.BundleEntryComponent) ((java.util.ArrayList) ((Bundle) bundle).getEntry()).get(0)).getResource()).getIdentifier()).get(0)).getValue();
-        assertEquals("M888888", patient_first_identifier);
+        assertEquals("12345", patient_first_identifier);
     }
 }
