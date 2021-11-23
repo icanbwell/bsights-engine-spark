@@ -17,7 +17,8 @@ codesystem "CDC Race and Ethnicity Codes": 'urn:oid:2.16.840.1.113883.6.238'
 
 valueset "Marital Status": 'http://hl7.org/fhir/ValueSet/marital-status'
 
-valueset "BMI Over 35": 'https://cts.nlm.nih.gov/fhir/r4/ValueSet/2.16.840.1.113762.1.4.1106.45'
+/* Imran: CQL Engine does not seem to like valuesets that refer to other valuesets so using just the ICD10 valueset here */
+valueset "BMI Over 35 ICD 10": 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1106.41'
 
 code "Marital Status - Married": 'M' from "Marital Status Codes"
 code "American Indian or Alaska Native": '1002-5' from "CDC Race and Ethnicity Codes"
@@ -76,7 +77,7 @@ define InDemographic1:
 define InDemographic:
         [Patient] patient
         where AgeInYearsAt(start of MeasurementPeriod) >= 16
-          and exists([Observation: "BMI Over 35"] observation
+          and exists([Observation: "BMI Over 35 ICD 10"] observation
                         where observation.status in {'final', 'amended'}
                     )
 
