@@ -143,64 +143,14 @@ public class CqlRunnerTest {
         return result;
     }
 
+
     @Test
     public void testBMI() {
         String fhirVersion = "R4";
         List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
         CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
         libraryParameter.libraryName = "TestFHIR";
-        libraryParameter.libraryUrl = testResourcePath + "/bmi001";
-//        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
-        libraryParameter.terminologyUrl = testResourcePath + "/bmi001/vocabulary/ValueSet";
-        libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
-        libraryParameter.model.modelName = "FHIR";
-        libraryParameter.model.modelUrl = testResourcePath + "/bmi001";
-        libraryParameter.context = new CqlRunner.LibraryParameter.ContextParameter();
-        libraryParameter.context.contextName = "Patient";
-        libraryParameter.context.contextValue = "example";
-
-        libraries.add(libraryParameter);
-
-        EvaluationResult result = new CqlRunner().runCql(fhirVersion, libraries);
-
-        Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
-        for (Map.Entry<String, Object> libraryEntry : entrySet) {
-            String key = libraryEntry.getKey();
-            Object value = libraryEntry.getValue();
-            if (key.equals("Patient")) {
-                Patient patient = (Patient) value;
-                String identifier_value = patient.getIdentifier().get(0).getValue();
-                System.out.println(key + " = " + identifier_value);
-                assertEquals(identifier_value, "12345");
-            }
-            System.out.println(key + "=" + tempConvert(value));
-        }
-
-        System.out.println();
-
-//        String output = outContent.toString();
-//
-//        assertTrue(output.contains("Patient=Patient(id=example)"));
-//        assertTrue(output.contains("TestAdverseEvent=[AdverseEvent(id=example)]"));
-//        assertTrue(output.contains("TestPatientGender=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientActive=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientBirthDate=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientMaritalStatusMembership=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientMartialStatusComparison=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientDeceasedAsBoolean=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientDeceasedAsDateTime=null"));
-//        assertTrue(output.contains("TestSlices=[Observation(id=blood-pressure)]"));
-//        assertTrue(output.contains("TestSimpleExtensions=Patient(id=example)"));
-//        assertTrue(output.contains("TestComplexExtensions=Patient(id=example)"));
-    }
-
-    @Test
-    public void testR4Simple() {
-        String fhirVersion = "R4";
-        List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
-        CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
-        libraryParameter.libraryName = "TestFHIR";
-        String folder = "r4Simple";
+        String folder = "bmi001";
         libraryParameter.libraryUrl = testResourcePath + "/" + folder;
 //        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
         libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/vocabulary/ValueSet";
