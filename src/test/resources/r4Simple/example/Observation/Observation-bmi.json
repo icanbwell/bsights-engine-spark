@@ -26,12 +26,7 @@
   "code": {
     "coding": [
       {
-        "system": "http://loinc.org",
-        "code": "39156-5",
-        "display": "Body mass index (BMI) [Ratio]"
-      },
-      {
-        "system": "ICD10CM",
+        "system": "http://hl7.org/fhir/sid/icd-10-cm",
         "code": "Z68.36",
         "display": "Body mass index [BMI] 36.0-36.9, adult"
       }
