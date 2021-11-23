@@ -7,11 +7,17 @@ with the exception of TestPatientDeceasedDateTime, which should return null
 
 using FHIR version '4.0.1'
 
+include FHIRHelpers version '4.0.1'
+
+parameter "MeasurementPeriod" Interval<DateTime> default Interval[@2021-01-01T00:00:00, @2021-12-31T00:00:00]
+
 codesystem "LOINC": 'http://loinc.org'
 codesystem "Marital Status Codes": 'http://terminology.hl7.org/CodeSystem/v3-MaritalStatus'
 codesystem "CDC Race and Ethnicity Codes": 'urn:oid:2.16.840.1.113883.6.238'
 
 valueset "Marital Status": 'http://hl7.org/fhir/ValueSet/marital-status'
+
+valueset "BMI Over 35": 'https://cts.nlm.nih.gov/fhir/r4/ValueSet/2.16.840.1.113762.1.4.1106.45'
 
 code "Marital Status - Married": 'M' from "Marital Status Codes"
 code "American Indian or Alaska Native": '1002-5' from "CDC Race and Ethnicity Codes"
@@ -62,6 +68,17 @@ define TestServiceRequest: ["ServiceRequest"]
 define TestSpecimen: ["Specimen"]
 define TestSubstsance: ["Substance"]
 define TestTask: ["Task"]
+
+define InDemographic1:
+        [Patient] patient
+        where AgeInYearsAt(start of MeasurementPeriod) >= 16
+
+define InDemographic:
+        [Patient] patient
+        where AgeInYearsAt(start of MeasurementPeriod) >= 16
+          and exists([Observation: "BMI Over 35"] observation
+                        where observation.status in {'final', 'amended'}
+                    )
 
 define TestPatientGender:
   Patient P
