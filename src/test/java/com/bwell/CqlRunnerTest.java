@@ -87,7 +87,7 @@ public class CqlRunnerTest {
             if (key.equals("Patient")) {
                 Patient patient = (Patient) value;
                 String identifier_value = patient.getIdentifier().get(0).getValue();
-                System.out.println(key + " = " + identifier_value);
+                System.out.println(key + "Id = " + identifier_value);
                 assertEquals(identifier_value, "12345");
             }
             System.out.println(key + "=" + tempConvert(value));
@@ -166,7 +166,7 @@ public class CqlRunnerTest {
 
         libraryParameter.libraryUrl = testResourcePath + "/" + folder;
 //        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
-        libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/vocabulary/ValueSet";
+//        libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/vocabulary/ValueSet";
         libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
         libraryParameter.model.modelName = "FHIR";
 //        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
@@ -185,9 +185,12 @@ public class CqlRunnerTest {
             Object value = libraryEntry.getValue();
             if (key.equals("Patient")) {
                 Patient patient = (Patient) value;
-                String identifier_value = patient.getIdentifier().get(0).getValue();
-                System.out.println(key + " = " + identifier_value);
-                assertEquals(identifier_value, "12345");
+                String mr_identifier_value = patient.getIdentifier().get(0).getValue(); // medical record number
+                System.out.println(key + ": Medical Record ID = " + mr_identifier_value);
+                assertEquals(mr_identifier_value, "12345");
+                String patient_id = patient.getId();  // patient id
+                System.out.println(key + ": Patient ID = " + patient_id);
+                assertEquals(patient_id, "example");
             }
             System.out.println(key + "=" + tempConvert(value));
         }
