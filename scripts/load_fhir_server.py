@@ -54,6 +54,7 @@ def send_cql_to_fhir_server(cql: str) -> None:
             ]
         },
         "status": "active",
+        "url": "http://localhost:3000/4_0_0/Library/BMI001",
         # "identifier": [
         # ],
         "name": "BMI001",

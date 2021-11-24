@@ -118,6 +118,9 @@ public class CqlRunner {
             CqlEvaluator evaluator = cqlEvaluatorBuilder.build();
 
             VersionedIdentifier identifier = new VersionedIdentifier().withId(library.libraryName);
+            if (library.libraryVersion != null) {
+                identifier = identifier.withVersion(library.libraryVersion);
+            }
 
             // add any context parameters
             Pair<String, Object> contextParameter = null;
