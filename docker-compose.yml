@@ -16,11 +16,11 @@ services:
   fhir:
     depends_on:
       - mongo
-    image: imranq2/node-fhir-server-mongo:2.0.83
+#    image: imranq2/node-fhir-server-mongo:2.0.83
     # To use local fhir code, comment above line and uncomment below
-#    build:
-#      dockerfile: Dockerfile
-#      context: ../fhir-server
+    build:
+      dockerfile: Dockerfile
+      context: ../fhir-server
     environment:
       SERVER_PORT: 3000
       MONGO_HOSTNAME: mongo

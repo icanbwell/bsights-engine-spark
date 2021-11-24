@@ -39,12 +39,12 @@ def send_resource_to_fhir_server(data) -> None:
     print(response.json())
 
 
-def send_cql_to_fhir_server(cql: str) -> None:
+def send_cql_to_fhir_server(library_name: str, library_version: str,  cql: str) -> None:
     # wrap cql in Library resource
     resource = {
         "resourceType": "Library",
-        "id": "BMI001",
-        "version": "1",
+        "id": library_name,
+        "version": library_version,
         "type": {
             "coding": [
                 {
@@ -57,9 +57,10 @@ def send_cql_to_fhir_server(cql: str) -> None:
         "url": "http://localhost:3000/4_0_0/Library/BMI001",
         # "identifier": [
         # ],
-        "name": "BMI001",
+        "name": library_name,
         "content": [
             {
+                "contentType": "text/cql",
                 "data": base64.b64encode(cql.encode('ascii')).decode('ascii')
             }
         ]
@@ -81,7 +82,10 @@ def load_cql() -> None:
             print(full_path)
             with open(full_path, "r") as f:
                 contents = f.read()
-                send_cql_to_fhir_server(contents)
+                file_name_without_extension = file_name.replace(".cql", "")
+                library_name = file_name_without_extension.split("-")[0]
+                library_version = file_name_without_extension.split("-")[1]
+                send_cql_to_fhir_server(library_name, library_version,  contents)
 
 def load_value_sets() -> None:
     data_dir: Path = Path(os.getcwd()).joinpath("./vocabulary")
