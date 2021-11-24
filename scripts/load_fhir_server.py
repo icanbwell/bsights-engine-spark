@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 import json
 import requests
+import base64
 
 
 def send_resource_to_fhir_server(data) -> None:
@@ -10,18 +11,18 @@ def send_resource_to_fhir_server(data) -> None:
     headers = {"Content-Type": "application/fhir+json"}
     # add security tag
     data["meta"] = {
-                       "source": "https://icanbwell.com",
-                       "security": [
-                           {
-                               "system": "https://www.icanbwell.com/access",
-                               "code": "bwell"
-                           },
-                           {
-                               "system": "https://www.icanbwell.com/owner",
-                               "code": "bwell"
-                           }
-                       ]
-                   }
+        "source": "https://icanbwell.com",
+        "security": [
+            {
+                "system": "https://www.icanbwell.com/access",
+                "code": "bwell"
+            },
+            {
+                "system": "https://www.icanbwell.com/owner",
+                "code": "bwell"
+            }
+        ]
+    }
 
     json_content = {
         "resourceType": "Bundle",
@@ -38,9 +39,50 @@ def send_resource_to_fhir_server(data) -> None:
     print(response.json())
 
 
+def send_cql_to_fhir_server(cql: str) -> None:
+    # wrap cql in Library resource
+    resource = {
+        "resourceType": "Library",
+        "id": "BMI001",
+        "version": "1",
+        "type": {
+            "coding": [
+                {
+                    "system": "http://terminology.hl7.org/CodeSystem/library-type",
+                    "code": "logic-library"
+                }
+            ]
+        },
+        "status": "active",
+        # "identifier": [
+        # ],
+        "name": "BMI001",
+        "content": [
+            {
+                "data": base64.b64encode(cql.encode('ascii')).decode('ascii')
+            }
+        ]
+    }
+    send_resource_to_fhir_server(resource)
+
+
 def main() -> int:
     print("Starting...")
+    load_cql()
+    load_value_sets()
 
+
+def load_cql() -> None:
+    data_dir: Path = Path(os.getcwd()).joinpath("./cql")
+    for (root, dirs, file_names) in os.walk(data_dir):
+        for file_name in file_names:
+            full_path = os.path.join(root, file_name)
+            print(full_path)
+            with open(full_path, "r") as f:
+                contents = f.read()
+                send_cql_to_fhir_server(contents)
+
+def load_value_sets() -> None:
     data_dir: Path = Path(os.getcwd()).joinpath("./vocabulary")
     for (root, dirs, file_names) in os.walk(data_dir):
         for file_name in file_names:
