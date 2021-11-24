@@ -37,6 +37,7 @@ services:
       VALIDATE_SCHEMA: "1"
       AUTH_ENABLED: "0"
       ENABLE_GRAPHQL: "1"
+      LOGLEVEL: "DEBUG"
     ports:
       - '3000:3000'
     command: yarn start
