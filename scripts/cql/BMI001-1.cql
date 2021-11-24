@@ -1,4 +1,4 @@
-library BMI001
+library BMI001 version '1'
 
 /*
 Every expression in this library should return non-null or a list with at least one element,
