@@ -27,3 +27,12 @@ buildjar:  ## Updates all the packages using Pipfile # (it takes a long time) ma
 	mvn clean && mvn package && \
 	mvn dependency:copy-dependencies -DoutputDirectory=target/jars -Dhttps.protocols=TLSv1.2
 
+.PHONY:loadfhir
+loadfhir:
+	docker-compose run scriptrunner bash -c "pip install requests && ls / && cd /scripts && python3 load_fhir_server.py"
+
+.PHONY: clean_data
+clean_data: down ## Cleans all the local docker setup
+ifneq ($(shell docker volume ls | grep "helixbsightscql_spark_engine"| awk '{print $$2}'),)
+	docker volume ls | grep "helixbsightscql_spark_engine" | awk '{print $$2}' | xargs docker volume rm
+endif
