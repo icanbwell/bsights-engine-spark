@@ -36,3 +36,7 @@ clean_data: down ## Cleans all the local docker setup
 ifneq ($(shell docker volume ls | grep "helixbsightscql_spark_engine"| awk '{print $$2}'),)
 	docker volume ls | grep "helixbsightscql_spark_engine" | awk '{print $$2}' | xargs docker volume rm
 endif
+
+.PHONY: tests
+tests:
+	mvn test
