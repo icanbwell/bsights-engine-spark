@@ -6,12 +6,17 @@ ENV PYTHONPATH=/helix.pipelines
 ENV PYTHONPATH "/opt/project:${PYTHONPATH}"
 ENV CLASSPATH=/helix.pipelines/jars:/opt/bitnami/spark/jars/:$CLASSPATH
 
-COPY Pipfile* /helix.pipelines/
+# first get just the pom.xml and download dependencies (so we don't do this again when the code changes)
+COPY ./pom.xml /helix.pipelines/
 WORKDIR /helix.pipelines
 
-COPY ./target/helix.bSights.cql_spark_engine-1.0-SNAPSHOT.jar /opt/bitnami/spark/jars/
+RUN mvn verify clean --fail-never
 
-#COPY . /helix.pipelines
+# now get the rest of the code and create the package
+COPY ./src/ /helix.pipelines/src/
 
-RUN mkdir -p /.local/share/virtualenvs && chmod 777 /.local/share/virtualenvs
+# skip running tests since it requires a fhir server
+RUN mvn -Dmaven.test.skip package && \
+    cp ./target/helix.bSights.cql_spark_engine-1.0-SNAPSHOT.jar /opt/bitnami/spark/jars/
+
 # USER 1001

@@ -38,5 +38,5 @@ ifneq ($(shell docker volume ls | grep "helixbsightscql_spark_engine"| awk '{pri
 endif
 
 .PHONY: tests
-tests:
+tests: loadfhir
 	mvn test
