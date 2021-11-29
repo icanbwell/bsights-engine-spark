@@ -14,7 +14,14 @@ up: ## Brings up all the services in docker-compose
 	echo "`docker-compose --version | awk '{print $$4;}'`" && \
 	if [[ "`docker-compose --version | awk '{print $$4;}'`" == "v2."* ]]; then echo "ERROR: Docker Compose version should be < 2.  Uncheck Use Docker Compose V2 checkbox in Docker Settings and restart Docker." && exit 1; fi && \
 	docker-compose -f docker-compose.yml up --build --no-start --no-recreate && \
-	docker-compose -f docker-compose.yml up -d --no-recreate
+	docker-compose -f docker-compose.yml up -d --no-recreate && \
+	echo "\nwaiting for Mongo server to become healthy" && \
+	while [ "`docker inspect --format {{.State.Health.Status}} helixbsightscql_spark_engine_mongo_1`" != "healthy" ] && [ "`docker inspect --format {{.State.Health.Status}} helixbsightscql_spark_engine_mongo_1`" != "unhealthy" ] && [ "`docker inspect --format {{.State.Status}} helixbsightscql_spark_engine_mongo_1`" != "restarting" ]; do printf "." && sleep 2; done && \
+	if [ "`docker inspect --format {{.State.Health.Status}} helixbsightscql_spark_engine_mongo_1`" != "healthy" ]; then docker ps && printf "========== ERROR: helixbsightscql_spark_engine_mongo_1 did not start. Run docker logs helixbsightscql_spark_engine_mongo_1 =========\n" && exit 1; fi && \
+	echo "\nwaiting for Fhir server to become healthy" && \
+	while [ "`docker inspect --format {{.State.Health.Status}} helixbsightscql_spark_engine_fhir_1`" != "healthy" ] && [ "`docker inspect --format {{.State.Health.Status}} helixbsightscql_spark_engine_fhir_1`" != "unhealthy" ] && [ "`docker inspect --format {{.State.Status}} helixbsightscql_spark_engine_fhir_1`" != "restarting" ]; do printf "." && sleep 2; done && \
+	if [ "`docker inspect --format {{.State.Health.Status}} helixbsightscql_spark_engine_fhir_1`" != "healthy" ]; then docker ps && printf "========== ERROR: helixbsightscql_spark_engine_fhir_1 did not start. Run docker logs helixbsightscql_spark_engine_fhir_1 =========\n" && exit 1; fi
+
 
 .PHONY:down
 down: ## Brings down all the services in docker-compose
