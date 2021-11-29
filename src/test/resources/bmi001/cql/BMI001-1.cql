@@ -36,3 +36,10 @@ define InDemographicComposed:
     [Patient] patient
         where InAgeCohort
             and InQualifyingObservationCohort
+
+define InDemographicExists:
+    exists (
+        [Patient] patient
+            where InAgeCohort
+                and InQualifyingObservationCohort
+    )
