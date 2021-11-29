@@ -97,6 +97,40 @@ public class CqlRunnerTest {
 
     }
 
+    @Test
+    public void testRunCql2() throws Exception {
+        String cqlLibraryName = "BMI001";
+        String cqllibraryUrl = "http://localhost:3000/4_0_0";
+        String cqllibraryVersion = "1";
+        String terminologyUrl = "http://localhost:3000/4_0_0";
+
+        String folder = "bmi001";
+        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
+        String bundleJson = null;
+        try {
+            bundleJson = FileUtils.readFileToString(f, Charset.forName("UTF-8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        try {
+            new CqlRunner().runCqlLibrary(
+                    cqllibraryUrl,
+                    cqlLibraryName,
+                    cqllibraryVersion,
+                    terminologyUrl,
+                    bundleJson
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+
+        System.out.println();
+
+    }
+
     private String tempConvert(Object value) {
         if (value == null) {
             return "null";

@@ -1,11 +1,14 @@
 package com.bwell;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
+import org.hl7.fhir.r4.model.Patient;
+import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.execution.EvaluationResult;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.opencds.cqf.cql.engine.retrieve.RetrieveProvider;
@@ -19,9 +22,10 @@ import org.opencds.cqf.cql.evaluator.cql2elm.content.LibraryContentProvider;
 import org.opencds.cqf.cql.evaluator.dagger.CqlEvaluatorComponent;
 import org.opencds.cqf.cql.evaluator.dagger.DaggerCqlEvaluatorComponent;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.*;
 
 public class CqlRunner {
 
@@ -143,6 +147,44 @@ public class CqlRunner {
     }
 
     Map<String, String> runCql2(String cqlLibraryUrl, String terminologyUrl, String fhirBundle) {
+        java.util.Map<String, String> newMap = new java.util.HashMap<>();
+        newMap.put("key1", fhirBundle + "_1");
+        newMap.put("key2", fhirBundle + "_2");
+
+        return newMap;
+    }
+
+    Map<String, String> runCqlLibrary(String cqlLibraryUrl, String cqlLibraryName, String cqlLibraryVersion, String terminologyUrl, String fhirBundle) throws Exception {
+        String fhirVersion = "R4";
+        List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
+        CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
+        libraryParameter.libraryName = cqlLibraryName;
+
+        libraryParameter.libraryUrl = cqlLibraryUrl;
+        libraryParameter.libraryVersion = cqlLibraryVersion;
+        libraryParameter.terminologyUrl = terminologyUrl;
+        libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
+        libraryParameter.model.modelName = "FHIR";
+        libraryParameter.model.modelBundle = fhirBundle;
+        libraryParameter.context = new CqlRunner.LibraryParameter.ContextParameter();
+        libraryParameter.context.contextName = "Patient";
+        libraryParameter.context.contextValue = "example";
+
+        libraries.add(libraryParameter);
+
+        try {
+            EvaluationResult result = new CqlRunner().runCql(fhirVersion, libraries);
+            Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
+        } catch (CqlException e) {
+            if (Objects.equals(e.getMessage(), "Unexpected exception caught during execution: ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException: HTTP 404 Not Found")) {
+                throw new Exception("NOTE: Did you run make loadfhir to load the fhir server?");
+            }
+            else {
+                throw e;
+            }
+
+        }
+
         java.util.Map<String, String> newMap = new java.util.HashMap<>();
         newMap.put("key1", fhirBundle + "_1");
         newMap.put("key2", fhirBundle + "_2");
