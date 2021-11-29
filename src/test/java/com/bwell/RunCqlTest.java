@@ -1,25 +1,29 @@
 package com.bwell;
 
 import com.holdenkarau.spark.testing.SharedJavaSparkContext;
-import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.sql.*;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.types.DataTypes;
-import org.apache.spark.sql.types.StructField;
-import org.apache.spark.sql.types.StructType;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import com.google.common.collect.Lists;
+import org.apache.spark.sql.functions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.io.File;
 
 public class RunCqlTest extends SharedJavaSparkContext {
+
+    private static final String testResourceRelativePath = "src/test/resources";
+    private static String testResourcePath = null;
+    String folder = "bmi001";
 
     @BeforeClass
     public void setup() {
         this.runBefore();
         jsc().setLogLevel("WARN");
+        File file = new File(testResourceRelativePath);
+        testResourcePath = file.getAbsolutePath();
+        System.out.println(String.format("Test resource directory: %s", testResourcePath));
     }
 
     @Test
@@ -27,12 +31,23 @@ public class RunCqlTest extends SharedJavaSparkContext {
         SQLContext sqlContext = new SQLContext(jsc());
         sqlContext.sparkSession().udf().register("runCql", new RunCql(), DataTypes.createMapType(DataTypes.StringType, DataTypes.StringType));
 
-        List<Row> rows = Arrays.asList(RowFactory.create("green"), RowFactory.create("red"));
-        StructType schema = DataTypes.createStructType(
-                new StructField[]{DataTypes.createStructField("patientBundle", DataTypes.StringType, false)});
+        String pathName = testResourcePath + "/" + folder + "/bundles" + "/expected.json";
+//        File f = new File(pathName);
+//        String bundleJson = null;
+//        try {
+//            bundleJson = FileUtils.readFileToString(f, Charset.forName("UTF-8"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
-        Dataset<Row> df = sqlContext.createDataFrame(rows, schema);
+        Dataset<Row> df = sqlContext.read().option("multiLine", true).json(pathName);
+//        Dataset<Row> df = sqlContext.read().text(pathName);
         df.show();
+        df = df.withColumn("patientBundle1", org.apache.spark.sql.functions.struct(functions.col("resourceType"),functions.col("entry")));
+        df = df.withColumn("patientBundle", org.apache.spark.sql.functions.to_json(functions.col("patientBundle1")));
+        df.show();
+        df.select("patientBundle1").printSchema();
+        df.select("patientBundle").printSchema();
         df.createOrReplaceTempView("numbersdata");
         Dataset<Row> result_df = sqlContext.sql("SELECT runCql('cqlLibraryUrl', 'terminologyUrl', patientBundle) As ruleResults from numbersdata");
         result_df.printSchema();

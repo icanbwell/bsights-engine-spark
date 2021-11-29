@@ -95,20 +95,6 @@ public class CqlRunnerTest {
 
         System.out.println();
 
-//        String output = outContent.toString();
-//
-//        assertTrue(output.contains("Patient=Patient(id=example)"));
-//        assertTrue(output.contains("TestAdverseEvent=[AdverseEvent(id=example)]"));
-//        assertTrue(output.contains("TestPatientGender=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientActive=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientBirthDate=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientMaritalStatusMembership=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientMartialStatusComparison=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientDeceasedAsBoolean=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientDeceasedAsDateTime=null"));
-//        assertTrue(output.contains("TestSlices=[Observation(id=blood-pressure)]"));
-//        assertTrue(output.contains("TestSimpleExtensions=Patient(id=example)"));
-//        assertTrue(output.contains("TestComplexExtensions=Patient(id=example)"));
     }
 
     private String tempConvert(Object value) {
