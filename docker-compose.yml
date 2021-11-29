@@ -59,6 +59,7 @@ services:
     image: python:3.8.12-slim-buster
     volumes:
       - ./scripts:/scripts/
+      - ./scripts:/scripts/
     command: tail -f /dev/null
 
 volumes:
