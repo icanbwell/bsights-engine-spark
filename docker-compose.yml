@@ -58,8 +58,9 @@ services:
   scriptrunner:
     image: python:3.8.12-slim-buster
     volumes:
-      - ./scripts:/scripts/
-      - ./scripts:/scripts/
+      - ./scripts/load_fhir_server.py:/scripts/load_fhir_server.py
+      - ./src/test/resources/bmi001/cql:/data/cql/
+      - ./src/test/resources/bmi001/vocabulary:/data/vocabulary/
     command: tail -f /dev/null
 
 volumes:

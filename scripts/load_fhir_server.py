@@ -75,7 +75,8 @@ def main() -> int:
 
 
 def load_cql() -> None:
-    data_dir: Path = Path(os.getcwd()).joinpath("./cql")
+    parent_path = "/data"
+    data_dir: Path = Path(parent_path).joinpath("./cql")
     for (root, dirs, file_names) in os.walk(data_dir):
         for file_name in file_names:
             full_path = os.path.join(root, file_name)
