@@ -15,16 +15,16 @@ context Patient
 define "InDemographicInline":
   exists([Observation: "451061000124104"] observation
             where (ToDate((observation.effective as FHIR.dateTime).value) in MeasurementPeriod)
-                    and
+                  and
                   observation.status in {'final', 'amended'}
-  )
+        )
 
   define "InObservationCohort":
         exists([Observation: "451061000124104"] observation
-              where (ToDate((observation.effective as FHIR.dateTime).value) in MeasurementPeriod)
+                where (ToDate((observation.effective as FHIR.dateTime).value) in MeasurementPeriod)
                       and
-                    observation.status in {'final', 'amended'}
-        )
+                      observation.status in {'final', 'amended'}
+              )
 
   define InDemographicComposed:
     [Patient] patient

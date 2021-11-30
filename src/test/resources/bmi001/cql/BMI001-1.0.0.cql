@@ -6,7 +6,6 @@ include FHIRHelpers version '4.0.1'
 
 parameter "MeasurementPeriod" Interval<DateTime> default Interval[@2021-01-01T00:00:00, @2021-12-31T00:00:00]
 
-/* Imran: CQL Engine does not seem to like value sets that refer to other value sets so using just the ICD10 value set here */
 valueset "BMI Over 35": 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1106.45'
 
 context Patient

@@ -75,8 +75,8 @@ public class BMI001Test {
             e.printStackTrace();
         }
 
-        libraryParameter.libraryUrl = testResourcePath + "/" + folder + "/cql";
-//        libraryParameter.libraryVersion = "1";
+        libraryParameter.libraryUrl = testResourcePath + "/" + folder;
+//        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
         libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/vocabulary/ValueSet";
         libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
         libraryParameter.model.modelName = "FHIR";
@@ -174,7 +174,6 @@ public class BMI001Test {
         String fhirVersion = "R4";
         List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
         CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
-        libraryParameter.libraryName = "BMI001";
         String folder = "bmi001";
 
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
@@ -186,6 +185,8 @@ public class BMI001Test {
         }
 
         libraryParameter.libraryUrl = "http://localhost:3000/4_0_0";
+        libraryParameter.libraryVersion = "1.0.0";
+        libraryParameter.libraryName = "BMI001";
         libraryParameter.libraryVersion = "1.0.0";
         libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/vocabulary/ValueSet";
         libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
@@ -233,7 +234,6 @@ public class BMI001Test {
         String fhirVersion = "R4";
         List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
         CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
-        libraryParameter.libraryName = "BMI001";
         String folder = "bmi001";
 
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
@@ -245,6 +245,7 @@ public class BMI001Test {
         }
 
         libraryParameter.libraryUrl = "http://localhost:3000/4_0_0";
+        libraryParameter.libraryName = "BMI001";
         libraryParameter.libraryVersion = "1.0.0";
         libraryParameter.terminologyUrl = "http://localhost:3000/4_0_0";
         libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
