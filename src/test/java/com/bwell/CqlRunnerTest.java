@@ -113,6 +113,7 @@ public class CqlRunnerTest {
             e.printStackTrace();
         }
 
+        String cqlVariablesToReturn = "InDemographicExists";
 
         try {
             new CqlRunner().runCqlLibrary(
@@ -120,6 +121,7 @@ public class CqlRunnerTest {
                     cqlLibraryName,
                     cqllibraryVersion,
                     terminologyUrl,
+                    cqlVariablesToReturn,
                     bundleJson
             );
         } catch (Exception e) {
