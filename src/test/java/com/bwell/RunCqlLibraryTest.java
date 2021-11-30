@@ -4,14 +4,14 @@ import com.holdenkarau.spark.testing.SharedJavaSparkContext;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
+import org.apache.spark.sql.functions;
 import org.apache.spark.sql.types.DataTypes;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.apache.spark.sql.functions;
 
 import java.io.File;
 
-public class RunCqlTest extends SharedJavaSparkContext {
+public class RunCqlLibraryTest extends SharedJavaSparkContext {
 
     private static final String testResourceRelativePath = "src/test/resources";
     private static String testResourcePath = null;
@@ -36,8 +36,8 @@ public class RunCqlTest extends SharedJavaSparkContext {
         Dataset<Row> df = sqlContext.read().option("multiLine", true).json(pathName);
 //        Dataset<Row> df = sqlContext.read().text(pathName);
         df.show();
-        df = df.withColumn("patientBundle1", org.apache.spark.sql.functions.struct(functions.col("resourceType"),functions.col("entry")));
-        df = df.withColumn("patientBundle", org.apache.spark.sql.functions.to_json(functions.col("patientBundle1")));
+        df = df.withColumn("patientBundle1", functions.struct(functions.col("resourceType"),functions.col("entry")));
+        df = df.withColumn("patientBundle", functions.to_json(functions.col("patientBundle1")));
         df.show();
         df.select("patientBundle1").printSchema();
         df.select("patientBundle").printSchema();
