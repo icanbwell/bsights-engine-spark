@@ -1,9 +1,4 @@
-library BMI001
-
-/*
-Every expression in this library should return non-null or a list with at least one element,
-with the exception of TestPatientDeceasedDateTime, which should return null
- */
+library BMI001 version '1.0.0'
 
 using FHIR version '4.0.1'
 
@@ -26,20 +21,14 @@ define InDemographicInline:
 
 /* Test composed definition */
 define InAgeCohort:
-    AgeInYearsAt(start of MeasurementPeriod) >= 16
+        AgeInYearsAt(start of MeasurementPeriod) >= 16
 
 define InQualifyingObservationCohort:
         exists([Observation: "BMI Over 35"] observation
-            where observation.status in {'final', 'amended'})
+                    where observation.status in {'final', 'amended'}
+              )
 
 define InDemographicComposed:
     [Patient] patient
         where InAgeCohort
             and InQualifyingObservationCohort
-
-define InDemographicExists:
-    exists (
-        [Patient] patient
-            where InAgeCohort
-                and InQualifyingObservationCohort
-    )

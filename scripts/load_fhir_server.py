@@ -32,7 +32,7 @@ def send_resource_to_fhir_server(data) -> None:
             }
         ]
     }
-    print(json_content)
+    # print(json_content)
     response = requests.post(f'http://fhir:3000/4_0_0/{resourceType}/0/$merge', json=json_content, headers=headers)
     print("Status code: ", response.status_code)
     print("Printing Entire Post Request")
@@ -67,6 +67,7 @@ def send_cql_to_fhir_server(library_name: str, library_version: str,  cql: str) 
     }
     send_resource_to_fhir_server(resource)
 
+parent_path = "/data"
 
 def main() -> int:
     print("Starting...")
@@ -75,35 +76,33 @@ def main() -> int:
 
 
 def load_cql() -> None:
-    parent_path = "/data"
     data_dir: Path = Path(parent_path).joinpath("./cql")
     for (root, dirs, file_names) in os.walk(data_dir):
         for file_name in file_names:
-            full_path = os.path.join(root, file_name)
-            print(full_path)
-            with open(full_path, "r") as f:
-                contents = f.read()
-                file_name_without_extension = file_name.replace(".cql", "")
-                library_name = file_name_without_extension.split("-")[0]
-                library_version = file_name_without_extension.split("-")[1]
-                send_cql_to_fhir_server(library_name, library_version,  contents)
+            if file_name.endswith(".cql"):
+                full_path = os.path.join(root, file_name)
+                print(full_path)
+                with open(full_path, "r") as f:
+                    contents = f.read()
+                    file_name_without_extension = file_name.replace(".cql", "")
+                    library_name = file_name_without_extension.split("-")[0]
+                    library_version = file_name_without_extension.split("-")[1]
+                    send_cql_to_fhir_server(library_name, library_version,  contents)
 
 def load_value_sets() -> None:
-    data_dir: Path = Path(os.getcwd()).joinpath("./vocabulary")
+    data_dir: Path = Path(parent_path).joinpath("./vocabulary")
     for (root, dirs, file_names) in os.walk(data_dir):
         for file_name in file_names:
-            full_path = os.path.join(root, file_name)
-            print(full_path)
-            with open(full_path, "r") as f:
-                contents = f.read()
-                # print(contents)
-                data = json.loads(contents)
-                print(data["resourceType"])
-                print(data["id"])
-                send_resource_to_fhir_server(data)
-            # print(file_name)
-            # data = json.load(file_name)
-            # print(data["resourceType"])
+            if file_name.endswith(".json"):
+                full_path = os.path.join(root, file_name)
+                print(full_path)
+                with open(full_path, "r") as f:
+                    contents = f.read()
+                    # print(contents)
+                    data = json.loads(contents)
+                    print(data["resourceType"])
+                    print(data["id"])
+                    send_resource_to_fhir_server(data)
 
 
 if __name__ == "__main__":

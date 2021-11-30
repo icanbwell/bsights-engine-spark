@@ -101,7 +101,7 @@ public class CqlRunnerTest {
     public void testRunCqlLibrary() throws Exception {
         String cqlLibraryName = "BMI001";
         String cqllibraryUrl = "http://localhost:3000/4_0_0";
-        String cqllibraryVersion = "1";
+        String cqllibraryVersion = "1.0.0";
         String terminologyUrl = "http://localhost:3000/4_0_0";
         String cqlVariablesToReturn = "InAgeCohort,InDemographicExists";
 
