@@ -4,8 +4,8 @@ import ca.uhn.fhir.context.FhirVersionEnum;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
-import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
+import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.execution.EvaluationResult;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.opencds.cqf.cql.engine.retrieve.RetrieveProvider;
@@ -19,9 +19,8 @@ import org.opencds.cqf.cql.evaluator.cql2elm.content.LibraryContentProvider;
 import org.opencds.cqf.cql.evaluator.dagger.CqlEvaluatorComponent;
 import org.opencds.cqf.cql.evaluator.dagger.DaggerCqlEvaluatorComponent;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class CqlRunner {
 
@@ -38,6 +37,7 @@ public class CqlRunner {
 
             public String contextValue;
         }
+
         public static class ModelParameter {
             public String modelName;
 
@@ -45,8 +45,9 @@ public class CqlRunner {
             public String modelBundle;
         }
     }
-    private Map<String, LibraryContentProvider> libraryContentProviderIndex = new HashMap<>();
-    private Map<String, TerminologyProvider> terminologyProviderIndex = new HashMap<>();
+
+    private final Map<String, LibraryContentProvider> libraryContentProviderIndex = new HashMap<>();
+    private final Map<String, TerminologyProvider> terminologyProviderIndex = new HashMap<>();
 
     public EvaluationResult runCql(String fhirVersion, List<LibraryParameter> libraries) {
         FhirVersionEnum fhirVersionEnum = FhirVersionEnum.valueOf(fhirVersion);
@@ -92,15 +93,14 @@ public class CqlRunner {
             }
 
             // load the data to evaluate
-            Triple<String, ModelResolver, RetrieveProvider> dataProvider = null;
+            Triple<String, ModelResolver, RetrieveProvider> dataProvider;
             DataProviderFactory dataProviderFactory = cqlEvaluatorComponent.createDataProviderFactory();
             if (library.model != null) {
                 // if model is provided as text then use it
-                if (library.model.modelBundle != null){
+                if (library.model.modelBundle != null) {
                     IBaseBundle bundle = ResourceLoader.loadResourceFromString(library.model.modelBundle);
                     dataProvider = dataProviderFactory.create(bundle);
-                }
-                else {
+                } else {
                     // load model from url
                     dataProvider = dataProviderFactory.create(new EndpointInfo().setAddress(library.model.modelUrl));
                 }
@@ -132,9 +132,7 @@ public class CqlRunner {
             try {
                 // run evaluator and return result
                 return evaluator.evaluate(identifier, contextParameter);
-            }
-            catch (Exception e) {
-                int foo = 1;
+            } catch (Exception e) {
                 throw e;
             }
 
@@ -146,6 +144,69 @@ public class CqlRunner {
         java.util.Map<String, String> newMap = new java.util.HashMap<>();
         newMap.put("key1", fhirBundle + "_1");
         newMap.put("key2", fhirBundle + "_2");
+
+        return newMap;
+    }
+
+    /**
+     * Runs the CQL Library
+     *
+     * @param cqlLibraryUrl:        link to fhir server that holds the CQL library
+     * @param cqlLibraryName:       name of cql library
+     * @param cqlLibraryVersion:    version of cql library
+     * @param terminologyUrl:       link to fhir server that holds the value set
+     * @param cqlVariablesToReturn: comma separated list of cql variables.  This functions returns a dictionary of values for these
+     * @param fhirBundle:           FHIR bundle that contains the patient resource and any related resources like observations, conditions etc
+     * @return map (dictionary) of variable name, value
+     * @throws Exception exception
+     */
+    Map<String, String> runCqlLibrary(
+            String cqlLibraryUrl,
+            String cqlLibraryName,
+            String cqlLibraryVersion,
+            String terminologyUrl,
+            String cqlVariablesToReturn,
+            String fhirBundle
+    ) throws Exception {
+        String fhirVersion = "R4";
+        List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
+        CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
+        libraryParameter.libraryName = cqlLibraryName;
+
+        libraryParameter.libraryUrl = cqlLibraryUrl;
+        libraryParameter.libraryVersion = cqlLibraryVersion;
+        libraryParameter.terminologyUrl = terminologyUrl;
+        libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
+        libraryParameter.model.modelName = "FHIR";
+        libraryParameter.model.modelBundle = fhirBundle;
+        libraryParameter.context = new CqlRunner.LibraryParameter.ContextParameter();
+        libraryParameter.context.contextName = "Patient";
+        libraryParameter.context.contextValue = "example";
+
+        libraries.add(libraryParameter);
+
+        List<String> cqlVariables = Arrays.stream(cqlVariablesToReturn.split(",")).map(String::trim).collect(Collectors.toList());
+
+        java.util.Map<String, String> newMap = new java.util.HashMap<>();
+
+        try {
+            EvaluationResult result = new CqlRunner().runCql(fhirVersion, libraries);
+            Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
+            for (Map.Entry<String, Object> libraryEntry : entrySet) {
+                String key = libraryEntry.getKey();
+                Object value = libraryEntry.getValue();
+                if (cqlVariables.contains(key)) {
+                    newMap.put(key, value.toString());
+                }
+            }
+        } catch (CqlException e) {
+            if (Objects.equals(e.getMessage(), "Unexpected exception caught during execution: ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException: HTTP 404 Not Found")) {
+                throw new Exception("NOTE: Did you run make loadfhir to load the fhir server?");
+            } else {
+                throw e;
+            }
+
+        }
 
         return newMap;
     }

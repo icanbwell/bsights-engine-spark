@@ -95,20 +95,43 @@ public class CqlRunnerTest {
 
         System.out.println();
 
-//        String output = outContent.toString();
-//
-//        assertTrue(output.contains("Patient=Patient(id=example)"));
-//        assertTrue(output.contains("TestAdverseEvent=[AdverseEvent(id=example)]"));
-//        assertTrue(output.contains("TestPatientGender=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientActive=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientBirthDate=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientMaritalStatusMembership=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientMartialStatusComparison=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientDeceasedAsBoolean=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientDeceasedAsDateTime=null"));
-//        assertTrue(output.contains("TestSlices=[Observation(id=blood-pressure)]"));
-//        assertTrue(output.contains("TestSimpleExtensions=Patient(id=example)"));
-//        assertTrue(output.contains("TestComplexExtensions=Patient(id=example)"));
+    }
+
+    @Test
+    public void testRunCqlLibrary() throws Exception {
+        String cqlLibraryName = "BMI001";
+        String cqllibraryUrl = "http://localhost:3000/4_0_0";
+        String cqllibraryVersion = "1.0.0";
+        String terminologyUrl = "http://localhost:3000/4_0_0";
+        String cqlVariablesToReturn = "InAgeCohort,InDemographicExists";
+
+        String folder = "bmi001";
+        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
+        String bundleJson = null;
+        try {
+            bundleJson = FileUtils.readFileToString(f, Charset.forName("UTF-8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        try {
+            Map<String, String> result = new CqlRunner().runCqlLibrary(
+                    cqllibraryUrl,
+                    cqlLibraryName,
+                    cqllibraryVersion,
+                    terminologyUrl,
+                    cqlVariablesToReturn,
+                    bundleJson
+            );
+            assertEquals(result.get("InAgeCohort"), "true");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+
+        System.out.println();
+
     }
 
     private String tempConvert(Object value) {

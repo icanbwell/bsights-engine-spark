@@ -75,7 +75,7 @@ public class BMI001Test {
             e.printStackTrace();
         }
 
-        libraryParameter.libraryUrl = testResourcePath + "/" + folder;
+        libraryParameter.libraryUrl = testResourcePath + "/" + folder + "/cql";
 //        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
         libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/vocabulary/ValueSet";
         libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
@@ -126,7 +126,7 @@ public class BMI001Test {
             e.printStackTrace();
         }
 
-        libraryParameter.libraryUrl = testResourcePath + "/" + folder;
+        libraryParameter.libraryUrl = testResourcePath + "/" + folder + "/cql";
 //        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
         libraryParameter.terminologyUrl = "http://localhost:3000/4_0_0";
         libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
@@ -185,6 +185,7 @@ public class BMI001Test {
         }
 
         libraryParameter.libraryUrl = "http://localhost:3000/4_0_0";
+        libraryParameter.libraryVersion = "1.0.0";
         libraryParameter.libraryName = "BMI001";
         libraryParameter.libraryVersion = "1.0.0";
         libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/vocabulary/ValueSet";

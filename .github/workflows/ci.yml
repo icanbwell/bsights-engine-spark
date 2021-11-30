@@ -2,9 +2,9 @@ name: Java CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -17,5 +17,9 @@ jobs:
         with:
           java-version: '8'
           distribution: 'adopt'
-      - name: Build with Maven
+      - name: Make up
+        run: make up
+      - name: Load FHIR
+        run: make loadfhir
+      - name: Run tests
         run: make tests
