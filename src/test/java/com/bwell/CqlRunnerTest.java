@@ -113,10 +113,10 @@ public class CqlRunnerTest {
             e.printStackTrace();
         }
 
-        String cqlVariablesToReturn = "InDemographicExists";
+        String cqlVariablesToReturn = "InAgeCohort,InDemographicExists";
 
         try {
-            new CqlRunner().runCqlLibrary(
+            Map<String, Object> result = new CqlRunner().runCqlLibrary(
                     cqllibraryUrl,
                     cqlLibraryName,
                     cqllibraryVersion,
@@ -124,6 +124,7 @@ public class CqlRunnerTest {
                     cqlVariablesToReturn,
                     bundleJson
             );
+            assertTrue((Boolean) result.get("InAgeCohort"));
         } catch (Exception e) {
             e.printStackTrace();
             throw e;

@@ -161,7 +161,7 @@ public class CqlRunner {
      * @return
      * @throws Exception
      */
-    Map<String, String> runCqlLibrary(
+    Map<String, Object> runCqlLibrary(
             String cqlLibraryUrl,
             String cqlLibraryName,
             String cqlLibraryVersion,
@@ -188,6 +188,8 @@ public class CqlRunner {
 
         List<String> cqlVariables = Arrays.asList( cqlVariablesToReturn.split(","));
 
+        java.util.Map<String, Object> newMap = new java.util.HashMap<>();
+
         try {
             EvaluationResult result = new CqlRunner().runCql(fhirVersion, libraries);
             Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
@@ -195,8 +197,7 @@ public class CqlRunner {
                 String key = libraryEntry.getKey();
                 Object value = libraryEntry.getValue();
                 if (cqlVariables.contains(key)) {
-                    Patient patient = (Patient) value;
-                    String identifier_value = patient.getIdentifier().get(0).getValue();
+                    newMap.put(key, value);
                 }
             }
         } catch (CqlException e) {
@@ -207,10 +208,6 @@ public class CqlRunner {
             }
 
         }
-
-        java.util.Map<String, String> newMap = new java.util.HashMap<>();
-        newMap.put("key1", fhirBundle + "_1");
-        newMap.put("key2", fhirBundle + "_2");
 
         return newMap;
     }
