@@ -160,7 +160,7 @@ public class CqlRunner {
      * @return map (dictionary) of variable name, value
      * @throws Exception exception
      */
-    Map<String, Object> runCqlLibrary(
+    Map<String, String> runCqlLibrary(
             String cqlLibraryUrl,
             String cqlLibraryName,
             String cqlLibraryVersion,
@@ -187,7 +187,7 @@ public class CqlRunner {
 
         List<String> cqlVariables = Arrays.stream(cqlVariablesToReturn.split(",")).map(String::trim).collect(Collectors.toList());
 
-        java.util.Map<String, Object> newMap = new java.util.HashMap<>();
+        java.util.Map<String, String> newMap = new java.util.HashMap<>();
 
         try {
             EvaluationResult result = new CqlRunner().runCql(fhirVersion, libraries);
@@ -196,7 +196,7 @@ public class CqlRunner {
                 String key = libraryEntry.getKey();
                 Object value = libraryEntry.getValue();
                 if (cqlVariables.contains(key)) {
-                    newMap.put(key, value);
+                    newMap.put(key, value.toString());
                 }
             }
         } catch (CqlException e) {

@@ -103,6 +103,7 @@ public class CqlRunnerTest {
         String cqllibraryUrl = "http://localhost:3000/4_0_0";
         String cqllibraryVersion = "1";
         String terminologyUrl = "http://localhost:3000/4_0_0";
+        String cqlVariablesToReturn = "InAgeCohort,InDemographicExists";
 
         String folder = "bmi001";
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
@@ -113,10 +114,9 @@ public class CqlRunnerTest {
             e.printStackTrace();
         }
 
-        String cqlVariablesToReturn = "InAgeCohort,InDemographicExists";
 
         try {
-            Map<String, Object> result = new CqlRunner().runCqlLibrary(
+            Map<String, String> result = new CqlRunner().runCqlLibrary(
                     cqllibraryUrl,
                     cqlLibraryName,
                     cqllibraryVersion,
@@ -124,7 +124,7 @@ public class CqlRunnerTest {
                     cqlVariablesToReturn,
                     bundleJson
             );
-            assertTrue((Boolean) result.get("InAgeCohort"));
+            assertEquals(result.get("InAgeCohort"), "true");
         } catch (Exception e) {
             e.printStackTrace();
             throw e;

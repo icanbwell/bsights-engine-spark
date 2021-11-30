@@ -6,10 +6,12 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.functions;
 import org.apache.spark.sql.types.DataTypes;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.util.List;
 
 public class RunCqlLibraryTest extends SharedJavaSparkContext {
 
@@ -20,16 +22,20 @@ public class RunCqlLibraryTest extends SharedJavaSparkContext {
     @BeforeClass
     public void setup() {
         this.runBefore();
-        jsc().setLogLevel("WARN");
+        jsc().setLogLevel("ERROR");
         File file = new File(testResourceRelativePath);
         testResourcePath = file.getAbsolutePath();
         System.out.println(String.format("Test resource directory: %s", testResourcePath));
     }
 
     @Test
-    public void testRunCqlUdf() {
+    public void testRunCqlLibraryUdf() {
         SQLContext sqlContext = new SQLContext(jsc());
-        sqlContext.sparkSession().udf().register("runCql", new RunCql(), DataTypes.createMapType(DataTypes.StringType, DataTypes.StringType));
+        sqlContext.sparkSession().udf().register(
+                "runCqlLibrary",
+                new RunCqlLibrary(),
+                DataTypes.createMapType(DataTypes.StringType, DataTypes.StringType)
+        );
 
         String pathName = testResourcePath + "/" + folder + "/bundles" + "/expected.json";
 
@@ -42,11 +48,24 @@ public class RunCqlLibraryTest extends SharedJavaSparkContext {
         df.select("patientBundle1").printSchema();
         df.select("patientBundle").printSchema();
         df.createOrReplaceTempView("numbersdata");
-        Dataset<Row> result_df = sqlContext.sql("SELECT runCql('cqlLibraryUrl', 'terminologyUrl', patientBundle) As ruleResults from numbersdata");
+
+        String cqlLibraryName = "BMI001";
+        String cqllibraryUrl = "http://localhost:3000/4_0_0";
+        String cqllibraryVersion = "1";
+        String terminologyUrl = "http://localhost:3000/4_0_0";
+        String cqlVariablesToReturn = "InAgeCohort,InDemographicExists";
+
+        String command = String.format(
+                "runCqlLibrary('%s', '%s','%s','%s','%s', patientBundle)",
+                cqllibraryUrl, cqlLibraryName, cqllibraryVersion, terminologyUrl, cqlVariablesToReturn);
+
+        Dataset<Row> result_df = sqlContext.sql("SELECT " + command + " As ruleResults from numbersdata");
         result_df.printSchema();
         result_df.show(10, false);
 
-        result_df.selectExpr("ruleResults['key1'] as key1").show();
-        result_df.selectExpr("ruleResults['key2'] as key2").show();
+        result_df.selectExpr("ruleResults['InAgeCohort'] as InAgeCohort").show();
+        List<Row> rows = result_df.selectExpr("ruleResults['InAgeCohort'] as InAgeCohort").collectAsList();
+        Assert.assertEquals(rows.get(0).get(0), "true");
+//        result_df.selectExpr("ruleResults['key2'] as key2").show();
     }
 }
