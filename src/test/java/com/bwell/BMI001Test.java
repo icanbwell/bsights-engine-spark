@@ -75,7 +75,7 @@ public class BMI001Test {
             e.printStackTrace();
         }
 
-        libraryParameter.libraryUrl = testResourcePath + "/" + folder;
+        libraryParameter.libraryUrl = testResourcePath + "/" + folder + "/cql";
 //        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
         libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/vocabulary/ValueSet";
         libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
