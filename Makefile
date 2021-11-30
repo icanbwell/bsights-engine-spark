@@ -31,7 +31,7 @@ down: ## Brings down all the services in docker-compose
 
 .PHONY:buildjar
 buildjar:  ## Updates all the packages using Pipfile # (it takes a long time) make run-pre-commit
-	mvn clean && mvn package && \
+	mvn clean && mvn -Dmaven.test.skip package && \
 	mvn dependency:copy-dependencies -DoutputDirectory=target/jars -Dhttps.protocols=TLSv1.2
 
 .PHONY:loadfhir
