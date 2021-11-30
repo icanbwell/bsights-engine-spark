@@ -10,7 +10,7 @@ ENV CLASSPATH=/helix.pipelines/jars:/opt/bitnami/spark/jars/:$CLASSPATH
 COPY ./pom.xml /helix.pipelines/
 WORKDIR /helix.pipelines
 
-RUN mvn verify clean --fail-never
+RUN mvn --batch-mode --update-snapshots verify clean
 
 # now get the rest of the code and create the package
 COPY ./src/ /helix.pipelines/src/
