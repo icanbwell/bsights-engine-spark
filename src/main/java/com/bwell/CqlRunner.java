@@ -5,7 +5,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
-import org.hl7.fhir.r4.model.Patient;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.execution.EvaluationResult;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
@@ -21,6 +20,7 @@ import org.opencds.cqf.cql.evaluator.dagger.CqlEvaluatorComponent;
 import org.opencds.cqf.cql.evaluator.dagger.DaggerCqlEvaluatorComponent;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CqlRunner {
 
@@ -46,8 +46,8 @@ public class CqlRunner {
         }
     }
 
-    private Map<String, LibraryContentProvider> libraryContentProviderIndex = new HashMap<>();
-    private Map<String, TerminologyProvider> terminologyProviderIndex = new HashMap<>();
+    private final Map<String, LibraryContentProvider> libraryContentProviderIndex = new HashMap<>();
+    private final Map<String, TerminologyProvider> terminologyProviderIndex = new HashMap<>();
 
     public EvaluationResult runCql(String fhirVersion, List<LibraryParameter> libraries) {
         FhirVersionEnum fhirVersionEnum = FhirVersionEnum.valueOf(fhirVersion);
@@ -93,7 +93,7 @@ public class CqlRunner {
             }
 
             // load the data to evaluate
-            Triple<String, ModelResolver, RetrieveProvider> dataProvider = null;
+            Triple<String, ModelResolver, RetrieveProvider> dataProvider;
             DataProviderFactory dataProviderFactory = cqlEvaluatorComponent.createDataProviderFactory();
             if (library.model != null) {
                 // if model is provided as text then use it
@@ -133,7 +133,6 @@ public class CqlRunner {
                 // run evaluator and return result
                 return evaluator.evaluate(identifier, contextParameter);
             } catch (Exception e) {
-                int foo = 1;
                 throw e;
             }
 
@@ -152,14 +151,14 @@ public class CqlRunner {
     /**
      * Runs the CQL Library
      *
-     * @param cqlLibraryUrl:     link to fhir server that holds the CQL library
-     * @param cqlLibraryName:    name of cql library
-     * @param cqlLibraryVersion: version of cql library
-     * @param terminologyUrl:    link to fhir server that holds the value set
+     * @param cqlLibraryUrl:        link to fhir server that holds the CQL library
+     * @param cqlLibraryName:       name of cql library
+     * @param cqlLibraryVersion:    version of cql library
+     * @param terminologyUrl:       link to fhir server that holds the value set
      * @param cqlVariablesToReturn: comma separated list of cql variables.  This functions returns a dictionary of values for these
-     * @param fhirBundle:        FHIR bundle that contains the patient resource and any related resources like observations, conditions etc
-     * @return
-     * @throws Exception
+     * @param fhirBundle:           FHIR bundle that contains the patient resource and any related resources like observations, conditions etc
+     * @return map (dictionary) of variable name, value
+     * @throws Exception exception
      */
     Map<String, Object> runCqlLibrary(
             String cqlLibraryUrl,
@@ -186,7 +185,7 @@ public class CqlRunner {
 
         libraries.add(libraryParameter);
 
-        List<String> cqlVariables = Arrays.asList( cqlVariablesToReturn.split(","));
+        List<String> cqlVariables = Arrays.stream(cqlVariablesToReturn.split(",")).map(String::trim).collect(Collectors.toList());
 
         java.util.Map<String, Object> newMap = new java.util.HashMap<>();
 
