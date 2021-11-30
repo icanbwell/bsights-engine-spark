@@ -98,7 +98,7 @@ public class CqlRunnerTest {
     }
 
     @Test
-    public void testRunCql2() throws Exception {
+    public void testRunCqlLibrary() throws Exception {
         String cqlLibraryName = "BMI001";
         String cqllibraryUrl = "http://localhost:3000/4_0_0";
         String cqllibraryVersion = "1";
