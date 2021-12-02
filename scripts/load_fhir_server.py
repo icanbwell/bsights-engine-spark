@@ -73,10 +73,12 @@ def main() -> int:
     print("Starting...")
     load_cql()
     load_value_sets()
+    load_code_systems()
 
 
 def load_cql() -> None:
     data_dir: Path = Path(parent_path).joinpath("./cql")
+    print(data_dir)
     for (root, dirs, file_names) in os.walk(data_dir):
         for file_name in file_names:
             if file_name.endswith(".cql"):
@@ -104,6 +106,20 @@ def load_value_sets() -> None:
                     print(data["id"])
                     send_resource_to_fhir_server(data)
 
+def load_code_systems() -> None:
+    data_dir: Path = Path(parent_path).joinpath("./terminology")
+    for (root, dirs, file_names) in os.walk(data_dir):
+        for file_name in file_names:
+            if file_name.endswith(".json"):
+                full_path = os.path.join(root, file_name)
+                print(full_path)
+                with open(full_path, "r") as f:
+                    contents = f.read()
+                    # print(contents)
+                    data = json.loads(contents)
+                    print(data["resourceType"])
+                    print(data["id"])
+                    send_resource_to_fhir_server(data)
 
 if __name__ == "__main__":
     exit(main())
