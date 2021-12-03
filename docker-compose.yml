@@ -60,7 +60,7 @@ services:
     volumes:
       - ./scripts/load_fhir_server.py:/scripts/load_fhir_server.py
       - ./src/test/resources/bmi001/cql:/data/cql/bmi001/
-      - ./src/test/resources/bmi001/vocabulary:/data/vocabulary/bmi001/
+      - ./src/test/resources/bmi001/terminology:/data/terminology/bmi001/
       - ./src/test/resources/diab001/cql:/data/cql/diab001/
       - ./src/test/resources/diab001/terminology:/data/terminology/diab001/
     command: tail -f /dev/null

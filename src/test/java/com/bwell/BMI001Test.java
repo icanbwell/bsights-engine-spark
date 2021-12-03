@@ -77,7 +77,7 @@ public class BMI001Test {
 
         libraryParameter.libraryUrl = testResourcePath + "/" + folder + "/cql";
 //        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
-        libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/vocabulary/ValueSet";
+        libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/terminology";
         libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
         libraryParameter.model.modelName = "FHIR";
 //        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
@@ -188,7 +188,7 @@ public class BMI001Test {
         libraryParameter.libraryVersion = "1.0.0";
         libraryParameter.libraryName = "BMI001";
         libraryParameter.libraryVersion = "1.0.0";
-        libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/vocabulary/ValueSet";
+        libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/terminology";
         libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
         libraryParameter.model.modelName = "FHIR";
 //        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;

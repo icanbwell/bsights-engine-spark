@@ -72,8 +72,9 @@ parent_path = "/data"
 def main() -> int:
     print("Starting...")
     load_cql()
-    load_value_sets()
-    load_code_systems()
+#     load_value_sets()
+#     load_code_systems()
+    load_terminology()
 
 
 def load_cql() -> None:
@@ -91,7 +92,7 @@ def load_cql() -> None:
                     library_version = file_name_without_extension.split("-")[1]
                     send_cql_to_fhir_server(library_name, library_version,  contents)
 
-def load_value_sets() -> None:
+""" def load_value_sets() -> None:
     data_dir: Path = Path(parent_path).joinpath("./vocabulary")
     for (root, dirs, file_names) in os.walk(data_dir):
         for file_name in file_names:
@@ -104,9 +105,24 @@ def load_value_sets() -> None:
                     data = json.loads(contents)
                     print(data["resourceType"])
                     print(data["id"])
-                    send_resource_to_fhir_server(data)
+                    send_resource_to_fhir_server(data) """
 
-def load_code_systems() -> None:
+""" def load_code_systems() -> None:
+    data_dir: Path = Path(parent_path).joinpath("./terminology")
+    for (root, dirs, file_names) in os.walk(data_dir):
+        for file_name in file_names:
+            if file_name.endswith(".json"):
+                full_path = os.path.join(root, file_name)
+                print(full_path)
+                with open(full_path, "r") as f:
+                    contents = f.read()
+                    # print(contents)
+                    data = json.loads(contents)
+                    print(data["resourceType"])
+                    print(data["id"])
+                    send_resource_to_fhir_server(data) """
+
+def load_terminology() -> None:
     data_dir: Path = Path(parent_path).joinpath("./terminology")
     for (root, dirs, file_names) in os.walk(data_dir):
         for file_name in file_names:
