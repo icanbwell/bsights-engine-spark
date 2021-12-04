@@ -62,8 +62,8 @@ public class BMI001Test {
     public void testBMI001Bundle() {
 
         String fhirVersion = "R4";
-        List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
-        CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
+        List<LibraryParameter> libraries = new ArrayList<>();
+        LibraryParameter libraryParameter = new LibraryParameter();
         libraryParameter.libraryName = "BMI001";
         String folder = "bmi001";
 
@@ -78,11 +78,11 @@ public class BMI001Test {
         libraryParameter.libraryUrl = testResourcePath + "/" + folder + "/cql";
 //        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
         libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/terminology";
-        libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
+        libraryParameter.model = new LibraryParameter.ModelParameter();
         libraryParameter.model.modelName = "FHIR";
 //        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new CqlRunner.LibraryParameter.ContextParameter();
+        libraryParameter.context = new LibraryParameter.ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
 
@@ -113,8 +113,8 @@ public class BMI001Test {
     public void testBMI001BundleTerminologyFromFhirServer() throws Exception {
 
         String fhirVersion = "R4";
-        List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
-        CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
+        List<LibraryParameter> libraries = new ArrayList<>();
+        LibraryParameter libraryParameter = new LibraryParameter();
         libraryParameter.libraryName = "BMI001";
         String folder = "bmi001";
 
@@ -129,11 +129,11 @@ public class BMI001Test {
         libraryParameter.libraryUrl = testResourcePath + "/" + folder + "/cql";
 //        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
         libraryParameter.terminologyUrl = "http://localhost:3000/4_0_0";
-        libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
+        libraryParameter.model = new LibraryParameter.ModelParameter();
         libraryParameter.model.modelName = "FHIR";
 //        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new CqlRunner.LibraryParameter.ContextParameter();
+        libraryParameter.context = new LibraryParameter.ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
 
@@ -172,8 +172,8 @@ public class BMI001Test {
     @Test
     public void testBMI001BundleCqlFromFhirServer() throws Exception {
         String fhirVersion = "R4";
-        List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
-        CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
+        List<LibraryParameter> libraries = new ArrayList<>();
+        LibraryParameter libraryParameter = new LibraryParameter();
         String folder = "bmi001";
 
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
@@ -189,11 +189,11 @@ public class BMI001Test {
         libraryParameter.libraryName = "BMI001";
         libraryParameter.libraryVersion = "1.0.0";
         libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/terminology";
-        libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
+        libraryParameter.model = new LibraryParameter.ModelParameter();
         libraryParameter.model.modelName = "FHIR";
 //        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new CqlRunner.LibraryParameter.ContextParameter();
+        libraryParameter.context = new LibraryParameter.ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
 
@@ -232,8 +232,8 @@ public class BMI001Test {
     @Test
     public void testBMI001BundleCqlAndTerminologyFromFhirServer() throws Exception {
         String fhirVersion = "R4";
-        List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
-        CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
+        List<LibraryParameter> libraries = new ArrayList<>();
+        LibraryParameter libraryParameter = new LibraryParameter();
         String folder = "bmi001";
 
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
@@ -248,11 +248,11 @@ public class BMI001Test {
         libraryParameter.libraryName = "BMI001";
         libraryParameter.libraryVersion = "1.0.0";
         libraryParameter.terminologyUrl = "http://localhost:3000/4_0_0";
-        libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
+        libraryParameter.model = new LibraryParameter.ModelParameter();
         libraryParameter.model.modelName = "FHIR";
 //        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new CqlRunner.LibraryParameter.ContextParameter();
+        libraryParameter.context = new LibraryParameter.ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
 

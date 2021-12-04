@@ -13,7 +13,7 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.util.List;
 
-public class RunCqlLibraryTest extends SharedJavaSparkContext {
+public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
 
     private static final String testResourceRelativePath = "src/test/resources";
     private static String testResourcePath = null;

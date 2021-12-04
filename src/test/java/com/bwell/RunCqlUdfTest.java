@@ -11,7 +11,7 @@ import org.apache.spark.sql.functions;
 
 import java.io.File;
 
-public class RunCqlTest extends SharedJavaSparkContext {
+public class RunCqlUdfTest extends SharedJavaSparkContext {
 
     private static final String testResourceRelativePath = "src/test/resources";
     private static String testResourcePath = null;

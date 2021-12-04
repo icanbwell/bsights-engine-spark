@@ -12,7 +12,7 @@ public class RunCqlLibrary implements UDF6<String, String, String, String, Strin
                                               String terminologyUrl,
                                               String cqlVariablesToReturn,
                                               String fhirBundle) throws Exception {
-        return new CqlRunner().runCqlLibrary(
+        return new MeasureRunner().runCqlLibrary(
                 cqlLibraryUrl,
                 cqlLibraryName,
                 cqlLibraryVersion,

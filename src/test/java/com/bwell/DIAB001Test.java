@@ -62,8 +62,8 @@ public class DIAB001Test {
     public void testDIAB001Bundle() {
 
         String fhirVersion = "R4";
-        List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
-        CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
+        List<LibraryParameter> libraries = new ArrayList<>();
+        LibraryParameter libraryParameter = new LibraryParameter();
         libraryParameter.libraryName = "DIAB001";
         String folder = "diab001";
 
@@ -78,11 +78,11 @@ public class DIAB001Test {
         libraryParameter.libraryUrl = testResourcePath + "/" + folder + "/cql";
 //        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
 //        libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/vocabulary/ValueSet";
-        libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
+        libraryParameter.model = new LibraryParameter.ModelParameter();
         libraryParameter.model.modelName = "FHIR";
 //        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new CqlRunner.LibraryParameter.ContextParameter();
+        libraryParameter.context = new LibraryParameter.ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
 
@@ -129,8 +129,8 @@ public class DIAB001Test {
     @Test
     public void testDIAB001BundleCqlFromFhirServer() throws Exception {
         String fhirVersion = "R4";
-        List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
-        CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
+        List<LibraryParameter> libraries = new ArrayList<>();
+        LibraryParameter libraryParameter = new LibraryParameter();
         String folder = "diab001";
 
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
@@ -146,11 +146,11 @@ public class DIAB001Test {
         libraryParameter.libraryName = "DIAB001";
         libraryParameter.libraryVersion = "1.0.0";
         libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/terminology";
-        libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
+        libraryParameter.model = new LibraryParameter.ModelParameter();
         libraryParameter.model.modelName = "FHIR";
 //        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new CqlRunner.LibraryParameter.ContextParameter();
+        libraryParameter.context = new LibraryParameter.ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
 
@@ -189,8 +189,8 @@ public class DIAB001Test {
     @Test
     public void testDIAB001BundleCqlAndTerminologyFromFhirServer() throws Exception {
         String fhirVersion = "R4";
-        List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
-        CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
+        List<LibraryParameter> libraries = new ArrayList<>();
+        LibraryParameter libraryParameter = new LibraryParameter();
         String folder = "diab001";
 
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
@@ -205,11 +205,11 @@ public class DIAB001Test {
         libraryParameter.libraryName = "DIAB001";
         libraryParameter.libraryVersion = "1.0.0";
         libraryParameter.terminologyUrl = "http://localhost:3000/4_0_0";
-        libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
+        libraryParameter.model = new LibraryParameter.ModelParameter();
         libraryParameter.model.modelName = "FHIR";
 //        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new CqlRunner.LibraryParameter.ContextParameter();
+        libraryParameter.context = new LibraryParameter.ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
 

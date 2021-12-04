@@ -22,7 +22,7 @@ import org.opencds.cqf.cql.evaluator.dagger.DaggerCqlEvaluatorComponent;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CqlRunner {
+public class MeasureRunner {
 
 /*    static public class LibraryParameter {
         public String libraryUrl;
@@ -140,15 +140,9 @@ public class CqlRunner {
         return null;
     }
 
-    Map<String, String> runCql2(String cqlLibraryUrl, String terminologyUrl, String fhirBundle) {
-        java.util.Map<String, String> newMap = new java.util.HashMap<>();
-        newMap.put("key1", fhirBundle + "_1");
-        newMap.put("key2", fhirBundle + "_2");
 
-        return newMap;
-    }
 
-/*    *//**
+    /**
      * Runs the CQL Library
      *
      * @param cqlLibraryUrl:        link to fhir server that holds the CQL library
@@ -159,7 +153,7 @@ public class CqlRunner {
      * @param fhirBundle:           FHIR bundle that contains the patient resource and any related resources like observations, conditions etc
      * @return map (dictionary) of variable name, value
      * @throws Exception exception
-     *//*
+     */
     Map<String, String> runCqlLibrary(
             String cqlLibraryUrl,
             String cqlLibraryName,
@@ -169,17 +163,17 @@ public class CqlRunner {
             String fhirBundle
     ) throws Exception {
         String fhirVersion = "R4";
-        List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
-        CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
+        List<LibraryParameter> libraries = new ArrayList<>();
+        LibraryParameter libraryParameter = new LibraryParameter();
         libraryParameter.libraryName = cqlLibraryName;
 
         libraryParameter.libraryUrl = cqlLibraryUrl;
         libraryParameter.libraryVersion = cqlLibraryVersion;
         libraryParameter.terminologyUrl = terminologyUrl;
-        libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
+        libraryParameter.model = new LibraryParameter.ModelParameter();
         libraryParameter.model.modelName = "FHIR";
         libraryParameter.model.modelBundle = fhirBundle;
-        libraryParameter.context = new CqlRunner.LibraryParameter.ContextParameter();
+        libraryParameter.context = new LibraryParameter.ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
 
@@ -187,10 +181,10 @@ public class CqlRunner {
 
         List<String> cqlVariables = Arrays.stream(cqlVariablesToReturn.split(",")).map(String::trim).collect(Collectors.toList());
 
-        java.util.Map<String, String> newMap = new java.util.HashMap<>();
+        Map<String, String> newMap = new HashMap<>();
 
         try {
-            EvaluationResult result = new CqlRunner().runCql(fhirVersion, libraries);
+            EvaluationResult result = new MeasureRunner().runCql(fhirVersion, libraries);
             Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
             for (Map.Entry<String, Object> libraryEntry : entrySet) {
                 String key = libraryEntry.getKey();
@@ -209,5 +203,5 @@ public class CqlRunner {
         }
 
         return newMap;
-    }*/
+    }
 }
