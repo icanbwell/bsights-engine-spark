@@ -1,8 +1,7 @@
 package com.bwell.runner;
 
+import com.bwell.common.*;
 import ca.uhn.fhir.context.FhirVersionEnum;
-import com.bwell.common.LibraryParameter;
-import com.bwell.common.ResourceLoader;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
@@ -150,10 +149,10 @@ public class MeasureRunner {
         libraryParameter.libraryUrl = cqlLibraryUrl;
         libraryParameter.libraryVersion = cqlLibraryVersion;
         libraryParameter.terminologyUrl = terminologyUrl;
-        libraryParameter.model = new LibraryParameter.ModelParameter();
+        libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
         libraryParameter.model.modelBundle = fhirBundle;
-        libraryParameter.context = new LibraryParameter.ContextParameter();
+        libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
 

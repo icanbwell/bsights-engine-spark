@@ -1,6 +1,6 @@
 package com.bwell.measure;
 
-import com.bwell.common.LibraryParameter;
+import com.bwell.common.*;
 import com.bwell.runner.MeasureRunner;
 import org.apache.commons.io.FileUtils;
 import org.hl7.fhir.instance.model.api.IBase;
@@ -78,10 +78,10 @@ public class DIAB001Test {
         }
 
         libraryParameter.libraryUrl = testResourcePath + "/" + folder + "/cql";
-        libraryParameter.model = new LibraryParameter.ModelParameter();
+        libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new LibraryParameter.ContextParameter();
+        libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
         libraries.add(libraryParameter);
@@ -128,10 +128,10 @@ public class DIAB001Test {
         libraryParameter.libraryName = "DIAB001";
         libraryParameter.libraryVersion = "1.0.0";
         libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/terminology";
-        libraryParameter.model = new LibraryParameter.ModelParameter();
+        libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new LibraryParameter.ContextParameter();
+        libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
         libraries.add(libraryParameter);
@@ -185,10 +185,10 @@ public class DIAB001Test {
         libraryParameter.libraryName = "DIAB001";
         libraryParameter.libraryVersion = "1.0.0";
         libraryParameter.terminologyUrl = "http://localhost:3000/4_0_0";
-        libraryParameter.model = new LibraryParameter.ModelParameter();
+        libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new LibraryParameter.ContextParameter();
+        libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
         libraries.add(libraryParameter);

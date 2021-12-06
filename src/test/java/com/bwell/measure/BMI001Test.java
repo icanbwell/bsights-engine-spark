@@ -1,6 +1,6 @@
 package com.bwell.measure;
 
-import com.bwell.common.LibraryParameter;
+import com.bwell.common.*;
 import com.bwell.runner.MeasureRunner;
 import org.apache.commons.io.FileUtils;
 import org.hl7.fhir.instance.model.api.IBase;
@@ -78,13 +78,11 @@ public class BMI001Test {
         }
 
         libraryParameter.libraryUrl = testResourcePath + "/" + folder + "/cql";
-//        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
         libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/terminology";
-        libraryParameter.model = new LibraryParameter.ModelParameter();
+        libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
-//        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new LibraryParameter.ContextParameter();
+        libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
 
@@ -129,13 +127,11 @@ public class BMI001Test {
         }
 
         libraryParameter.libraryUrl = testResourcePath + "/" + folder + "/cql";
-//        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
         libraryParameter.terminologyUrl = "http://localhost:3000/4_0_0";
-        libraryParameter.model = new LibraryParameter.ModelParameter();
+        libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
-//        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new LibraryParameter.ContextParameter();
+        libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
 
@@ -187,15 +183,13 @@ public class BMI001Test {
         }
 
         libraryParameter.libraryUrl = "http://localhost:3000/4_0_0";
-        libraryParameter.libraryVersion = "1.0.0";
         libraryParameter.libraryName = "BMI001";
         libraryParameter.libraryVersion = "1.0.0";
         libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/terminology";
-        libraryParameter.model = new LibraryParameter.ModelParameter();
+        libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
-//        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new LibraryParameter.ContextParameter();
+        libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
 
@@ -250,11 +244,10 @@ public class BMI001Test {
         libraryParameter.libraryName = "BMI001";
         libraryParameter.libraryVersion = "1.0.0";
         libraryParameter.terminologyUrl = "http://localhost:3000/4_0_0";
-        libraryParameter.model = new LibraryParameter.ModelParameter();
+        libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
-//        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new LibraryParameter.ContextParameter();
+        libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
 

@@ -1,5 +1,6 @@
 package com.bwell.runner;
 
+import com.bwell.common.*;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
@@ -8,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.bwell.common.LibraryParameter;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseDatatype;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -65,12 +65,11 @@ public class CqlRunnerTest {
         LibraryParameter libraryParameter = new LibraryParameter();
         libraryParameter.libraryName = "TestFHIR";
         libraryParameter.libraryUrl = testResourcePath + "/r4";
-//        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
         libraryParameter.terminologyUrl = testResourcePath + "/r4/vocabulary/ValueSet";
-        libraryParameter.model = new LibraryParameter.ModelParameter();
+        libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
         libraryParameter.model.modelUrl = testResourcePath + "/r4";
-        libraryParameter.context = new LibraryParameter.ContextParameter();
+        libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
 
@@ -94,43 +93,6 @@ public class CqlRunnerTest {
         System.out.println();
 
     }
-
-/*    @Test
-    public void testRunCqlLibrary() throws Exception {
-        String cqlLibraryName = "BMI001";
-        String cqllibraryUrl = "http://localhost:3000/4_0_0";
-        String cqllibraryVersion = "1.0.0";
-        String terminologyUrl = "http://localhost:3000/4_0_0";
-        String cqlVariablesToReturn = "InAgeCohort,InDemographicExists";
-
-        String folder = "bmi001";
-        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
-        String bundleJson = null;
-        try {
-            bundleJson = FileUtils.readFileToString(f, Charset.forName("UTF-8"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        try {
-            Map<String, String> result = new MeasureRunner().runCqlLibrary(
-                    cqllibraryUrl,
-                    cqlLibraryName,
-                    cqllibraryVersion,
-                    terminologyUrl,
-                    cqlVariablesToReturn,
-                    bundleJson
-            );
-            assertEquals(result.get("InAgeCohort"), "true");
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
-
-        System.out.println();
-
-    }*/
 
     private String tempConvert(Object value) {
         if (value == null) {
