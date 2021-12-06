@@ -1,5 +1,6 @@
-package com.bwell;
+package com.bwell.spark;
 
+import com.bwell.runner.MeasureRunner;
 import org.apache.spark.sql.api.java.UDF6;
 
 public class RunCqlLibrary implements UDF6<String, String, String, String, String, String, java.util.Map<String, String>> {

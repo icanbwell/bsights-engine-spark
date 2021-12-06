@@ -1,5 +1,7 @@
-package com.bwell;
+package com.bwell.measure;
 
+import com.bwell.common.LibraryParameter;
+import com.bwell.runner.MeasureRunner;
 import org.apache.commons.io.FileUtils;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseDatatype;
@@ -21,7 +23,7 @@ import java.util.*;
 
 import static org.testng.Assert.assertEquals;
 
-public class BMI001Test {
+public class DIAB001Test {
     private ByteArrayOutputStream outContent;
     private ByteArrayOutputStream errContent;
     private final PrintStream originalOut = System.out;
@@ -59,13 +61,13 @@ public class BMI001Test {
     }
 
     @Test
-    public void testBMI001Bundle() {
+    public void testDIAB001Bundle() {
 
         String fhirVersion = "R4";
         List<LibraryParameter> libraries = new ArrayList<>();
         LibraryParameter libraryParameter = new LibraryParameter();
-        libraryParameter.libraryName = "BMI001";
-        String folder = "bmi001";
+        libraryParameter.libraryName = "DIAB001";
+        String folder = "diab001";
 
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
         String bundleJson = null;
@@ -76,19 +78,15 @@ public class BMI001Test {
         }
 
         libraryParameter.libraryUrl = testResourcePath + "/" + folder + "/cql";
-//        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
-        libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/terminology";
         libraryParameter.model = new LibraryParameter.ModelParameter();
         libraryParameter.model.modelName = "FHIR";
-//        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
         libraryParameter.model.modelBundle = bundleJson;
         libraryParameter.context = new LibraryParameter.ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
-
         libraries.add(libraryParameter);
 
-        EvaluationResult result = new CqlRunner().runCql(fhirVersion, libraries);
+        EvaluationResult result = new MeasureRunner().runCql(fhirVersion, libraries);
 
         Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
         for (Map.Entry<String, Object> libraryEntry : entrySet) {
@@ -96,9 +94,11 @@ public class BMI001Test {
             Object value = libraryEntry.getValue();
             if (key.equals("Patient")) {
                 Patient patient = (Patient) value;
+
                 String mr_identifier_value = patient.getIdentifier().get(0).getValue(); // medical record number
                 System.out.println(key + ": Medical Record ID = " + mr_identifier_value);
                 assertEquals(mr_identifier_value, "12345");
+
                 String patient_id = patient.getId();  // patient id
                 System.out.println(key + ": Patient ID = " + patient_id);
                 assertEquals(patient_id, "example");
@@ -110,71 +110,11 @@ public class BMI001Test {
     }
 
     @Test
-    public void testBMI001BundleTerminologyFromFhirServer() throws Exception {
-
+    public void testDIAB001BundleCqlFromFhirServer() throws Exception {
         String fhirVersion = "R4";
         List<LibraryParameter> libraries = new ArrayList<>();
         LibraryParameter libraryParameter = new LibraryParameter();
-        libraryParameter.libraryName = "BMI001";
-        String folder = "bmi001";
-
-        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
-        String bundleJson = null;
-        try {
-            bundleJson = FileUtils.readFileToString(f, Charset.forName("UTF-8"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        libraryParameter.libraryUrl = testResourcePath + "/" + folder + "/cql";
-//        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
-        libraryParameter.terminologyUrl = "http://localhost:3000/4_0_0";
-        libraryParameter.model = new LibraryParameter.ModelParameter();
-        libraryParameter.model.modelName = "FHIR";
-//        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
-        libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new LibraryParameter.ContextParameter();
-        libraryParameter.context.contextName = "Patient";
-        libraryParameter.context.contextValue = "example";
-
-        libraries.add(libraryParameter);
-
-        try {
-            EvaluationResult result = new CqlRunner().runCql(fhirVersion, libraries);
-            Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
-            for (Map.Entry<String, Object> libraryEntry : entrySet) {
-                String key = libraryEntry.getKey();
-                Object value = libraryEntry.getValue();
-                if (key.equals("Patient")) {
-                    Patient patient = (Patient) value;
-                    String mr_identifier_value = patient.getIdentifier().get(0).getValue(); // medical record number
-                    System.out.println(key + ": Medical Record ID = " + mr_identifier_value);
-                    assertEquals(mr_identifier_value, "12345");
-                    String patient_id = patient.getId();  // patient id
-                    System.out.println(key + ": Patient ID = " + patient_id);
-                    assertEquals(patient_id, "example");
-                }
-                System.out.println(key + "=" + tempConvert(value));
-            }
-        } catch (CqlException e) {
-            if (Objects.equals(e.getMessage(), "Unexpected exception caught during execution: ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException: HTTP 404 Not Found")) {
-                throw new Exception("NOTE: Did you run make loadfhir to load the fhir server?");
-            }
-            else {
-                throw e;
-            }
-
-        }
-
-        System.out.println();
-    }
-
-    @Test
-    public void testBMI001BundleCqlFromFhirServer() throws Exception {
-        String fhirVersion = "R4";
-        List<LibraryParameter> libraries = new ArrayList<>();
-        LibraryParameter libraryParameter = new LibraryParameter();
-        String folder = "bmi001";
+        String folder = "diab001";
 
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
         String bundleJson = null;
@@ -185,22 +125,19 @@ public class BMI001Test {
         }
 
         libraryParameter.libraryUrl = "http://localhost:3000/4_0_0";
-        libraryParameter.libraryVersion = "1.0.0";
-        libraryParameter.libraryName = "BMI001";
+        libraryParameter.libraryName = "DIAB001";
         libraryParameter.libraryVersion = "1.0.0";
         libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/terminology";
         libraryParameter.model = new LibraryParameter.ModelParameter();
         libraryParameter.model.modelName = "FHIR";
-//        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
         libraryParameter.model.modelBundle = bundleJson;
         libraryParameter.context = new LibraryParameter.ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
-
         libraries.add(libraryParameter);
 
         try {
-            EvaluationResult result = new CqlRunner().runCql(fhirVersion, libraries);
+            EvaluationResult result = new MeasureRunner().runCql(fhirVersion, libraries);
             Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
             for (Map.Entry<String, Object> libraryEntry : entrySet) {
                 String key = libraryEntry.getKey();
@@ -230,11 +167,11 @@ public class BMI001Test {
     }
 
     @Test
-    public void testBMI001BundleCqlAndTerminologyFromFhirServer() throws Exception {
+    public void testDIAB001BundleCqlAndTerminologyFromFhirServer() throws Exception {
         String fhirVersion = "R4";
         List<LibraryParameter> libraries = new ArrayList<>();
         LibraryParameter libraryParameter = new LibraryParameter();
-        String folder = "bmi001";
+        String folder = "diab001";
 
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
         String bundleJson = null;
@@ -245,21 +182,19 @@ public class BMI001Test {
         }
 
         libraryParameter.libraryUrl = "http://localhost:3000/4_0_0";
-        libraryParameter.libraryName = "BMI001";
+        libraryParameter.libraryName = "DIAB001";
         libraryParameter.libraryVersion = "1.0.0";
         libraryParameter.terminologyUrl = "http://localhost:3000/4_0_0";
         libraryParameter.model = new LibraryParameter.ModelParameter();
         libraryParameter.model.modelName = "FHIR";
-//        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
         libraryParameter.model.modelBundle = bundleJson;
         libraryParameter.context = new LibraryParameter.ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
-
         libraries.add(libraryParameter);
 
         try {
-            EvaluationResult result = new CqlRunner().runCql(fhirVersion, libraries);
+            EvaluationResult result = new MeasureRunner().runCql(fhirVersion, libraries);
             Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
             for (Map.Entry<String, Object> libraryEntry : entrySet) {
                 String key = libraryEntry.getKey();
@@ -322,6 +257,7 @@ public class BMI001Test {
 
         return result;
     }
+
 
 
 }

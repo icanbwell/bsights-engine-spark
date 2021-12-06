@@ -1,4 +1,4 @@
-package com.bwell;
+package com.bwell.spark;
 
 import com.holdenkarau.spark.testing.SharedJavaSparkContext;
 import org.apache.spark.sql.Dataset;
