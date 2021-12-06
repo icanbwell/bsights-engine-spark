@@ -65,6 +65,7 @@ public class RunCqlLibraryTest extends SharedJavaSparkContext {
         result_df.selectExpr("ruleResults['InAgeCohort'] as InAgeCohort").show();
         List<Row> rows = result_df.selectExpr("ruleResults['InAgeCohort'] as InAgeCohort").collectAsList();
         Assert.assertEquals(rows.get(0).get(0), "true");
+        Assert.assertEquals(rows.get(1).get(0), "false");
 //        result_df.selectExpr("ruleResults['key2'] as key2").show();
     }
 }
