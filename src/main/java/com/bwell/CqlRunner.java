@@ -196,7 +196,7 @@ public class CqlRunner {
                 String key = libraryEntry.getKey();
                 Object value = libraryEntry.getValue();
                 if (cqlVariables.contains(key)) {
-                    newMap.put(key, value.toString());
+                    newMap.put(key, value != null ? value.toString(): null);
                 }
             }
         } catch (CqlException e) {

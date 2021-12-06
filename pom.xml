@@ -151,6 +151,13 @@
             <version>${spark.version}_1.1.1</version>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.json/json -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20210307</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
