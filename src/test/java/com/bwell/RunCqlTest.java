@@ -36,13 +36,13 @@ public class RunCqlTest extends SharedJavaSparkContext {
         Dataset<Row> df = sqlContext.read().option("multiLine", true).json(pathName);
 //        Dataset<Row> df = sqlContext.read().text(pathName);
         df.show();
-        df = df.withColumn("patientBundle1", org.apache.spark.sql.functions.struct(functions.col("resourceType"),functions.col("entry")));
-        df = df.withColumn("patientBundle", org.apache.spark.sql.functions.to_json(functions.col("patientBundle1")));
+        String patientBundleColumn = "bundle";
+        df = df.withColumn(patientBundleColumn, functions.to_json(functions.col(patientBundleColumn)));
         df.show();
-        df.select("patientBundle1").printSchema();
-        df.select("patientBundle").printSchema();
+        df.select(patientBundleColumn).printSchema();
+
         df.createOrReplaceTempView("numbersdata");
-        Dataset<Row> result_df = sqlContext.sql("SELECT runCql('cqlLibraryUrl', 'terminologyUrl', patientBundle) As ruleResults from numbersdata");
+        Dataset<Row> result_df = sqlContext.sql("SELECT runCql('cqlLibraryUrl', 'terminologyUrl', bundle) As ruleResults from numbersdata");
         result_df.printSchema();
         result_df.show(10, false);
 

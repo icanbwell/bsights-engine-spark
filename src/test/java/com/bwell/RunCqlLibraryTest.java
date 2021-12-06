@@ -42,11 +42,10 @@ public class RunCqlLibraryTest extends SharedJavaSparkContext {
         Dataset<Row> df = sqlContext.read().option("multiLine", true).json(pathName);
 //        Dataset<Row> df = sqlContext.read().text(pathName);
         df.show();
-        df = df.withColumn("patientBundle1", functions.struct(functions.col("resourceType"),functions.col("entry")));
-        df = df.withColumn("patientBundle", functions.to_json(functions.col("patientBundle1")));
+        String patientBundleColumn = "bundle";
+        df = df.withColumn(patientBundleColumn, functions.to_json(functions.col(patientBundleColumn)));
         df.show();
-        df.select("patientBundle1").printSchema();
-        df.select("patientBundle").printSchema();
+        df.select(patientBundleColumn).printSchema();
         df.createOrReplaceTempView("numbersdata");
 
         String cqlLibraryName = "BMI001";
@@ -56,8 +55,8 @@ public class RunCqlLibraryTest extends SharedJavaSparkContext {
         String cqlVariablesToReturn = "InAgeCohort,InDemographicExists";
 
         String command = String.format(
-                "runCqlLibrary('%s', '%s','%s','%s','%s', patientBundle)",
-                cqllibraryUrl, cqlLibraryName, cqllibraryVersion, terminologyUrl, cqlVariablesToReturn);
+                "runCqlLibrary('%s', '%s','%s','%s','%s', %s)",
+                cqllibraryUrl, cqlLibraryName, cqllibraryVersion, terminologyUrl, cqlVariablesToReturn, patientBundleColumn);
 
         Dataset<Row> result_df = sqlContext.sql("SELECT " + command + " As ruleResults from numbersdata");
         result_df.printSchema();
