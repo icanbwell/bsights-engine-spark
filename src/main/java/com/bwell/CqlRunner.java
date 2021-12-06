@@ -22,6 +22,9 @@ import org.opencds.cqf.cql.evaluator.dagger.DaggerCqlEvaluatorComponent;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+*   This class runs CQL library on a passed in model.  The model can either be a string or a path to files
+*/
 public class CqlRunner {
 
     static public class LibraryParameter {
@@ -49,6 +52,11 @@ public class CqlRunner {
     private final Map<String, LibraryContentProvider> libraryContentProviderIndex = new HashMap<>();
     private final Map<String, TerminologyProvider> terminologyProviderIndex = new HashMap<>();
 
+    /**
+     * Runs the CQL Library using library parameters
+     *
+     * @return an evaluation result
+     */
     public EvaluationResult runCql(String fhirVersion, List<LibraryParameter> libraries) {
         FhirVersionEnum fhirVersionEnum = FhirVersionEnum.valueOf(fhirVersion);
 
@@ -119,6 +127,7 @@ public class CqlRunner {
 
             VersionedIdentifier identifier = new VersionedIdentifier().withId(library.libraryName);
             if (library.libraryVersion != null) {
+                // choose the right version of the library
                 identifier = identifier.withVersion(library.libraryVersion);
             }
 
@@ -129,23 +138,11 @@ public class CqlRunner {
                 contextParameter = Pair.of(library.context.contextName, library.context.contextValue);
             }
 
-            try {
-                // run evaluator and return result
-                return evaluator.evaluate(identifier, contextParameter);
-            } catch (Exception e) {
-                throw e;
-            }
+            // run evaluator and return result
+            return evaluator.evaluate(identifier, contextParameter);
 
         }
         return null;
-    }
-
-    Map<String, String> runCql2(String cqlLibraryUrl, String terminologyUrl, String fhirBundle) {
-        java.util.Map<String, String> newMap = new java.util.HashMap<>();
-        newMap.put("key1", fhirBundle + "_1");
-        newMap.put("key2", fhirBundle + "_2");
-
-        return newMap;
     }
 
     /**
@@ -168,6 +165,8 @@ public class CqlRunner {
             String cqlVariablesToReturn,
             String fhirBundle
     ) throws Exception {
+
+        // set the parameters for runCql() function
         String fhirVersion = "R4";
         List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
         CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
@@ -185,17 +184,21 @@ public class CqlRunner {
 
         libraries.add(libraryParameter);
 
+        // convert the comma-separated cqlVariablesToReturn into a list
         List<String> cqlVariables = Arrays.stream(cqlVariablesToReturn.split(",")).map(String::trim).collect(Collectors.toList());
 
         java.util.Map<String, String> newMap = new java.util.HashMap<>();
 
         try {
+            // run the CQL and get results
             EvaluationResult result = new CqlRunner().runCql(fhirVersion, libraries);
             Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
+            // filter to the results that match cqlVariables to return
             for (Map.Entry<String, Object> libraryEntry : entrySet) {
                 String key = libraryEntry.getKey();
                 Object value = libraryEntry.getValue();
                 if (cqlVariables.contains(key)) {
+                    // we convert everything to string since Spark wants the value of a map to be the same type
                     newMap.put(key, value != null ? value.toString(): null);
                 }
             }
