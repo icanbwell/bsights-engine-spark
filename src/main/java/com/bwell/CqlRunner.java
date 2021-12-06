@@ -22,6 +22,9 @@ import org.opencds.cqf.cql.evaluator.dagger.DaggerCqlEvaluatorComponent;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+*   This class runs CQL library on a passed in model.  The model can either be a string or a path to files
+*/
 public class CqlRunner {
 
     static public class LibraryParameter {
@@ -49,6 +52,11 @@ public class CqlRunner {
     private final Map<String, LibraryContentProvider> libraryContentProviderIndex = new HashMap<>();
     private final Map<String, TerminologyProvider> terminologyProviderIndex = new HashMap<>();
 
+    /**
+     * Runs the CQL Library using library parameters
+     *
+     * @return an evaluation result
+     */
     public EvaluationResult runCql(String fhirVersion, List<LibraryParameter> libraries) {
         FhirVersionEnum fhirVersionEnum = FhirVersionEnum.valueOf(fhirVersion);
 
@@ -138,14 +146,6 @@ public class CqlRunner {
 
         }
         return null;
-    }
-
-    Map<String, String> runCql2(String cqlLibraryUrl, String terminologyUrl, String fhirBundle) {
-        java.util.Map<String, String> newMap = new java.util.HashMap<>();
-        newMap.put("key1", fhirBundle + "_1");
-        newMap.put("key2", fhirBundle + "_2");
-
-        return newMap;
     }
 
     /**
