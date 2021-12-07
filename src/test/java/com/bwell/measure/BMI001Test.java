@@ -1,12 +1,12 @@
-package com.bwell;
+package com.bwell.measure;
 
+import com.bwell.common.*;
+import com.bwell.runner.MeasureRunner;
 import org.apache.commons.io.FileUtils;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseDatatype;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Patient;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.execution.EvaluationResult;
 import org.testng.annotations.AfterMethod;
@@ -32,26 +32,11 @@ public class BMI001Test {
     private static final String testResourceRelativePath = "src/test/resources";
     private static String testResourcePath = null;
 
-    private static String folder = null;
-    private static String bundleJson = null;
-
     @BeforeClass
     public void setup() {
         File file = new File(testResourceRelativePath);
         testResourcePath = file.getAbsolutePath();
-        System.out.printf("Test resource directory: %s%n", testResourcePath);
-
-        folder = "bmi001";
-        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
-        try {
-            bundleJson = FileUtils.readFileToString(f, Charset.forName("UTF-8"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        JSONArray jsonArray = new JSONArray(bundleJson);
-        JSONObject firstItem = (JSONObject) jsonArray.get(0);
-        bundleJson = firstItem.getJSONObject("bundle").toString();
+        System.out.println(String.format("Test resource directory: %s", testResourcePath));
     }
 
     @BeforeMethod
@@ -79,24 +64,31 @@ public class BMI001Test {
     public void testBMI001Bundle() {
 
         String fhirVersion = "R4";
-        List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
-        CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
+        List<LibraryParameter> libraries = new ArrayList<>();
+        LibraryParameter libraryParameter = new LibraryParameter();
         libraryParameter.libraryName = "BMI001";
+        String folder = "bmi001";
+
+        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
+        String bundleJson = null;
+        try {
+            bundleJson = FileUtils.readFileToString(f, Charset.forName("UTF-8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         libraryParameter.libraryUrl = testResourcePath + "/" + folder + "/cql";
-//        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
-        libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/vocabulary/ValueSet";
-        libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
+        libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/terminology";
+        libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
-//        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new CqlRunner.LibraryParameter.ContextParameter();
+        libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
 
         libraries.add(libraryParameter);
 
-        EvaluationResult result = new CqlRunner().runCql(fhirVersion, libraries);
+        EvaluationResult result = new MeasureRunner().runCql(fhirVersion, libraries);
 
         Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
         for (Map.Entry<String, Object> libraryEntry : entrySet) {
@@ -121,25 +113,32 @@ public class BMI001Test {
     public void testBMI001BundleTerminologyFromFhirServer() throws Exception {
 
         String fhirVersion = "R4";
-        List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
-        CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
+        List<LibraryParameter> libraries = new ArrayList<>();
+        LibraryParameter libraryParameter = new LibraryParameter();
         libraryParameter.libraryName = "BMI001";
+        String folder = "bmi001";
+
+        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
+        String bundleJson = null;
+        try {
+            bundleJson = FileUtils.readFileToString(f, Charset.forName("UTF-8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         libraryParameter.libraryUrl = testResourcePath + "/" + folder + "/cql";
-//        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
         libraryParameter.terminologyUrl = "http://localhost:3000/4_0_0";
-        libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
+        libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
-//        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new CqlRunner.LibraryParameter.ContextParameter();
+        libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
 
         libraries.add(libraryParameter);
 
         try {
-            EvaluationResult result = new CqlRunner().runCql(fhirVersion, libraries);
+            EvaluationResult result = new MeasureRunner().runCql(fhirVersion, libraries);
             Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
             for (Map.Entry<String, Object> libraryEntry : entrySet) {
                 String key = libraryEntry.getKey();
@@ -171,26 +170,33 @@ public class BMI001Test {
     @Test
     public void testBMI001BundleCqlFromFhirServer() throws Exception {
         String fhirVersion = "R4";
-        List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
-        CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
+        List<LibraryParameter> libraries = new ArrayList<>();
+        LibraryParameter libraryParameter = new LibraryParameter();
+        String folder = "bmi001";
+
+        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
+        String bundleJson = null;
+        try {
+            bundleJson = FileUtils.readFileToString(f, Charset.forName("UTF-8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         libraryParameter.libraryUrl = "http://localhost:3000/4_0_0";
-        libraryParameter.libraryVersion = "1.0.0";
         libraryParameter.libraryName = "BMI001";
         libraryParameter.libraryVersion = "1.0.0";
-        libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/vocabulary/ValueSet";
-        libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
+        libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/terminology";
+        libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
-//        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new CqlRunner.LibraryParameter.ContextParameter();
+        libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
 
         libraries.add(libraryParameter);
 
         try {
-            EvaluationResult result = new CqlRunner().runCql(fhirVersion, libraries);
+            EvaluationResult result = new MeasureRunner().runCql(fhirVersion, libraries);
             Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
             for (Map.Entry<String, Object> libraryEntry : entrySet) {
                 String key = libraryEntry.getKey();
@@ -222,25 +228,33 @@ public class BMI001Test {
     @Test
     public void testBMI001BundleCqlAndTerminologyFromFhirServer() throws Exception {
         String fhirVersion = "R4";
-        List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
-        CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
+        List<LibraryParameter> libraries = new ArrayList<>();
+        LibraryParameter libraryParameter = new LibraryParameter();
+        String folder = "bmi001";
+
+        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
+        String bundleJson = null;
+        try {
+            bundleJson = FileUtils.readFileToString(f, Charset.forName("UTF-8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         libraryParameter.libraryUrl = "http://localhost:3000/4_0_0";
         libraryParameter.libraryName = "BMI001";
         libraryParameter.libraryVersion = "1.0.0";
         libraryParameter.terminologyUrl = "http://localhost:3000/4_0_0";
-        libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
+        libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
-//        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new CqlRunner.LibraryParameter.ContextParameter();
+        libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
 
         libraries.add(libraryParameter);
 
         try {
-            EvaluationResult result = new CqlRunner().runCql(fhirVersion, libraries);
+            EvaluationResult result = new MeasureRunner().runCql(fhirVersion, libraries);
             Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
             for (Map.Entry<String, Object> libraryEntry : entrySet) {
                 String key = libraryEntry.getKey();

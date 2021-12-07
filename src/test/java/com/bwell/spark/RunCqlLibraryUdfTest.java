@@ -1,4 +1,4 @@
-package com.bwell;
+package com.bwell.spark;
 
 import com.holdenkarau.spark.testing.SharedJavaSparkContext;
 import org.apache.spark.sql.Dataset;
@@ -13,7 +13,7 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.util.List;
 
-public class RunCqlLibraryTest extends SharedJavaSparkContext {
+public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
 
     private static final String testResourceRelativePath = "src/test/resources";
     private static String testResourcePath = null;

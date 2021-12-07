@@ -1,6 +1,14 @@
-package com.bwell;
+package com.bwell.runner;
 
-import org.apache.commons.io.FileUtils;
+import com.bwell.common.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseDatatype;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -11,19 +19,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import static org.testng.Assert.*;
 
-import static org.testng.Assert.assertEquals;
-
-public class DIAB001Test {
+public class CqlRunnerTest {
     private ByteArrayOutputStream outContent;
     private ByteArrayOutputStream errContent;
     private final PrintStream originalOut = System.out;
@@ -61,36 +59,23 @@ public class DIAB001Test {
     }
 
     @Test
-    public void testDIAB001Bundle() {
-
+    public void testR4() {
         String fhirVersion = "R4";
-        List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
-        CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
-        libraryParameter.libraryName = "DIAB001";
-        String folder = "diab001";
-
-        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
-        String bundleJson = null;
-        try {
-            bundleJson = FileUtils.readFileToString(f, Charset.forName("UTF-8"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        libraryParameter.libraryUrl = testResourcePath + "/" + folder;
-//        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
-//        libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/vocabulary/ValueSet";
-        libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
+        List<LibraryParameter> libraries = new ArrayList<>();
+        LibraryParameter libraryParameter = new LibraryParameter();
+        libraryParameter.libraryName = "TestFHIR";
+        libraryParameter.libraryUrl = testResourcePath + "/r4";
+        libraryParameter.terminologyUrl = testResourcePath + "/r4/vocabulary/ValueSet";
+        libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
-//        libraryParameter.model.modelUrl = testResourcePath + "/" + folder;
-        libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new CqlRunner.LibraryParameter.ContextParameter();
+        libraryParameter.model.modelUrl = testResourcePath + "/r4";
+        libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
 
         libraries.add(libraryParameter);
 
-        EvaluationResult result = new CqlRunner().runCql(fhirVersion, libraries);
+        EvaluationResult result = new MeasureRunner().runCql(fhirVersion, libraries);
 
         Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
         for (Map.Entry<String, Object> libraryEntry : entrySet) {
@@ -98,34 +83,15 @@ public class DIAB001Test {
             Object value = libraryEntry.getValue();
             if (key.equals("Patient")) {
                 Patient patient = (Patient) value;
-
-                String mr_identifier_value = patient.getIdentifier().get(0).getValue(); // medical record number
-                System.out.println(key + ": Medical Record ID = " + mr_identifier_value);
-                assertEquals(mr_identifier_value, "12345");
-
-                String patient_id = patient.getId();  // patient id
-                System.out.println(key + ": Patient ID = " + patient_id);
-                assertEquals(patient_id, "example");
+                String identifier_value = patient.getIdentifier().get(0).getValue();
+                System.out.println(key + "Id = " + identifier_value);
+                assertEquals(identifier_value, "12345");
             }
             System.out.println(key + "=" + tempConvert(value));
         }
 
         System.out.println();
 
-//        String output = outContent.toString();
-//
-//        assertTrue(output.contains("Patient=Patient(id=example)"));
-//        assertTrue(output.contains("TestAdverseEvent=[AdverseEvent(id=example)]"));
-//        assertTrue(output.contains("TestPatientGender=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientActive=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientBirthDate=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientMaritalStatusMembership=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientMartialStatusComparison=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientDeceasedAsBoolean=Patient(id=example)"));
-//        assertTrue(output.contains("TestPatientDeceasedAsDateTime=null"));
-//        assertTrue(output.contains("TestSlices=[Observation(id=blood-pressure)]"));
-//        assertTrue(output.contains("TestSimpleExtensions=Patient(id=example)"));
-//        assertTrue(output.contains("TestComplexExtensions=Patient(id=example)"));
     }
 
     private String tempConvert(Object value) {
@@ -162,7 +128,5 @@ public class DIAB001Test {
 
         return result;
     }
-
-
 
 }

@@ -1,31 +1,24 @@
-package com.bwell;
+package com.bwell.runner;
+
+import org.apache.commons.io.FileUtils;
+import org.hl7.fhir.instance.model.api.IBase;
+import org.hl7.fhir.instance.model.api.IBaseDatatype;
+import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.apache.commons.io.FileUtils;
-import org.hl7.fhir.instance.model.api.IBase;
-import org.hl7.fhir.instance.model.api.IBaseDatatype;
-import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r4.model.Patient;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.opencds.cqf.cql.engine.execution.EvaluationResult;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import static org.testng.Assert.assertEquals;
 
-import static org.testng.Assert.*;
-
-public class CqlRunnerTest {
+public class MeasureRunnerTest {
     private ByteArrayOutputStream outContent;
     private ByteArrayOutputStream errContent;
     private final PrintStream originalOut = System.out;
@@ -33,15 +26,12 @@ public class CqlRunnerTest {
 
     private static final String testResourceRelativePath = "src/test/resources";
     private static String testResourcePath = null;
-    private static String folder = null;
-    private static String bundleJson = null;
 
     @BeforeClass
     public void setup() {
         File file = new File(testResourceRelativePath);
         testResourcePath = file.getAbsolutePath();
         System.out.println(String.format("Test resource directory: %s", testResourcePath));
-
     }
 
     @BeforeMethod
@@ -66,43 +56,6 @@ public class CqlRunnerTest {
     }
 
     @Test
-    public void testR4() {
-        String fhirVersion = "R4";
-        List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
-        CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
-        libraryParameter.libraryName = "TestFHIR";
-        libraryParameter.libraryUrl = testResourcePath + "/r4";
-//        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
-        libraryParameter.terminologyUrl = testResourcePath + "/r4/vocabulary/ValueSet";
-        libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
-        libraryParameter.model.modelName = "FHIR";
-        libraryParameter.model.modelUrl = testResourcePath + "/r4";
-        libraryParameter.context = new CqlRunner.LibraryParameter.ContextParameter();
-        libraryParameter.context.contextName = "Patient";
-        libraryParameter.context.contextValue = "example";
-
-        libraries.add(libraryParameter);
-
-        EvaluationResult result = new CqlRunner().runCql(fhirVersion, libraries);
-
-        Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
-        for (Map.Entry<String, Object> libraryEntry : entrySet) {
-            String key = libraryEntry.getKey();
-            Object value = libraryEntry.getValue();
-            if (key.equals("Patient")) {
-                Patient patient = (Patient) value;
-                String identifier_value = patient.getIdentifier().get(0).getValue();
-                System.out.println(key + "Id = " + identifier_value);
-                assertEquals(identifier_value, "12345");
-            }
-            System.out.println(key + "=" + tempConvert(value));
-        }
-
-        System.out.println();
-
-    }
-
-    @Test
     public void testRunCqlLibrary() throws Exception {
         String cqlLibraryName = "BMI001";
         String cqllibraryUrl = "http://localhost:3000/4_0_0";
@@ -118,12 +71,10 @@ public class CqlRunnerTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        JSONArray jsonArray = new JSONArray(bundleJson);
-        JSONObject firstItem = (JSONObject) jsonArray.get(0);
-        bundleJson = firstItem.getJSONObject("bundle").toString();
+
 
         try {
-            Map<String, String> result = new CqlRunner().runCqlLibrary(
+            Map<String, String> result = new MeasureRunner().runCqlLibrary(
                     cqllibraryUrl,
                     cqlLibraryName,
                     cqllibraryVersion,

@@ -1,4 +1,4 @@
-package com.bwell;
+package com.bwell.common;
 
 import org.apache.commons.io.FileUtils;
 import org.hl7.fhir.instance.model.api.IBaseBundle;

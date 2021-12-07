@@ -1,5 +1,6 @@
-package com.bwell;
+package com.bwell.runner;
 
+import com.bwell.common.*;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
@@ -22,41 +23,11 @@ import org.opencds.cqf.cql.evaluator.dagger.DaggerCqlEvaluatorComponent;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
-*   This class runs CQL library on a passed in model.  The model can either be a string or a path to files
-*/
-public class CqlRunner {
-
-    static public class LibraryParameter {
-        public String libraryUrl;
-        public String libraryName;
-        public String libraryVersion;
-        public String terminologyUrl;
-        public ModelParameter model;
-        public ContextParameter context;
-
-        public static class ContextParameter {
-            public String contextName;
-
-            public String contextValue;
-        }
-
-        public static class ModelParameter {
-            public String modelName;
-
-            public String modelUrl;
-            public String modelBundle;
-        }
-    }
+public class MeasureRunner {
 
     private final Map<String, LibraryContentProvider> libraryContentProviderIndex = new HashMap<>();
     private final Map<String, TerminologyProvider> terminologyProviderIndex = new HashMap<>();
 
-    /**
-     * Runs the CQL Library using library parameters
-     *
-     * @return an evaluation result
-     */
     public EvaluationResult runCql(String fhirVersion, List<LibraryParameter> libraries) {
         FhirVersionEnum fhirVersionEnum = FhirVersionEnum.valueOf(fhirVersion);
 
@@ -127,7 +98,6 @@ public class CqlRunner {
 
             VersionedIdentifier identifier = new VersionedIdentifier().withId(library.libraryName);
             if (library.libraryVersion != null) {
-                // choose the right version of the library
                 identifier = identifier.withVersion(library.libraryVersion);
             }
 
@@ -138,12 +108,18 @@ public class CqlRunner {
                 contextParameter = Pair.of(library.context.contextName, library.context.contextValue);
             }
 
-            // run evaluator and return result
-            return evaluator.evaluate(identifier, contextParameter);
+            try {
+                // run evaluator and return result
+                return evaluator.evaluate(identifier, contextParameter);
+            } catch (Exception e) {
+                throw e;
+            }
 
         }
         return null;
     }
+
+
 
     /**
      * Runs the CQL Library
@@ -157,7 +133,7 @@ public class CqlRunner {
      * @return map (dictionary) of variable name, value
      * @throws Exception exception
      */
-    Map<String, String> runCqlLibrary(
+    public Map<String, String> runCqlLibrary(
             String cqlLibraryUrl,
             String cqlLibraryName,
             String cqlLibraryVersion,
@@ -165,41 +141,35 @@ public class CqlRunner {
             String cqlVariablesToReturn,
             String fhirBundle
     ) throws Exception {
-
-        // set the parameters for runCql() function
         String fhirVersion = "R4";
-        List<CqlRunner.LibraryParameter> libraries = new ArrayList<>();
-        CqlRunner.LibraryParameter libraryParameter = new CqlRunner.LibraryParameter();
+        List<LibraryParameter> libraries = new ArrayList<>();
+        LibraryParameter libraryParameter = new LibraryParameter();
         libraryParameter.libraryName = cqlLibraryName;
 
         libraryParameter.libraryUrl = cqlLibraryUrl;
         libraryParameter.libraryVersion = cqlLibraryVersion;
         libraryParameter.terminologyUrl = terminologyUrl;
-        libraryParameter.model = new CqlRunner.LibraryParameter.ModelParameter();
+        libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
         libraryParameter.model.modelBundle = fhirBundle;
-        libraryParameter.context = new CqlRunner.LibraryParameter.ContextParameter();
+        libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
 
         libraries.add(libraryParameter);
 
-        // convert the comma-separated cqlVariablesToReturn into a list
         List<String> cqlVariables = Arrays.stream(cqlVariablesToReturn.split(",")).map(String::trim).collect(Collectors.toList());
 
-        java.util.Map<String, String> newMap = new java.util.HashMap<>();
+        Map<String, String> newMap = new HashMap<>();
 
         try {
-            // run the CQL and get results
-            EvaluationResult result = new CqlRunner().runCql(fhirVersion, libraries);
+            EvaluationResult result = new MeasureRunner().runCql(fhirVersion, libraries);
             Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
-            // filter to the results that match cqlVariables to return
             for (Map.Entry<String, Object> libraryEntry : entrySet) {
                 String key = libraryEntry.getKey();
                 Object value = libraryEntry.getValue();
                 if (cqlVariables.contains(key)) {
-                    // we convert everything to string since Spark wants the value of a map to be the same type
-                    newMap.put(key, value != null ? value.toString(): null);
+                    newMap.put(key, value.toString());
                 }
             }
         } catch (CqlException e) {
