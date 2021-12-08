@@ -120,7 +120,6 @@ public class MeasureRunner {
     }
 
 
-
     /**
      * Runs the CQL Library
      *
@@ -169,7 +168,7 @@ public class MeasureRunner {
                 String key = libraryEntry.getKey();
                 Object value = libraryEntry.getValue();
                 if (cqlVariables.contains(key)) {
-                    newMap.put(key, value.toString());
+                    newMap.put(key, value != null ? value.toString() : null);
                 }
             }
         } catch (CqlException e) {
