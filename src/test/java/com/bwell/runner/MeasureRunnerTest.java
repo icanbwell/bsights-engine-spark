@@ -4,6 +4,8 @@ import org.apache.commons.io.FileUtils;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseDatatype;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -14,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
@@ -26,12 +29,26 @@ public class MeasureRunnerTest {
 
     private static final String testResourceRelativePath = "src/test/resources";
     private static String testResourcePath = null;
+    private static String folder = null;
+    private static String bundleJson = null;
 
     @BeforeClass
     public void setup() {
         File file = new File(testResourceRelativePath);
         testResourcePath = file.getAbsolutePath();
-        System.out.println(String.format("Test resource directory: %s", testResourcePath));
+        System.out.printf("Test resource directory: %s%n", testResourcePath);
+
+        folder = "bmi001";
+        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
+        try {
+            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        JSONArray jsonArray = new JSONArray(bundleJson);
+        JSONObject firstItem = (JSONObject) jsonArray.get(0);
+        bundleJson = firstItem.getJSONObject("bundle").toString();
     }
 
     @BeforeMethod
@@ -62,16 +79,6 @@ public class MeasureRunnerTest {
         String cqllibraryVersion = "1.0.0";
         String terminologyUrl = "http://localhost:3000/4_0_0";
         String cqlVariablesToReturn = "InAgeCohort,InDemographicExists";
-
-        String folder = "bmi001";
-        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
-        String bundleJson = null;
-        try {
-            bundleJson = FileUtils.readFileToString(f, Charset.forName("UTF-8"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
 
         try {
             Map<String, String> result = new MeasureRunner().runCqlLibrary(
