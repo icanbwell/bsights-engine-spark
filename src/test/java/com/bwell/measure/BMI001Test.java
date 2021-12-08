@@ -266,6 +266,20 @@ public class BMI001Test {
     @Test
     public void testBMI001BundleCqlAndTerminologyFromFhirServerWithContainedResources() throws Exception {
         String fhirVersion = "R4";
+
+        String bundleContainedJson = null;
+        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected_contained.json");
+        try {
+            bundleContainedJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        JSONArray jsonArray = new JSONArray(bundleContainedJson);
+        JSONObject firstItem = (JSONObject) jsonArray.get(0);
+//        bundleJson = firstItem.toString();
+        bundleContainedJson = firstItem.getJSONObject("bundle").toString();
+
         List<LibraryParameter> libraries = new ArrayList<>();
         LibraryParameter libraryParameter = new LibraryParameter();
 
@@ -275,12 +289,13 @@ public class BMI001Test {
         libraryParameter.terminologyUrl = "http://localhost:3000/4_0_0";
         libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
-        libraryParameter.model.modelBundle = bundleJson;
+        libraryParameter.model.modelBundle = bundleContainedJson;
         libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
 
         libraries.add(libraryParameter);
+
 
         try {
             EvaluationResult result = new MeasureRunner().runCql(fhirVersion, libraries);
