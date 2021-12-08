@@ -13,6 +13,8 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -46,7 +48,35 @@ public class ResourceLoaderTest {
 
         IBaseBundle bundle = ResourceLoader.loadResourceFromString(bundleJson);
         assertNotNull(bundle);
-        String patient_first_identifier = ((Identifier) ((java.util.ArrayList) ((Patient) ((Bundle.BundleEntryComponent) ((java.util.ArrayList) ((Bundle) bundle).getEntry()).get(0)).getResource()).getIdentifier()).get(0)).getValue();
+        ArrayList entry = (ArrayList) ((Bundle) bundle).getEntry();
+        Bundle.BundleEntryComponent bundleEntryComponent = (Bundle.BundleEntryComponent) entry.get(0);
+        Patient patient = (Patient) bundleEntryComponent.getResource();
+        ArrayList identifier = (ArrayList) patient.getIdentifier();
+        Identifier identifier1 = (Identifier) identifier.get(0);
+        String patient_first_identifier = identifier1.getValue();
+        assertEquals("12345", patient_first_identifier);
+    }
+
+    @Test
+    public void testLoadingResource() {
+        String folder = "bmi001";
+        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected_resource_only.json");
+        String bundleJson = null;
+
+        try {
+            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        IBaseBundle bundle = ResourceLoader.loadResourceFromString(bundleJson);
+        assertNotNull(bundle);
+        ArrayList entry = (ArrayList) ((Bundle) bundle).getEntry();
+        Bundle.BundleEntryComponent bundleEntryComponent = (Bundle.BundleEntryComponent) entry.get(0);
+        Patient patient = (Patient) bundleEntryComponent.getResource();
+        ArrayList identifier = (ArrayList) patient.getIdentifier();
+        Identifier identifier1 = (Identifier) identifier.get(0);
+        String patient_first_identifier = identifier1.getValue();
         assertEquals("12345", patient_first_identifier);
     }
 }

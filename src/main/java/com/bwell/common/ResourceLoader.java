@@ -3,6 +3,8 @@ package com.bwell.common;
 import org.apache.commons.io.FileUtils;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.r4.formats.JsonParser;
+import org.hl7.fhir.r4.model.Resource;
+import org.hl7.fhir.r4.model.ResourceType;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -15,6 +17,7 @@ import java.nio.charset.Charset;
 public class ResourceLoader {
     /**
      * Reads a FHIR resource from a file
+     *
      * @param path: path to file
      * @return IBaseBundle
      */
@@ -32,15 +35,25 @@ public class ResourceLoader {
 
     /**
      * Load a FHIR resource from a string
-     * @param resource: resource as a string
+     *
+     * @param resourceJson: resource as a string
      * @return IBaseBundle
      */
     @Nullable
-    public static IBaseBundle loadResourceFromString(String resource) {
+    public static IBaseBundle loadResourceFromString(String resourceJson) {
         JsonParser parser = new JsonParser();
         IBaseBundle bundle = null;
         try {
-            bundle = (IBaseBundle) parser.parse(resource);
+            Resource resource = parser.parse(resourceJson);
+            ResourceType resourceType = resource.getResourceType();
+            if (resourceType != ResourceType.Bundle) {
+                // wrap in a bundle
+                resourceJson = "{\"resourceType\":\"Bundle\", \"id\":\"" + resource.getId() + "\", \"entry\":[" + "{\"resource\":" + resourceJson + "}" + "]}";
+                bundle = (IBaseBundle) parser.parse(resourceJson);
+            }
+            else {
+                bundle = (IBaseBundle) resource;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
