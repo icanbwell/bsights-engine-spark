@@ -109,7 +109,7 @@ public class MeasureRunnerTest {
         String cqlVariablesToReturn = "InAgeCohort,InDemographicExists";
 
         String bundleJson = null;
-        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
+        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected_contained.json");
         try {
             bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
         } catch (IOException e) {
@@ -118,6 +118,7 @@ public class MeasureRunnerTest {
 
         JSONArray jsonArray = new JSONArray(bundleJson);
         JSONObject firstItem = (JSONObject) jsonArray.get(0);
+//        bundleJson = firstItem.toString();
         bundleJson = firstItem.getJSONObject("bundle").toString();
         try {
             Map<String, String> result = new MeasureRunner().runCqlLibrary(
