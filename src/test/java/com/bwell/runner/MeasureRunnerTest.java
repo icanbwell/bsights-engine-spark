@@ -30,7 +30,6 @@ public class MeasureRunnerTest {
     private static final String testResourceRelativePath = "src/test/resources";
     private static String testResourcePath = null;
     private static String folder = null;
-    private static String bundleJson = null;
 
     @BeforeClass
     public void setup() {
@@ -39,16 +38,6 @@ public class MeasureRunnerTest {
         System.out.printf("Test resource directory: %s%n", testResourcePath);
 
         folder = "bmi001";
-        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
-        try {
-            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        JSONArray jsonArray = new JSONArray(bundleJson);
-        JSONObject firstItem = (JSONObject) jsonArray.get(0);
-        bundleJson = firstItem.getJSONObject("bundle").toString();
     }
 
     @BeforeMethod
@@ -80,6 +69,56 @@ public class MeasureRunnerTest {
         String terminologyUrl = "http://localhost:3000/4_0_0";
         String cqlVariablesToReturn = "InAgeCohort,InDemographicExists";
 
+        String bundleJson = null;
+        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
+        try {
+            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        JSONArray jsonArray = new JSONArray(bundleJson);
+        JSONObject firstItem = (JSONObject) jsonArray.get(0);
+        bundleJson = firstItem.getJSONObject("bundle").toString();
+
+        try {
+            Map<String, String> result = new MeasureRunner().runCqlLibrary(
+                    cqllibraryUrl,
+                    cqlLibraryName,
+                    cqllibraryVersion,
+                    terminologyUrl,
+                    cqlVariablesToReturn,
+                    bundleJson
+            );
+            assertEquals(result.get("InAgeCohort"), "true");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+
+        System.out.println();
+
+    }
+
+    @Test
+    public void testRunCqlLibraryWithContainedResources() throws Exception {
+        String cqlLibraryName = "BMI001";
+        String cqllibraryUrl = "http://localhost:3000/4_0_0";
+        String cqllibraryVersion = "1.0.0";
+        String terminologyUrl = "http://localhost:3000/4_0_0";
+        String cqlVariablesToReturn = "InAgeCohort,InDemographicExists";
+
+        String bundleJson = null;
+        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
+        try {
+            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        JSONArray jsonArray = new JSONArray(bundleJson);
+        JSONObject firstItem = (JSONObject) jsonArray.get(0);
+        bundleJson = firstItem.getJSONObject("bundle").toString();
         try {
             Map<String, String> result = new MeasureRunner().runCqlLibrary(
                     cqllibraryUrl,
