@@ -1,12 +1,11 @@
-package com.bwell.runner;
+package com.bwell.services.domain;
 
-import com.bwell.common.*;
 import ca.uhn.fhir.context.FhirVersionEnum;
+import com.bwell.core.entities.LibraryParameter;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
-import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.execution.EvaluationResult;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.opencds.cqf.cql.engine.retrieve.RetrieveProvider;
@@ -22,12 +21,12 @@ import org.opencds.cqf.cql.evaluator.dagger.DaggerCqlEvaluatorComponent;
 
 import java.util.*;
 
-public class ResourceRunner {
+public class CqlService {
 
     private final Map<String, LibraryContentProvider> libraryContentProviderIndex = new HashMap<>();
     private final Map<String, TerminologyProvider> terminologyProviderIndex = new HashMap<>();
 
-    public EvaluationResult runCql(String fhirVersion, List<LibraryParameter> libraries) {
+    public EvaluationResult runCqlLibrary(String fhirVersion, List<LibraryParameter> libraries) {
         FhirVersionEnum fhirVersionEnum = FhirVersionEnum.valueOf(fhirVersion);
 
         // create an evaluator with the passed in fhirVersion
@@ -76,7 +75,7 @@ public class ResourceRunner {
             if (library.model != null) {
                 // if model is provided as text then use it
                 if (library.model.modelBundle != null) {
-                    IBaseBundle bundle = ResourceLoader.loadResourceFromString(library.model.modelBundle);
+                    IBaseBundle bundle = new ResourceLoader().loadResourceFromString(library.model.modelBundle);
                     dataProvider = dataProviderFactory.create(bundle);
                 } else {
                     // load model from url
@@ -117,13 +116,4 @@ public class ResourceRunner {
         }
         return null;
     }
-
-/*    Map<String, String> runCql2(String cqlLibraryUrl, String terminologyUrl, String fhirBundle) {
-        java.util.Map<String, String> newMap = new java.util.HashMap<>();
-        newMap.put("key1", fhirBundle + "_1");
-        newMap.put("key2", fhirBundle + "_2");
-
-        return newMap;
-    }*/
-
 }

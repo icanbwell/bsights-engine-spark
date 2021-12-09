@@ -1,6 +1,5 @@
-package com.bwell.runner;
+package com.bwell.services.application;
 
-import com.bwell.common.*;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
@@ -9,6 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.bwell.core.entities.ContextParameter;
+import com.bwell.core.entities.LibraryParameter;
+import com.bwell.core.entities.ModelParameter;
+import com.bwell.services.domain.CqlService;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseDatatype;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -76,7 +79,7 @@ public class ResourceRunnerTest {
 
         libraries.add(libraryParameter);
 
-        EvaluationResult result = new ResourceRunner().runCql(fhirVersion, libraries);
+        EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraries);
 
         Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
         for (Map.Entry<String, Object> libraryEntry : entrySet) {
@@ -113,7 +116,7 @@ public class ResourceRunnerTest {
 
         libraries.add(libraryParameter);
 
-        EvaluationResult result = new ResourceRunner().runCql(fhirVersion, libraries);
+        EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraries);
 
         Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
         for (Map.Entry<String, Object> libraryEntry : entrySet) {

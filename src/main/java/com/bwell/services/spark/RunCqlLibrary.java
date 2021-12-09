@@ -1,12 +1,23 @@
-package com.bwell.spark;
+package com.bwell.services.spark;
 
+<<<<<<< Updated upstream:src/main/java/com/bwell/spark/RunCqlLibrary.java
 import com.bwell.runner.MeasureRunner;
 import org.apache.spark.sql.api.java.UDF8;
+=======
+import com.bwell.services.application.MeasureService;
+import org.apache.spark.sql.api.java.UDF6;
+>>>>>>> Stashed changes:src/main/java/com/bwell/services/spark/RunCqlLibrary.java
 
 /**
  * This class implements a Spark UDF that takes in 6 strings and returns a map of key, value
+ * allowing Spark to execute a CQL Measure Library.
  */
+<<<<<<< Updated upstream:src/main/java/com/bwell/spark/RunCqlLibrary.java
 public class RunCqlLibrary implements UDF8<String, String, String, String, String, String, String, String, java.util.Map<String, String>> {
+=======
+public class RunCqlLibrary implements UDF6<String, String, String, String, String, String, java.util.Map<String, String>> {
+
+>>>>>>> Stashed changes:src/main/java/com/bwell/services/spark/RunCqlLibrary.java
     private static final long serialVersionUID = 1L;
 
     /**
@@ -26,10 +37,15 @@ public class RunCqlLibrary implements UDF8<String, String, String, String, Strin
                                               String cqlLibraryVersion,
                                               String terminologyUrl,
                                               String cqlVariablesToReturn,
+<<<<<<< Updated upstream:src/main/java/com/bwell/spark/RunCqlLibrary.java
                                               String fhirBundle,
                                               String contextName,
                                               String contextValue) throws Exception {
         return new MeasureRunner().runCqlLibrary(
+=======
+                                              String fhirBundle) throws Exception {
+        return new MeasureService().runCqlLibrary(
+>>>>>>> Stashed changes:src/main/java/com/bwell/services/spark/RunCqlLibrary.java
                 cqlLibraryUrl,
                 cqlLibraryName,
                 cqlLibraryVersion,

@@ -1,15 +1,12 @@
-package com.bwell.common;
+package com.bwell.services.domain;
 
-import org.apache.commons.io.FileUtils;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.r4.formats.JsonParser;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.ResourceType;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 
 /**
  * This class loads a FHIR resource from a file or a string
@@ -21,6 +18,7 @@ public class ResourceLoader {
      * @param path: path to file
      * @return IBaseBundle
      */
+/*
     @Nullable
     public static IBaseBundle loadResourceFromFile(String path) {
         File f = new File(path);
@@ -32,6 +30,7 @@ public class ResourceLoader {
         }
         return loadResourceFromString(resource);
     }
+*/
 
     /**
      * Load a FHIR resource from a string
@@ -40,7 +39,7 @@ public class ResourceLoader {
      * @return IBaseBundle
      */
     @Nullable
-    public static IBaseBundle loadResourceFromString(String resourceJson) {
+    public IBaseBundle loadResourceFromString(String resourceJson) {
         JsonParser parser = new JsonParser();
         IBaseBundle bundle = null;
         try {

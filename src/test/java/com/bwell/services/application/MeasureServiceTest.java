@@ -1,4 +1,4 @@
-package com.bwell.runner;
+package com.bwell.services.application;
 
 import org.apache.commons.io.FileUtils;
 import org.hl7.fhir.instance.model.api.IBase;
@@ -15,13 +15,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
 
-public class MeasureRunnerTest {
+public class MeasureServiceTest {
     private ByteArrayOutputStream outContent;
     private ByteArrayOutputStream errContent;
     private final PrintStream originalOut = System.out;
@@ -124,7 +123,7 @@ public class MeasureRunnerTest {
         bundleJson = firstItem.getJSONObject("bundle").toString();
 
         try {
-            Map<String, String> result = new MeasureRunner().runCqlLibrary(
+            Map<String, String> result = new MeasureService().runCqlLibrary(
                     cqllibraryUrl,
                     cqlLibraryName,
                     cqllibraryVersion,
@@ -165,7 +164,7 @@ public class MeasureRunnerTest {
 //        bundleJson = firstItem.toString();
         bundleJson = firstItem.getJSONObject("bundle").toString();
         try {
-            Map<String, String> result = new MeasureRunner().runCqlLibrary(
+            Map<String, String> result = new MeasureService().runCqlLibrary(
                     cqllibraryUrl,
                     cqlLibraryName,
                     cqllibraryVersion,
@@ -185,7 +184,7 @@ public class MeasureRunnerTest {
 
     }
 
-    private String tempConvert(Object value) {
+/*    private String tempConvert(Object value) {
         if (value == null) {
             return "null";
         }
@@ -218,6 +217,6 @@ public class MeasureRunnerTest {
         }
 
         return result;
-    }
+    }*/
 
 }
