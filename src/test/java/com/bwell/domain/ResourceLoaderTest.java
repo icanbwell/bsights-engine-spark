@@ -1,5 +1,6 @@
-package com.bwell.common;
+package com.bwell.domain;
 
+import com.bwell.services.domain.ResourceLoader;
 import org.apache.commons.io.FileUtils;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.r4.model.Bundle;
@@ -46,7 +47,7 @@ public class ResourceLoaderTest {
         JSONObject firstItem = (JSONObject) jsonArray.get(0);
         bundleJson = firstItem.getJSONObject("bundle").toString();
 
-        IBaseBundle bundle = ResourceLoader.loadResourceFromString(bundleJson);
+        IBaseBundle bundle = new ResourceLoader().loadResourceFromString(bundleJson);
         assertNotNull(bundle);
         ArrayList entry = (ArrayList) ((Bundle) bundle).getEntry();
         Bundle.BundleEntryComponent bundleEntryComponent = (Bundle.BundleEntryComponent) entry.get(0);
@@ -69,7 +70,7 @@ public class ResourceLoaderTest {
             e.printStackTrace();
         }
 
-        IBaseBundle bundle = ResourceLoader.loadResourceFromString(bundleJson);
+        IBaseBundle bundle = new ResourceLoader().loadResourceFromString(bundleJson);
         assertNotNull(bundle);
         ArrayList entry = (ArrayList) ((Bundle) bundle).getEntry();
         Bundle.BundleEntryComponent bundleEntryComponent = (Bundle.BundleEntryComponent) entry.get(0);

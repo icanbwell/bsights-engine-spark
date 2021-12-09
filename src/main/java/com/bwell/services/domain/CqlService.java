@@ -1,12 +1,11 @@
-package com.bwell.runner;
+package com.bwell.services.domain;
 
-import com.bwell.common.*;
 import ca.uhn.fhir.context.FhirVersionEnum;
+import com.bwell.core.entities.LibraryParameter;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
-import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.execution.EvaluationResult;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.opencds.cqf.cql.engine.retrieve.RetrieveProvider;
@@ -21,14 +20,13 @@ import org.opencds.cqf.cql.evaluator.dagger.CqlEvaluatorComponent;
 import org.opencds.cqf.cql.evaluator.dagger.DaggerCqlEvaluatorComponent;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class MeasureRunner {
+public class CqlService {
 
     private final Map<String, LibraryContentProvider> libraryContentProviderIndex = new HashMap<>();
     private final Map<String, TerminologyProvider> terminologyProviderIndex = new HashMap<>();
 
-    public EvaluationResult runCql(String fhirVersion, List<LibraryParameter> libraries) {
+    public EvaluationResult runCqlLibrary(String fhirVersion, List<LibraryParameter> libraries) {
         FhirVersionEnum fhirVersionEnum = FhirVersionEnum.valueOf(fhirVersion);
 
         // create an evaluator with the passed in fhirVersion
@@ -77,7 +75,7 @@ public class MeasureRunner {
             if (library.model != null) {
                 // if model is provided as text then use it
                 if (library.model.modelBundle != null) {
-                    IBaseBundle bundle = ResourceLoader.loadResourceFromString(library.model.modelBundle);
+                    IBaseBundle bundle = new ResourceLoader().loadResourceFromString(library.model.modelBundle);
                     dataProvider = dataProviderFactory.create(bundle);
                 } else {
                     // load model from url
@@ -117,77 +115,5 @@ public class MeasureRunner {
 
         }
         return null;
-    }
-
-
-    /**
-     * Runs the CQL Library
-     *
-     * @param cqlLibraryUrl:        link to fhir server that holds the CQL library
-     * @param cqlLibraryName:       name of cql library
-     * @param cqlLibraryVersion:    version of cql library
-     * @param terminologyUrl:       link to fhir server that holds the value set
-     * @param cqlVariablesToReturn: comma separated list of cql variables.  This functions returns a dictionary of values for these
-     * @param fhirBundle:           FHIR bundle that contains the patient resource and any related resources like observations, conditions etc
-     * @param contextName:          Optional context name
-     * @param contextValue:         Optional context value
-     * @return map (dictionary) of variable name, value
-     * @throws Exception exception
-     */
-    public Map<String, String> runCqlLibrary(
-            String cqlLibraryUrl,
-            String cqlLibraryName,
-            String cqlLibraryVersion,
-            String terminologyUrl,
-            String cqlVariablesToReturn,
-            String fhirBundle,
-            String contextName,
-            String contextValue
-    ) throws Exception {
-        String fhirVersion = "R4";
-        List<LibraryParameter> libraries = new ArrayList<>();
-        LibraryParameter libraryParameter = new LibraryParameter();
-        libraryParameter.libraryName = cqlLibraryName;
-
-        libraryParameter.libraryUrl = cqlLibraryUrl;
-        libraryParameter.libraryVersion = cqlLibraryVersion;
-        libraryParameter.terminologyUrl = terminologyUrl;
-        libraryParameter.model = new ModelParameter();
-        libraryParameter.model.modelName = "FHIR";
-        libraryParameter.model.modelBundle = fhirBundle;
-        if (contextName != null) {
-            libraryParameter.context = new ContextParameter();
-            libraryParameter.context.contextName = "Patient";
-            if (contextValue != null) {
-                libraryParameter.context.contextValue = contextValue;
-            }
-        }
-
-        libraries.add(libraryParameter);
-
-        List<String> cqlVariables = Arrays.stream(cqlVariablesToReturn.split(",")).map(String::trim).collect(Collectors.toList());
-
-        Map<String, String> newMap = new HashMap<>();
-
-        try {
-            EvaluationResult result = new MeasureRunner().runCql(fhirVersion, libraries);
-            Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
-            for (Map.Entry<String, Object> libraryEntry : entrySet) {
-                String key = libraryEntry.getKey();
-                Object value = libraryEntry.getValue();
-                if (cqlVariables.contains(key)) {
-                    newMap.put(key, value != null ? value.toString() : null);
-                }
-            }
-        } catch (CqlException e) {
-            if (Objects.equals(e.getMessage(), "Unexpected exception caught during execution: ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException: HTTP 404 Not Found")) {
-                throw new Exception("NOTE: Did you run make loadfhir to load the fhir server?");
-            } else {
-                throw e;
-            }
-
-        }
-
-        return newMap;
     }
 }

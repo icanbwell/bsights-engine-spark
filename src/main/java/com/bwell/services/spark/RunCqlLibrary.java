@@ -1,22 +1,24 @@
-package com.bwell.spark;
+package com.bwell.services.spark;
 
-import com.bwell.runner.MeasureRunner;
+import com.bwell.services.application.MeasureService;
 import org.apache.spark.sql.api.java.UDF8;
 
 /**
- * This class implements a Spark UDF that takes in 6 strings and returns a map of key, value
+ * This class implements a Spark UDF that takes in 8 string parameters and returns a map of key, value
  */
 public class RunCqlLibrary implements UDF8<String, String, String, String, String, String, String, String, java.util.Map<String, String>> {
     private static final long serialVersionUID = 1L;
 
     /**
      * Implements the UDF function
-     * @param cqlLibraryUrl: url to fhir server containing the cql library to run
-     * @param cqlLibraryName: name of CQL library to run
-     * @param cqlLibraryVersion: version of cql library to run
-     * @param terminologyUrl: url to fhir server that has value sets
+     * @param cqlLibraryUrl:        url to fhir server containing the cql library to run
+     * @param cqlLibraryName:       name of CQL library to run
+     * @param cqlLibraryVersion:    version of cql library to run
+     * @param terminologyUrl:       url to fhir server that has value sets
      * @param cqlVariablesToReturn: list of cql variables that we should return the values for
-     * @param fhirBundle: FHIR resource bundle as a string
+     * @param fhirBundle:           FHIR resource bundle as a string
+     * @param contextName:          Optional context name
+     * @param contextValue:         Optional context value
      * @return Map of cql variable name, value
      * @throws Exception: exception
      */
@@ -29,7 +31,7 @@ public class RunCqlLibrary implements UDF8<String, String, String, String, Strin
                                               String fhirBundle,
                                               String contextName,
                                               String contextValue) throws Exception {
-        return new MeasureRunner().runCqlLibrary(
+        return new MeasureService().runCqlLibrary(
                 cqlLibraryUrl,
                 cqlLibraryName,
                 cqlLibraryVersion,
@@ -41,4 +43,3 @@ public class RunCqlLibrary implements UDF8<String, String, String, String, Strin
         );
     }
 }
-

@@ -1,7 +1,9 @@
 package com.bwell.measure;
 
-import com.bwell.common.*;
-import com.bwell.runner.MeasureRunner;
+import com.bwell.core.entities.ContextParameter;
+import com.bwell.core.entities.LibraryParameter;
+import com.bwell.core.entities.ModelParameter;
+import com.bwell.services.domain.CqlService;
 import org.apache.commons.io.FileUtils;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseDatatype;
@@ -91,7 +93,7 @@ public class BMI001Test {
 
         libraries.add(libraryParameter);
 
-        EvaluationResult result = new MeasureRunner().runCql(fhirVersion, libraries);
+        EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraries);
 
         Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
         for (Map.Entry<String, Object> libraryEntry : entrySet) {
@@ -129,7 +131,7 @@ public class BMI001Test {
         libraries.add(libraryParameter);
 
         try {
-            EvaluationResult result = new MeasureRunner().runCql(fhirVersion, libraries);
+            EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraries);
             Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
             for (Map.Entry<String, Object> libraryEntry : entrySet) {
                 String key = libraryEntry.getKey();
@@ -176,7 +178,7 @@ public class BMI001Test {
         libraries.add(libraryParameter);
 
         try {
-            EvaluationResult result = new MeasureRunner().runCql(fhirVersion, libraries);
+            EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraries);
             Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
             for (Map.Entry<String, Object> libraryEntry : entrySet) {
                 String key = libraryEntry.getKey();
@@ -222,7 +224,7 @@ public class BMI001Test {
         libraries.add(libraryParameter);
 
         try {
-            EvaluationResult result = new MeasureRunner().runCql(fhirVersion, libraries);
+            EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraries);
             Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
             for (Map.Entry<String, Object> libraryEntry : entrySet) {
                 String key = libraryEntry.getKey();
@@ -283,7 +285,7 @@ public class BMI001Test {
 
 
         try {
-            EvaluationResult result = new MeasureRunner().runCql(fhirVersion, libraries);
+            EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraries);
             Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
             for (Map.Entry<String, Object> libraryEntry : entrySet) {
                 String key = libraryEntry.getKey();
