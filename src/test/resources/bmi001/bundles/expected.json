@@ -6,7 +6,7 @@
         {
           "resource": {
             "resourceType": "Patient",
-            "id": "example",
+            "id": "1",
             "meta": {
               "profile": [
                 "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-patient"
@@ -339,7 +339,7 @@
         {
           "resource": {
             "resourceType": "Patient",
-            "id": "example",
+            "id": "2",
             "meta": {
               "profile": [
                 "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-patient"
