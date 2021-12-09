@@ -90,7 +90,6 @@ public class BMI001Test {
         libraryParameter.model.modelBundle = bundleJson;
         libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
-        libraryParameter.context.contextValue = "example";
 
         libraries.add(libraryParameter);
 
@@ -107,7 +106,7 @@ public class BMI001Test {
                 assertEquals(mr_identifier_value, "12345");
                 String patient_id = patient.getId();  // patient id
                 System.out.println(key + ": Patient ID = " + patient_id);
-                assertEquals(patient_id, "example");
+                assertEquals(patient_id, "1");
             }
             System.out.println(key + "=" + tempConvert(value));
         }
@@ -130,7 +129,6 @@ public class BMI001Test {
         libraryParameter.model.modelBundle = bundleJson;
         libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
-        libraryParameter.context.contextValue = "example";
 
         libraries.add(libraryParameter);
 
@@ -147,7 +145,7 @@ public class BMI001Test {
                     assertEquals(mr_identifier_value, "12345");
                     String patient_id = patient.getId();  // patient id
                     System.out.println(key + ": Patient ID = " + patient_id);
-                    assertEquals(patient_id, "example");
+                    assertEquals(patient_id, "1");
                 }
                 System.out.println(key + "=" + tempConvert(value));
             }
@@ -180,7 +178,6 @@ public class BMI001Test {
         libraryParameter.model.modelBundle = bundleJson;
         libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
-        libraryParameter.context.contextValue = "example";
 
         libraries.add(libraryParameter);
 
@@ -197,7 +194,7 @@ public class BMI001Test {
                     assertEquals(mr_identifier_value, "12345");
                     String patient_id = patient.getId();  // patient id
                     System.out.println(key + ": Patient ID = " + patient_id);
-                    assertEquals(patient_id, "example");
+                    assertEquals(patient_id, "1");
                 }
                 System.out.println(key + "=" + tempConvert(value));
             }
@@ -229,7 +226,6 @@ public class BMI001Test {
         libraryParameter.model.modelBundle = bundleJson;
         libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
-        libraryParameter.context.contextValue = "example";
 
         libraries.add(libraryParameter);
 
@@ -246,7 +242,7 @@ public class BMI001Test {
                     assertEquals(mr_identifier_value, "12345");
                     String patient_id = patient.getId();  // patient id
                     System.out.println(key + ": Patient ID = " + patient_id);
-                    assertEquals(patient_id, "example");
+                    assertEquals(patient_id, "1");
                 }
                 System.out.println(key + "=" + tempConvert(value));
             }
@@ -292,7 +288,6 @@ public class BMI001Test {
         libraryParameter.model.modelBundle = bundleContainedJson;
         libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
-        libraryParameter.context.contextValue = "example";
 
         libraries.add(libraryParameter);
 
@@ -305,12 +300,14 @@ public class BMI001Test {
                 Object value = libraryEntry.getValue();
                 if (key.equals("Patient")) {
                     Patient patient = (Patient) value;
-                    String mr_identifier_value = patient.getIdentifier().get(0).getValue(); // medical record number
-                    System.out.println(key + ": Medical Record ID = " + mr_identifier_value);
-                    assertEquals(mr_identifier_value, "12345");
-                    String patient_id = patient.getId();  // patient id
-                    System.out.println(key + ": Patient ID = " + patient_id);
-                    assertEquals(patient_id, "example");
+                    if (patient != null){
+                        String mr_identifier_value = patient.getIdentifier().get(0).getValue(); // medical record number
+                        System.out.println(key + ": Medical Record ID = " + mr_identifier_value);
+                        assertEquals(mr_identifier_value, "12345");
+                        String patient_id = patient.getId();  // patient id
+                        System.out.println(key + ": Patient ID = " + patient_id);
+                        assertEquals(patient_id, "1");
+                    }
                 }
                 System.out.println(key + "=" + tempConvert(value));
             }

@@ -88,7 +88,8 @@ public class MeasureRunnerTest {
                     cqllibraryVersion,
                     terminologyUrl,
                     cqlVariablesToReturn,
-                    bundleJson
+                    bundleJson,
+                    null
             );
             assertEquals(result.get("InAgeCohort"), "true");
         } catch (Exception e) {
@@ -127,7 +128,8 @@ public class MeasureRunnerTest {
                     cqllibraryVersion,
                     terminologyUrl,
                     cqlVariablesToReturn,
-                    bundleJson
+                    bundleJson,
+                    null
             );
             assertEquals(result.get("InAgeCohort"), "true");
         } catch (Exception e) {

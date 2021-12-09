@@ -25,7 +25,7 @@ public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
         jsc().setLogLevel("ERROR");
         File file = new File(testResourceRelativePath);
         testResourcePath = file.getAbsolutePath();
-        System.out.println(String.format("Test resource directory: %s", testResourcePath));
+        System.out.printf("Test resource directory: %s%n", testResourcePath);
     }
 
     @Test
@@ -55,8 +55,8 @@ public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
         String cqlVariablesToReturn = "InAgeCohort,InDemographicExists";
 
         String command = String.format(
-                "runCqlLibrary('%s', '%s','%s','%s','%s', %s)",
-                cqllibraryUrl, cqlLibraryName, cqllibraryVersion, terminologyUrl, cqlVariablesToReturn, patientBundleColumn);
+                "runCqlLibrary('%s', '%s','%s','%s','%s', %s, %s)",
+                cqllibraryUrl, cqlLibraryName, cqllibraryVersion, terminologyUrl, cqlVariablesToReturn, patientBundleColumn, null);
 
         Dataset<Row> result_df = sqlContext.sql("SELECT " + command + " As ruleResults from numbersdata");
         result_df.printSchema();

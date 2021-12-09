@@ -138,7 +138,8 @@ public class MeasureRunner {
             String cqlLibraryVersion,
             String terminologyUrl,
             String cqlVariablesToReturn,
-            String fhirBundle
+            String fhirBundle,
+            String contextValue
     ) throws Exception {
         String fhirVersion = "R4";
         List<LibraryParameter> libraries = new ArrayList<>();
@@ -153,7 +154,10 @@ public class MeasureRunner {
         libraryParameter.model.modelBundle = fhirBundle;
         libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
-        libraryParameter.context.contextValue = "example";
+        if (contextValue != null){
+            libraryParameter.context.contextValue = contextValue;
+        }
+
 
         libraries.add(libraryParameter);
 
