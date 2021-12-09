@@ -89,6 +89,7 @@ public class MeasureRunnerTest {
                     terminologyUrl,
                     cqlVariablesToReturn,
                     bundleJson,
+                    null,
                     null
             );
             assertEquals(result.get("InAgeCohort"), "true");
@@ -129,6 +130,7 @@ public class MeasureRunnerTest {
                     terminologyUrl,
                     cqlVariablesToReturn,
                     bundleJson,
+                    null,
                     null
             );
             assertEquals(result.get("InAgeCohort"), "true");

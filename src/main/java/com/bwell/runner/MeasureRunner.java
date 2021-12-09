@@ -129,6 +129,8 @@ public class MeasureRunner {
      * @param terminologyUrl:       link to fhir server that holds the value set
      * @param cqlVariablesToReturn: comma separated list of cql variables.  This functions returns a dictionary of values for these
      * @param fhirBundle:           FHIR bundle that contains the patient resource and any related resources like observations, conditions etc
+     * @param contextName:          Optional context name
+     * @param contextValue:         Optional context value
      * @return map (dictionary) of variable name, value
      * @throws Exception exception
      */
@@ -139,6 +141,7 @@ public class MeasureRunner {
             String terminologyUrl,
             String cqlVariablesToReturn,
             String fhirBundle,
+            String contextName,
             String contextValue
     ) throws Exception {
         String fhirVersion = "R4";
@@ -152,12 +155,13 @@ public class MeasureRunner {
         libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
         libraryParameter.model.modelBundle = fhirBundle;
-        libraryParameter.context = new ContextParameter();
-        libraryParameter.context.contextName = "Patient";
-        if (contextValue != null){
-            libraryParameter.context.contextValue = contextValue;
+        if (contextName != null) {
+            libraryParameter.context = new ContextParameter();
+            libraryParameter.context.contextName = "Patient";
+            if (contextValue != null) {
+                libraryParameter.context.contextValue = contextValue;
+            }
         }
-
 
         libraries.add(libraryParameter);
 

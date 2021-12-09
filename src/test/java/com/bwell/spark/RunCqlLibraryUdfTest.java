@@ -55,8 +55,8 @@ public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
         String cqlVariablesToReturn = "InAgeCohort,InDemographicExists";
 
         String command = String.format(
-                "runCqlLibrary('%s', '%s','%s','%s','%s', %s, %s)",
-                cqllibraryUrl, cqlLibraryName, cqllibraryVersion, terminologyUrl, cqlVariablesToReturn, patientBundleColumn, null);
+                "runCqlLibrary('%s', '%s','%s','%s','%s', %s, %s, %s)",
+                cqllibraryUrl, cqlLibraryName, cqllibraryVersion, terminologyUrl, cqlVariablesToReturn, patientBundleColumn, null, null);
 
         Dataset<Row> result_df = sqlContext.sql("SELECT " + command + " As ruleResults from numbersdata");
         result_df.printSchema();

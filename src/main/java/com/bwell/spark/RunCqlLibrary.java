@@ -1,12 +1,12 @@
 package com.bwell.spark;
 
 import com.bwell.runner.MeasureRunner;
-import org.apache.spark.sql.api.java.UDF7;
+import org.apache.spark.sql.api.java.UDF8;
 
 /**
  * This class implements a Spark UDF that takes in 6 strings and returns a map of key, value
  */
-public class RunCqlLibrary implements UDF7<String, String, String, String, String, String, String, java.util.Map<String, String>> {
+public class RunCqlLibrary implements UDF8<String, String, String, String, String, String, String, String, java.util.Map<String, String>> {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -27,6 +27,7 @@ public class RunCqlLibrary implements UDF7<String, String, String, String, Strin
                                               String terminologyUrl,
                                               String cqlVariablesToReturn,
                                               String fhirBundle,
+                                              String contextName,
                                               String contextValue) throws Exception {
         return new MeasureRunner().runCqlLibrary(
                 cqlLibraryUrl,
@@ -35,6 +36,7 @@ public class RunCqlLibrary implements UDF7<String, String, String, String, Strin
                 terminologyUrl,
                 cqlVariablesToReturn,
                 fhirBundle,
+                contextName,
                 contextValue
         );
     }

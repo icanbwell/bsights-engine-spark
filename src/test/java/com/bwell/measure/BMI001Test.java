@@ -88,8 +88,6 @@ public class BMI001Test {
         libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new ContextParameter();
-        libraryParameter.context.contextName = "Patient";
 
         libraries.add(libraryParameter);
 
@@ -127,8 +125,6 @@ public class BMI001Test {
         libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new ContextParameter();
-        libraryParameter.context.contextName = "Patient";
 
         libraries.add(libraryParameter);
 
@@ -176,8 +172,6 @@ public class BMI001Test {
         libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new ContextParameter();
-        libraryParameter.context.contextName = "Patient";
 
         libraries.add(libraryParameter);
 
@@ -224,8 +218,6 @@ public class BMI001Test {
         libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new ContextParameter();
-        libraryParameter.context.contextName = "Patient";
 
         libraries.add(libraryParameter);
 
@@ -286,8 +278,6 @@ public class BMI001Test {
         libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
         libraryParameter.model.modelBundle = bundleContainedJson;
-        libraryParameter.context = new ContextParameter();
-        libraryParameter.context.contextName = "Patient";
 
         libraries.add(libraryParameter);
 
