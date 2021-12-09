@@ -24,6 +24,8 @@ public class MeasureService {
      * @param terminologyUrl:       link to fhir server that holds the value set
      * @param cqlVariablesToReturn: comma separated list of cql variables.  This functions returns a dictionary of values for these
      * @param fhirBundle:           FHIR bundle that contains the patient resource and any related resources like observations, conditions etc
+     * @param contextName:          Optional context name
+     * @param contextValue:         Optional context value
      * @return map (dictionary) of variable name, value
      * @throws Exception exception
      */
@@ -49,8 +51,13 @@ public class MeasureService {
         libraryParameter.model.modelName = "FHIR";
         libraryParameter.model.modelBundle = fhirBundle;
         libraryParameter.context = new ContextParameter();
-        libraryParameter.context.contextName = "Patient";
-        libraryParameter.context.contextValue = "example";
+        if (contextName != null) {
+            libraryParameter.context = new ContextParameter();
+            libraryParameter.context.contextName = "Patient";
+            if (contextValue != null) {
+                libraryParameter.context.contextValue = contextValue;
+            }
+        }
 
         libraries.add(libraryParameter);
 
@@ -65,7 +72,7 @@ public class MeasureService {
                 String key = libraryEntry.getKey();
                 Object value = libraryEntry.getValue();
                 if (cqlVariables.contains(key)) {
-                    newMap.put(key, value.toString());
+                    newMap.put(key, value != null ? value.toString() : null);
                 }
             }
         } catch (CqlException e) {
