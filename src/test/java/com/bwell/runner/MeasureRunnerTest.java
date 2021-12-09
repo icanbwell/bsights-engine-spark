@@ -62,12 +62,54 @@ public class MeasureRunnerTest {
     }
 
     @Test
+    public void testRunCqlLibraryFromFile() throws Exception {
+        String cqlLibraryName = "BMI001";
+        String cqllibraryUrl = testResourcePath + "/" + folder + "/cql";
+        String cqllibraryVersion = "1.0.0";
+        String terminologyUrl = testResourcePath + "/" + folder + "/terminology";
+        String cqlVariablesToReturn = "InAgeCohort,InDemographicExists,PatientId";
+
+        String bundleJson = null;
+        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
+        try {
+            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        JSONArray jsonArray = new JSONArray(bundleJson);
+        JSONObject firstItem = (JSONObject) jsonArray.get(0);
+        bundleJson = firstItem.getJSONObject("bundle").toString();
+
+        try {
+            Map<String, String> result = new MeasureRunner().runCqlLibrary(
+                    cqllibraryUrl,
+                    cqlLibraryName,
+                    cqllibraryVersion,
+                    terminologyUrl,
+                    cqlVariablesToReturn,
+                    bundleJson,
+                    null,
+                    null
+            );
+            assertEquals(result.get("InAgeCohort"), "true");
+            assertEquals(result.get("PatientId"), "1");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+
+        System.out.println();
+
+    }
+
+    @Test
     public void testRunCqlLibrary() throws Exception {
         String cqlLibraryName = "BMI001";
         String cqllibraryUrl = "http://localhost:3000/4_0_0";
         String cqllibraryVersion = "1.0.0";
         String terminologyUrl = "http://localhost:3000/4_0_0";
-        String cqlVariablesToReturn = "InAgeCohort,InDemographicExists";
+        String cqlVariablesToReturn = "InAgeCohort,InDemographicExists,PatientId";
 
         String bundleJson = null;
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
