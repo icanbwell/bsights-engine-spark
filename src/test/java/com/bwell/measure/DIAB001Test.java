@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static org.testng.Assert.assertEquals;
@@ -36,7 +37,7 @@ public class DIAB001Test {
     public void setup() {
         File file = new File(testResourceRelativePath);
         testResourcePath = file.getAbsolutePath();
-        System.out.println(String.format("Test resource directory: %s", testResourcePath));
+        System.out.printf("Test resource directory: %s%n", testResourcePath);
     }
 
     @BeforeMethod
@@ -72,7 +73,7 @@ public class DIAB001Test {
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
         String bundleJson = null;
         try {
-            bundleJson = FileUtils.readFileToString(f, Charset.forName("UTF-8"));
+            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -81,9 +82,6 @@ public class DIAB001Test {
         libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new ContextParameter();
-        libraryParameter.context.contextName = "Patient";
-        libraryParameter.context.contextValue = "example";
         libraries.add(libraryParameter);
 
         EvaluationResult result = new MeasureRunner().runCql(fhirVersion, libraries);
@@ -119,7 +117,7 @@ public class DIAB001Test {
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
         String bundleJson = null;
         try {
-            bundleJson = FileUtils.readFileToString(f, Charset.forName("UTF-8"));
+            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -131,9 +129,6 @@ public class DIAB001Test {
         libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new ContextParameter();
-        libraryParameter.context.contextName = "Patient";
-        libraryParameter.context.contextValue = "example";
         libraries.add(libraryParameter);
 
         try {
@@ -176,7 +171,7 @@ public class DIAB001Test {
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
         String bundleJson = null;
         try {
-            bundleJson = FileUtils.readFileToString(f, Charset.forName("UTF-8"));
+            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -188,9 +183,6 @@ public class DIAB001Test {
         libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
         libraryParameter.model.modelBundle = bundleJson;
-        libraryParameter.context = new ContextParameter();
-        libraryParameter.context.contextName = "Patient";
-        libraryParameter.context.contextValue = "example";
         libraries.add(libraryParameter);
 
         try {
