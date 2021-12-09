@@ -81,7 +81,7 @@ public class MeasureServiceTest {
         bundleJson = firstItem.getJSONObject("bundle").toString();
 
         try {
-            Map<String, String> result = new MeasureRunner().runCqlLibrary(
+            Map<String, String> result = new MeasureService().runCqlLibrary(
                     cqllibraryUrl,
                     cqlLibraryName,
                     cqllibraryVersion,
@@ -183,40 +183,5 @@ public class MeasureServiceTest {
         System.out.println();
 
     }
-
-/*    private String tempConvert(Object value) {
-        if (value == null) {
-            return "null";
-        }
-
-        String result = "";
-        if (value instanceof Iterable) {
-            result += "[";
-            Iterable<?> values = (Iterable<?>) value;
-            for (Object o : values) {
-
-                result += (tempConvert(o) + ", ");
-            }
-
-            if (result.length() > 1) {
-                result = result.substring(0, result.length() - 2);
-            }
-
-            result += "]";
-        } else if (value instanceof IBaseResource) {
-            IBaseResource resource = (IBaseResource) value;
-            result = resource.fhirType() + (resource.getIdElement() != null && resource.getIdElement().hasIdPart()
-                    ? "(id=" + resource.getIdElement().getIdPart() + ")"
-                    : "");
-        } else if (value instanceof IBase) {
-            result = ((IBase) value).fhirType();
-        } else if (value instanceof IBaseDatatype) {
-            result = ((IBaseDatatype) value).fhirType();
-        } else {
-            result = value.toString();
-        }
-
-        return result;
-    }*/
 
 }

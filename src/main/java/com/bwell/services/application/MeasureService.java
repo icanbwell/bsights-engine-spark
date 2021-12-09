@@ -33,7 +33,9 @@ public class MeasureService {
             String cqlLibraryVersion,
             String terminologyUrl,
             String cqlVariablesToReturn,
-            String fhirBundle
+            String fhirBundle,
+            String contextName,
+            String contextValue
     ) throws Exception {
         String fhirVersion = "R4";
         List<LibraryParameter> libraries = new ArrayList<>();
