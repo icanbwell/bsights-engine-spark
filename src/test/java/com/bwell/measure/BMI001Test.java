@@ -1,6 +1,5 @@
 package com.bwell.measure;
 
-import com.bwell.core.entities.ContextParameter;
 import com.bwell.core.entities.LibraryParameter;
 import com.bwell.core.entities.ModelParameter;
 import com.bwell.services.domain.CqlService;
@@ -28,22 +27,45 @@ import java.util.*;
 import static org.testng.Assert.assertEquals;
 
 public class BMI001Test {
+
     private ByteArrayOutputStream outContent;
     private ByteArrayOutputStream errContent;
     private final PrintStream originalOut = System.out;
     private final PrintStream originalErr = System.err;
 
+    private static String fhirVersion = "R4";
+    private static String modelName = "FHIR";
+    private static String fhirServerUrl = "http://localhost:3000/4_0_0";
     private static final String testResourceRelativePath = "src/test/resources";
+    private static String folder = "bmi001";
+    private static String libraryName = "BMI001";
     private static String testResourcePath = null;
-    private static String folder = null;
     private static String bundleJson = null;
+    private static String bundleContainedJson = null;
+
 
     @BeforeClass
     public void setup() {
         File file = new File(testResourceRelativePath);
         testResourcePath = file.getAbsolutePath();
         System.out.printf("Test resource directory: %s%n", testResourcePath);
-        folder = "bmi001";
+
+        bundleJson = getBundle(file);
+        bundleContainedJson = getContainedBundle(file);
+
+/*        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
+        try {
+            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        JSONArray jsonArray = new JSONArray(bundleJson);
+        JSONObject firstItem = (JSONObject) jsonArray.get(0);
+        bundleJson = firstItem.getJSONObject("bundle").toString();*/
+    }
+
+    private String getBundle(File file) {
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
         try {
             bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
@@ -54,6 +76,21 @@ public class BMI001Test {
         JSONArray jsonArray = new JSONArray(bundleJson);
         JSONObject firstItem = (JSONObject) jsonArray.get(0);
         bundleJson = firstItem.getJSONObject("bundle").toString();
+        return bundleJson;
+    }
+
+    private String getContainedBundle(File file) {
+        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected_contained.json");
+        try {
+            bundleContainedJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        JSONArray jsonArray = new JSONArray(bundleContainedJson);
+        JSONObject firstItem = (JSONObject) jsonArray.get(0);
+        bundleContainedJson = firstItem.getJSONObject("bundle").toString();
+        return bundleContainedJson;
     }
 
     @BeforeMethod
@@ -80,15 +117,15 @@ public class BMI001Test {
     @Test
     public void testBMI001Bundle() {
 
-        String fhirVersion = "R4";
+        ModelParameter modelParameter = new ModelParameter();
         List<LibraryParameter> libraries = new ArrayList<>();
-        LibraryParameter libraryParameter = new LibraryParameter();
-        libraryParameter.libraryName = "BMI001";
 
+        LibraryParameter libraryParameter = new LibraryParameter();
+        libraryParameter.libraryName = libraryName;
         libraryParameter.libraryUrl = testResourcePath + "/" + folder + "/cql";
         libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/terminology";
-        libraryParameter.model = new ModelParameter();
-        libraryParameter.model.modelName = "FHIR";
+        libraryParameter.model = modelParameter;
+        libraryParameter.model.modelName = modelName;
         libraryParameter.model.modelBundle = bundleJson;
 
         libraries.add(libraryParameter);
@@ -96,19 +133,30 @@ public class BMI001Test {
         EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraries);
 
         Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
+
         for (Map.Entry<String, Object> libraryEntry : entrySet) {
+
             String key = libraryEntry.getKey();
             Object value = libraryEntry.getValue();
+
             if (key.equals("Patient")) {
+
                 Patient patient = (Patient) value;
-                String mr_identifier_value = patient.getIdentifier().get(0).getValue(); // medical record number
-                System.out.println(key + ": Medical Record ID = " + mr_identifier_value);
-                assertEquals(mr_identifier_value, "12345");
-                String patient_id = patient.getId();  // patient id
-                System.out.println(key + ": Patient ID = " + patient_id);
-                assertEquals(patient_id, "1");
+
+                // medical record number
+                String medicalRecordId = patient.getIdentifier().get(0).getValue();
+                System.out.println(key + ": Medical Record ID = " + medicalRecordId);
+                assertEquals(medicalRecordId, "12345");
+
+                // patient id
+                String patientId = patient.getId();
+                System.out.println(key + ": Patient ID = " + patientId);
+                assertEquals(patientId, "example");
+
             }
+
             System.out.println(key + "=" + tempConvert(value));
+
         }
 
         System.out.println();
@@ -117,35 +165,48 @@ public class BMI001Test {
     @Test
     public void testBMI001BundleTerminologyFromFhirServer() throws Exception {
 
-        String fhirVersion = "R4";
+        ModelParameter modelParameter = new ModelParameter();
         List<LibraryParameter> libraries = new ArrayList<>();
-        LibraryParameter libraryParameter = new LibraryParameter();
-        libraryParameter.libraryName = "BMI001";
 
+        LibraryParameter libraryParameter = new LibraryParameter();
+        libraryParameter.libraryName = libraryName;
         libraryParameter.libraryUrl = testResourcePath + "/" + folder + "/cql";
-        libraryParameter.terminologyUrl = "http://localhost:3000/4_0_0";
-        libraryParameter.model = new ModelParameter();
-        libraryParameter.model.modelName = "FHIR";
+        libraryParameter.terminologyUrl = fhirServerUrl;
+        libraryParameter.model = modelParameter;
+        libraryParameter.model.modelName = modelName;
         libraryParameter.model.modelBundle = bundleJson;
 
         libraries.add(libraryParameter);
 
         try {
+
             EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraries);
+
             Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
+
             for (Map.Entry<String, Object> libraryEntry : entrySet) {
+
                 String key = libraryEntry.getKey();
                 Object value = libraryEntry.getValue();
+
                 if (key.equals("Patient")) {
+
                     Patient patient = (Patient) value;
-                    String mr_identifier_value = patient.getIdentifier().get(0).getValue(); // medical record number
-                    System.out.println(key + ": Medical Record ID = " + mr_identifier_value);
-                    assertEquals(mr_identifier_value, "12345");
-                    String patient_id = patient.getId();  // patient id
-                    System.out.println(key + ": Patient ID = " + patient_id);
-                    assertEquals(patient_id, "1");
+
+                    // medical record number
+                    String medicalRecordId = patient.getIdentifier().get(0).getValue();
+                    System.out.println(key + ": Medical Record ID = " + medicalRecordId);
+                    assertEquals(medicalRecordId, "12345");
+
+                    // patient id
+                    String patientId = patient.getId();
+                    System.out.println(key + ": Patient ID = " + patientId);
+                    assertEquals(patientId, "example");
+
                 }
+
                 System.out.println(key + "=" + tempConvert(value));
+
             }
         } catch (CqlException e) {
             if (Objects.equals(e.getMessage(), "Unexpected exception caught during execution: ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException: HTTP 404 Not Found")) {
@@ -162,37 +223,50 @@ public class BMI001Test {
 
     @Test
     public void testBMI001BundleCqlFromFhirServer() throws Exception {
-        String fhirVersion = "R4";
-        List<LibraryParameter> libraries = new ArrayList<>();
-        LibraryParameter libraryParameter = new LibraryParameter();
-        String folder = "bmi001";
 
-        libraryParameter.libraryUrl = "http://localhost:3000/4_0_0";
-        libraryParameter.libraryName = "BMI001";
+        ModelParameter modelParameter = new ModelParameter();
+        List<LibraryParameter> libraries = new ArrayList<>();
+
+        LibraryParameter libraryParameter = new LibraryParameter();
+        libraryParameter.libraryName = libraryName;
+        libraryParameter.libraryUrl = fhirServerUrl;
         libraryParameter.libraryVersion = "1.0.0";
         libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/terminology";
-        libraryParameter.model = new ModelParameter();
-        libraryParameter.model.modelName = "FHIR";
+        libraryParameter.model = modelParameter;
+        libraryParameter.model.modelName = modelName;
         libraryParameter.model.modelBundle = bundleJson;
 
         libraries.add(libraryParameter);
 
         try {
+
             EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraries);
+
             Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
+
             for (Map.Entry<String, Object> libraryEntry : entrySet) {
+
                 String key = libraryEntry.getKey();
                 Object value = libraryEntry.getValue();
+
                 if (key.equals("Patient")) {
+
                     Patient patient = (Patient) value;
-                    String mr_identifier_value = patient.getIdentifier().get(0).getValue(); // medical record number
-                    System.out.println(key + ": Medical Record ID = " + mr_identifier_value);
-                    assertEquals(mr_identifier_value, "12345");
-                    String patient_id = patient.getId();  // patient id
-                    System.out.println(key + ": Patient ID = " + patient_id);
-                    assertEquals(patient_id, "1");
+
+                    // medical record number
+                    String medicalRecordId = patient.getIdentifier().get(0).getValue();
+                    System.out.println(key + ": Medical Record ID = " + medicalRecordId);
+                    assertEquals(medicalRecordId, "12345");
+
+                    // patient id
+                    String patientId = patient.getId();
+                    System.out.println(key + ": Patient ID = " + patientId);
+                    assertEquals(patientId, "example");
+
                 }
+
                 System.out.println(key + "=" + tempConvert(value));
+
             }
         } catch (CqlException e) {
             if (Objects.equals(e.getMessage(), "Unexpected exception caught during execution: ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException: HTTP 404 Not Found")) {
@@ -209,16 +283,17 @@ public class BMI001Test {
 
     @Test
     public void testBMI001BundleCqlAndTerminologyFromFhirServer() throws Exception {
-        String fhirVersion = "R4";
-        List<LibraryParameter> libraries = new ArrayList<>();
-        LibraryParameter libraryParameter = new LibraryParameter();
 
-        libraryParameter.libraryUrl = "http://localhost:3000/4_0_0";
-        libraryParameter.libraryName = "BMI001";
+        ModelParameter modelParameter = new ModelParameter();
+        List<LibraryParameter> libraries = new ArrayList<>();
+
+        LibraryParameter libraryParameter = new LibraryParameter();
+        libraryParameter.libraryName = libraryName;
+        libraryParameter.libraryUrl = fhirServerUrl;
         libraryParameter.libraryVersion = "1.0.0";
-        libraryParameter.terminologyUrl = "http://localhost:3000/4_0_0";
-        libraryParameter.model = new ModelParameter();
-        libraryParameter.model.modelName = "FHIR";
+        libraryParameter.terminologyUrl = fhirServerUrl;
+        libraryParameter.model = modelParameter;
+        libraryParameter.model.modelName = modelName;
         libraryParameter.model.modelBundle = bundleJson;
 
         libraries.add(libraryParameter);
@@ -255,9 +330,9 @@ public class BMI001Test {
 
     @Test
     public void testBMI001BundleCqlAndTerminologyFromFhirServerWithContainedResources() throws Exception {
-        String fhirVersion = "R4";
+  /*       String fhirVersion = "R4";
 
-        String bundleContainedJson = null;
+       String bundleContainedJson = null;
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected_contained.json");
         try {
             bundleContainedJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
@@ -283,25 +358,50 @@ public class BMI001Test {
 
         libraries.add(libraryParameter);
 
+*/
+        ModelParameter modelParameter = new ModelParameter();
+        List<LibraryParameter> libraries = new ArrayList<>();
+
+        LibraryParameter libraryParameter = new LibraryParameter();
+        libraryParameter.libraryName = libraryName;
+        libraryParameter.libraryUrl = fhirServerUrl;
+        libraryParameter.libraryVersion = "1.0.0";
+        libraryParameter.terminologyUrl = fhirServerUrl;
+        libraryParameter.model = modelParameter;
+        libraryParameter.model.modelName = modelName;
+        libraryParameter.model.modelBundle = bundleContainedJson;
+
+        libraries.add(libraryParameter);
 
         try {
+
             EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraries);
+
             Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
+
             for (Map.Entry<String, Object> libraryEntry : entrySet) {
+
                 String key = libraryEntry.getKey();
                 Object value = libraryEntry.getValue();
+
                 if (key.equals("Patient")) {
+
                     Patient patient = (Patient) value;
-                    if (patient != null){
-                        String mr_identifier_value = patient.getIdentifier().get(0).getValue(); // medical record number
-                        System.out.println(key + ": Medical Record ID = " + mr_identifier_value);
-                        assertEquals(mr_identifier_value, "12345");
-                        String patient_id = patient.getId();  // patient id
-                        System.out.println(key + ": Patient ID = " + patient_id);
-                        assertEquals(patient_id, "1");
-                    }
+
+                    // medical record number
+                    String medicalRecordId = patient.getIdentifier().get(0).getValue();
+                    System.out.println(key + ": Medical Record ID = " + medicalRecordId);
+                    assertEquals(medicalRecordId, "12345");
+
+                    // patient id
+                    String patientId = patient.getId();
+                    System.out.println(key + ": Patient ID = " + patientId);
+                    assertEquals(patientId, "example");
+
                 }
+
                 System.out.println(key + "=" + tempConvert(value));
+
             }
         } catch (CqlException e) {
             if (Objects.equals(e.getMessage(), "Unexpected exception caught during execution: ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException: HTTP 404 Not Found")) {
@@ -350,6 +450,5 @@ public class BMI001Test {
 
         return result;
     }
-
 
 }
