@@ -1,8 +1,6 @@
 package com.bwell.services.application;
 
-import com.bwell.core.entities.ContextParameter;
-import com.bwell.core.entities.LibraryParameter;
-import com.bwell.core.entities.ModelParameter;
+import com.bwell.core.entities.*;
 import com.bwell.services.domain.CqlService;
 import org.hl7.fhir.r4.model.Patient;
 import org.opencds.cqf.cql.engine.exception.CqlException;
