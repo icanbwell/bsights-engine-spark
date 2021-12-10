@@ -1,12 +1,12 @@
 package com.bwell.services.spark;
 
 import com.bwell.services.application.MeasureService;
-import org.apache.spark.sql.api.java.UDF8;
+import org.apache.spark.sql.api.java.UDF10;
 
 /**
  * This class implements a Spark UDF that takes in 8 string parameters and returns a map of key, value
  */
-public class RunCqlLibrary implements UDF8<String, String, String, String, String, String, String, String, java.util.Map<String, String>> {
+public class RunCqlLibrary implements UDF10<String, String, String, String, String, String, String, String, String, String, java.util.Map<String, String>> {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -24,18 +24,22 @@ public class RunCqlLibrary implements UDF8<String, String, String, String, Strin
      */
     @Override
     public java.util.Map<String, String> call(String cqlLibraryUrl,
+                                              String cqlLibraryHeaders,
                                               String cqlLibraryName,
                                               String cqlLibraryVersion,
                                               String terminologyUrl,
+                                              String terminologyUrlHeaders,
                                               String cqlVariablesToReturn,
                                               String fhirBundle,
                                               String contextName,
                                               String contextValue) throws Exception {
         return new MeasureService().runCqlLibrary(
                 cqlLibraryUrl,
+                cqlLibraryHeaders,
                 cqlLibraryName,
                 cqlLibraryVersion,
                 terminologyUrl,
+                terminologyUrlHeaders,
                 cqlVariablesToReturn,
                 fhirBundle,
                 contextName,

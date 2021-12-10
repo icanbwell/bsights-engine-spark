@@ -83,9 +83,11 @@ public class MeasureServiceTest {
         try {
             Map<String, String> result = new MeasureService().runCqlLibrary(
                     cqllibraryUrl,
+                    null,
                     cqlLibraryName,
                     cqllibraryVersion,
                     terminologyUrl,
+                    null,
                     cqlVariablesToReturn,
                     bundleJson,
                     null,
@@ -125,9 +127,11 @@ public class MeasureServiceTest {
         try {
             Map<String, String> result = new MeasureService().runCqlLibrary(
                     cqllibraryUrl,
+                    null,
                     cqlLibraryName,
                     cqllibraryVersion,
                     terminologyUrl,
+                    null,
                     cqlVariablesToReturn,
                     bundleJson,
                     null,
@@ -167,9 +171,11 @@ public class MeasureServiceTest {
         try {
             Map<String, String> result = new MeasureService().runCqlLibrary(
                     cqllibraryUrl,
+                    null,
                     cqlLibraryName,
                     cqllibraryVersion,
                     terminologyUrl,
+                    null,
                     cqlVariablesToReturn,
                     bundleJson,
                     null,
