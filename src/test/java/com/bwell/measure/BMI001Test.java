@@ -33,13 +33,16 @@ public class BMI001Test {
     private final PrintStream originalOut = System.out;
     private final PrintStream originalErr = System.err;
 
-    private static String fhirVersion = "R4";
-    private static String modelName = "FHIR";
-    private static String fhirServerUrl = "http://localhost:3000/4_0_0";
+    private static final String fhirVersion = "R4";
+    private static final String modelName = "FHIR";
+    private static final String fhirServerUrl = "http://localhost:3000/4_0_0";
+    private static final String folder = "bmi001";
+    private static final String libraryName = "BMI001";
+    private static final String libraryVersion = "1.0.0";
     private static final String testResourceRelativePath = "src/test/resources";
-    private static String folder = "bmi001";
-    private static String libraryName = "BMI001";
     private static String testResourcePath = null;
+    private static String terminologyPath = null;
+    private static String cqlPath = null;
     private static String bundleJson = null;
     private static String bundleContainedJson = null;
 
@@ -50,22 +53,15 @@ public class BMI001Test {
         testResourcePath = file.getAbsolutePath();
         System.out.printf("Test resource directory: %s%n", testResourcePath);
 
-        bundleJson = getBundle(file);
-        bundleContainedJson = getContainedBundle(file);
+        terminologyPath = testResourcePath + "/" + folder + "/terminology";
+        cqlPath = testResourcePath + "/" + folder + "/cql";
 
-/*        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
-        try {
-            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        bundleJson = getBundle();
+        bundleContainedJson = getContainedBundle();
 
-        JSONArray jsonArray = new JSONArray(bundleJson);
-        JSONObject firstItem = (JSONObject) jsonArray.get(0);
-        bundleJson = firstItem.getJSONObject("bundle").toString();*/
     }
 
-    private String getBundle(File file) {
+    private String getBundle() {
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
         try {
             bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
@@ -79,7 +75,7 @@ public class BMI001Test {
         return bundleJson;
     }
 
-    private String getContainedBundle(File file) {
+    private String getContainedBundle() {
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected_contained.json");
         try {
             bundleContainedJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
@@ -121,9 +117,10 @@ public class BMI001Test {
         List<LibraryParameter> libraries = new ArrayList<>();
 
         LibraryParameter libraryParameter = new LibraryParameter();
+        libraryParameter.terminologyUrl = terminologyPath;
+        libraryParameter.libraryUrl = cqlPath;
         libraryParameter.libraryName = libraryName;
-        libraryParameter.libraryUrl = testResourcePath + "/" + folder + "/cql";
-        libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/terminology";
+        libraryParameter.libraryVersion = libraryVersion;
         libraryParameter.model = modelParameter;
         libraryParameter.model.modelName = modelName;
         libraryParameter.model.modelBundle = bundleJson;
@@ -151,7 +148,7 @@ public class BMI001Test {
                 // patient id
                 String patientId = patient.getId();
                 System.out.println(key + ": Patient ID = " + patientId);
-                assertEquals(patientId, "example");
+                assertEquals(patientId, "1");
 
             }
 
@@ -169,9 +166,10 @@ public class BMI001Test {
         List<LibraryParameter> libraries = new ArrayList<>();
 
         LibraryParameter libraryParameter = new LibraryParameter();
-        libraryParameter.libraryName = libraryName;
-        libraryParameter.libraryUrl = testResourcePath + "/" + folder + "/cql";
         libraryParameter.terminologyUrl = fhirServerUrl;
+        libraryParameter.libraryUrl = cqlPath;
+        libraryParameter.libraryName = libraryName;
+        libraryParameter.libraryVersion = libraryVersion;
         libraryParameter.model = modelParameter;
         libraryParameter.model.modelName = modelName;
         libraryParameter.model.modelBundle = bundleJson;
@@ -201,7 +199,7 @@ public class BMI001Test {
                     // patient id
                     String patientId = patient.getId();
                     System.out.println(key + ": Patient ID = " + patientId);
-                    assertEquals(patientId, "example");
+                    assertEquals(patientId, "1");
 
                 }
 
@@ -228,10 +226,10 @@ public class BMI001Test {
         List<LibraryParameter> libraries = new ArrayList<>();
 
         LibraryParameter libraryParameter = new LibraryParameter();
-        libraryParameter.libraryName = libraryName;
+        libraryParameter.terminologyUrl = terminologyPath;
         libraryParameter.libraryUrl = fhirServerUrl;
-        libraryParameter.libraryVersion = "1.0.0";
-        libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/terminology";
+        libraryParameter.libraryName = libraryName;
+        libraryParameter.libraryVersion = libraryVersion;
         libraryParameter.model = modelParameter;
         libraryParameter.model.modelName = modelName;
         libraryParameter.model.modelBundle = bundleJson;
@@ -261,7 +259,7 @@ public class BMI001Test {
                     // patient id
                     String patientId = patient.getId();
                     System.out.println(key + ": Patient ID = " + patientId);
-                    assertEquals(patientId, "example");
+                    assertEquals(patientId, "1");
 
                 }
 
@@ -290,7 +288,7 @@ public class BMI001Test {
         LibraryParameter libraryParameter = new LibraryParameter();
         libraryParameter.libraryName = libraryName;
         libraryParameter.libraryUrl = fhirServerUrl;
-        libraryParameter.libraryVersion = "1.0.0";
+        libraryParameter.libraryVersion = libraryVersion;
         libraryParameter.terminologyUrl = fhirServerUrl;
         libraryParameter.model = modelParameter;
         libraryParameter.model.modelName = modelName;
@@ -330,43 +328,15 @@ public class BMI001Test {
 
     @Test
     public void testBMI001BundleCqlAndTerminologyFromFhirServerWithContainedResources() throws Exception {
-  /*       String fhirVersion = "R4";
 
-       String bundleContainedJson = null;
-        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected_contained.json");
-        try {
-            bundleContainedJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        JSONArray jsonArray = new JSONArray(bundleContainedJson);
-        JSONObject firstItem = (JSONObject) jsonArray.get(0);
-//        bundleJson = firstItem.toString();
-        bundleContainedJson = firstItem.getJSONObject("bundle").toString();
-
-        List<LibraryParameter> libraries = new ArrayList<>();
-        LibraryParameter libraryParameter = new LibraryParameter();
-
-        libraryParameter.libraryUrl = "http://localhost:3000/4_0_0";
-        libraryParameter.libraryName = "BMI001";
-        libraryParameter.libraryVersion = "1.0.0";
-        libraryParameter.terminologyUrl = "http://localhost:3000/4_0_0";
-        libraryParameter.model = new ModelParameter();
-        libraryParameter.model.modelName = "FHIR";
-        libraryParameter.model.modelBundle = bundleContainedJson;
-
-        libraries.add(libraryParameter);
-
-*/
         ModelParameter modelParameter = new ModelParameter();
         List<LibraryParameter> libraries = new ArrayList<>();
 
         LibraryParameter libraryParameter = new LibraryParameter();
-        libraryParameter.libraryName = libraryName;
-        libraryParameter.libraryUrl = fhirServerUrl;
-        libraryParameter.libraryVersion = "1.0.0";
         libraryParameter.terminologyUrl = fhirServerUrl;
+        libraryParameter.libraryUrl = fhirServerUrl;
+        libraryParameter.libraryName = libraryName;
+        libraryParameter.libraryVersion = libraryVersion;
         libraryParameter.model = modelParameter;
         libraryParameter.model.modelName = modelName;
         libraryParameter.model.modelBundle = bundleContainedJson;
@@ -396,7 +366,7 @@ public class BMI001Test {
                     // patient id
                     String patientId = patient.getId();
                     System.out.println(key + ": Patient ID = " + patientId);
-                    assertEquals(patientId, "example");
+                    assertEquals(patientId, "1");
 
                 }
 

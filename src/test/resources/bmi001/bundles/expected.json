@@ -314,7 +314,7 @@
               "text": "BMI"
             },
             "subject": {
-              "reference": "Patient/example",
+              "reference": "Patient/1",
               "display": "Amy Shaw"
             },
             "encounter": {
@@ -647,7 +647,7 @@
               "text": "BMI"
             },
             "subject": {
-              "reference": "Patient/example",
+              "reference": "Patient/2",
               "display": "Amy Shaw"
             },
             "encounter": {
