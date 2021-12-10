@@ -53,6 +53,8 @@ define InDemographicComposed:
 
 [CQL 101 Video](https://youtu.be/BETFiQzLb8o)
 
+[CQL Wiki](https://github.com/cqframework/CQL-Formatting-and-Usage-Wiki/wiki/Authoring-Measures-in-CQL)
+
 
 ### Contributing
 This project requires Docker, Java 1.8 and Maven.
