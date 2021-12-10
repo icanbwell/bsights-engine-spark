@@ -66,7 +66,7 @@ public class MeasureServiceTest {
         String cqllibraryUrl = testResourcePath + "/" + folder + "/cql";
         String cqllibraryVersion = "1.0.0";
         String terminologyUrl = testResourcePath + "/" + folder + "/terminology";
-        String cqlVariablesToReturn = "InAgeCohort,InDemographicExists,PatientId";
+        String cqlVariablesToReturn = "InAgeCohort,InQualifyingObservationCohort,InDemographicComposed";
 
         String bundleJson = null;
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
@@ -108,7 +108,7 @@ public class MeasureServiceTest {
         String cqllibraryUrl = "http://localhost:3000/4_0_0";
         String cqllibraryVersion = "1.0.0";
         String terminologyUrl = "http://localhost:3000/4_0_0";
-        String cqlVariablesToReturn = "InAgeCohort,InDemographicExists,PatientId";
+        String cqlVariablesToReturn = "InAgeCohort,InQualifyingObservationCohort,InDemographicComposed";
 
         String bundleJson = null;
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
@@ -134,6 +134,7 @@ public class MeasureServiceTest {
                     null
             );
             assertEquals(result.get("InAgeCohort"), "true");
+            assertEquals(result.get("PatientId"), "1");
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
@@ -149,7 +150,7 @@ public class MeasureServiceTest {
         String cqllibraryUrl = "http://localhost:3000/4_0_0";
         String cqllibraryVersion = "1.0.0";
         String terminologyUrl = "http://localhost:3000/4_0_0";
-        String cqlVariablesToReturn = "InAgeCohort,InDemographicExists";
+        String cqlVariablesToReturn = "InAgeCohort,InQualifyingObservationCohort,InDemographicComposed";
 
         String bundleJson = null;
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected_contained.json");
@@ -175,6 +176,7 @@ public class MeasureServiceTest {
                     null
             );
             assertEquals(result.get("InAgeCohort"), "true");
+            assertEquals(result.get("PatientId"), "1");
         } catch (Exception e) {
             e.printStackTrace();
             throw e;

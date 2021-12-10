@@ -11,12 +11,15 @@ valueset "BMI Over 35": 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.
 context Patient
 
 /* Test inline definition */
-define InDemographicInline:
+/*
+    define InDemographicInline:
         [Patient] patient
         where AgeInYearsAt(start of MeasurementPeriod) >= 16
           and exists([Observation: "BMI Over 35"] observation
                         where observation.status in {'final', 'amended'}
                     )
+
+*/
 
 /* Test composed definition */
 define InAgeCohort:
@@ -28,12 +31,5 @@ define InQualifyingObservationCohort:
               )
 
 define InDemographicComposed:
-    [Patient] patient
-        where InAgeCohort
+         InAgeCohort
             and InQualifyingObservationCohort
-
-define PatientId:
-    (
-        [Patient] patient
-            return patient.id
-    )[0]

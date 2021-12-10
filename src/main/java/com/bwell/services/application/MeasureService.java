@@ -4,6 +4,7 @@ import com.bwell.core.entities.ContextParameter;
 import com.bwell.core.entities.LibraryParameter;
 import com.bwell.core.entities.ModelParameter;
 import com.bwell.services.domain.CqlService;
+import org.hl7.fhir.r4.model.Patient;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.execution.EvaluationResult;
 
@@ -71,8 +72,16 @@ public class MeasureService {
             for (Map.Entry<String, Object> libraryEntry : entrySet) {
                 String key = libraryEntry.getKey();
                 Object value = libraryEntry.getValue();
-                if (cqlVariables.contains(key)) {
-                    newMap.put(key, value != null ? value.toString() : null);
+
+                if ("Patient".equals(key)) {
+                    Patient patient = (Patient) value;
+                    newMap.put("PatientId", patient.hasId() ? patient.getId() : null);
+
+                }else{
+                    if (cqlVariables.contains(key)) {
+                        newMap.put(key, value != null ? value.toString() : null);
+                    }
+
                 }
             }
         } catch (CqlException e) {
