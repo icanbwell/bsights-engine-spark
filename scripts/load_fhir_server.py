@@ -4,6 +4,7 @@ import json
 import requests
 import base64
 
+fhir_server = "http://fhir:3000/4_0_0"
 
 def send_resource_to_fhir_server(data) -> None:
     resourceType: str = data["resourceType"]
@@ -54,7 +55,7 @@ def send_cql_to_fhir_server(library_name: str, library_version: str,  cql: str) 
             ]
         },
         "status": "active",
-        "url": f"http://localhost:3000/4_0_0/Library/{library_name}",
+        "url": f"{fhir_server}/Library/{library_name}",
         # "identifier": [
         # ],
         "name": library_name,

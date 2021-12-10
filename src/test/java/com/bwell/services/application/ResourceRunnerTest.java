@@ -37,7 +37,7 @@ public class ResourceRunnerTest {
     public void setup() {
         File file = new File(testResourceRelativePath);
         testResourcePath = file.getAbsolutePath();
-        System.out.println(String.format("Test resource directory: %s", testResourcePath));
+        System.out.printf("Test resource directory: %s%n", testResourcePath);
     }
 
     @BeforeMethod

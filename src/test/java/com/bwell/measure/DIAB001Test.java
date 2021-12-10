@@ -34,12 +34,15 @@ public class DIAB001Test {
 
     private static final String testResourceRelativePath = "src/test/resources";
     private static String testResourcePath = null;
+    private static String fhirServerUrl = null;
 
     @BeforeClass
     public void setup() {
         File file = new File(testResourceRelativePath);
         testResourcePath = file.getAbsolutePath();
         System.out.printf("Test resource directory: %s%n", testResourcePath);
+        fhirServerUrl = System.getenv("FHIR_SERVER");
+        if (fhirServerUrl == null) fhirServerUrl = "http://localhost:3000/4_0_0";
     }
 
     @BeforeMethod
@@ -124,7 +127,7 @@ public class DIAB001Test {
             e.printStackTrace();
         }
 
-        libraryParameter.libraryUrl = "http://localhost:3000/4_0_0";
+        libraryParameter.libraryUrl = fhirServerUrl;
         libraryParameter.libraryName = "DIAB001";
         libraryParameter.libraryVersion = "1.0.0";
         libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/terminology";
@@ -178,10 +181,10 @@ public class DIAB001Test {
             e.printStackTrace();
         }
 
-        libraryParameter.libraryUrl = "http://localhost:3000/4_0_0";
+        libraryParameter.libraryUrl = fhirServerUrl;
         libraryParameter.libraryName = "DIAB001";
         libraryParameter.libraryVersion = "1.0.0";
-        libraryParameter.terminologyUrl = "http://localhost:3000/4_0_0";
+        libraryParameter.terminologyUrl = fhirServerUrl;
         libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
         libraryParameter.model.modelBundle = bundleJson;

@@ -29,6 +29,7 @@ public class MeasureServiceTest {
     private static final String testResourceRelativePath = "src/test/resources";
     private static String testResourcePath = null;
     private static String folder = null;
+    private static String fhirServerUrl = null;
 
     @BeforeClass
     public void setup() {
@@ -37,6 +38,8 @@ public class MeasureServiceTest {
         System.out.printf("Test resource directory: %s%n", testResourcePath);
 
         folder = "bmi001";
+        fhirServerUrl = System.getenv("FHIR_SERVER");
+        if (fhirServerUrl == null) fhirServerUrl = "http://localhost:3000/4_0_0";
     }
 
     @BeforeMethod
@@ -105,9 +108,9 @@ public class MeasureServiceTest {
     @Test
     public void testRunCqlLibrary() throws Exception {
         String cqlLibraryName = "BMI001";
-        String cqllibraryUrl = "http://localhost:3000/4_0_0";
+        String cqllibraryUrl = fhirServerUrl;
         String cqllibraryVersion = "1.0.0";
-        String terminologyUrl = "http://localhost:3000/4_0_0";
+        String terminologyUrl = fhirServerUrl;
         String cqlVariablesToReturn = "InAgeCohort,InQualifyingObservationCohort,InDemographicComposed";
 
         String bundleJson = null;
@@ -147,9 +150,9 @@ public class MeasureServiceTest {
     @Test
     public void testRunCqlLibraryWithContainedResources() throws Exception {
         String cqlLibraryName = "BMI001";
-        String cqllibraryUrl = "http://localhost:3000/4_0_0";
+        String cqllibraryUrl = fhirServerUrl;
         String cqllibraryVersion = "1.0.0";
-        String terminologyUrl = "http://localhost:3000/4_0_0";
+        String terminologyUrl = fhirServerUrl;
         String cqlVariablesToReturn = "InAgeCohort,InQualifyingObservationCohort,InDemographicComposed";
 
         String bundleJson = null;

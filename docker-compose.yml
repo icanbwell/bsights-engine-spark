@@ -65,5 +65,17 @@ services:
       - ./src/test/resources/diab001/terminology:/data/terminology/diab001/
     command: tail -f /dev/null
 
+#  maven:
+#    image: maven:3-openjdk-8-slim
+#    volumes:
+#      -  ./:/usr/src/mymaven
+#      - maven-repo:/root/.m2
+#    working_dir: /usr/src/mymaven
+##    environment:
+##      FHIR_SERVER: http://fhir:3000/4_0_0
+#    command: tail -f /dev/null
+#    network_mode: "host"
+
 volumes:
   mongo_data:
+  maven-repo:

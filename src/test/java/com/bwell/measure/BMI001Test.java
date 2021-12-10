@@ -37,6 +37,7 @@ public class BMI001Test {
     private static String testResourcePath = null;
     private static String folder = null;
     private static String bundleJson = null;
+    private static String fhirServerUrl = null;
 
     @BeforeClass
     public void setup() {
@@ -54,6 +55,9 @@ public class BMI001Test {
         JSONArray jsonArray = new JSONArray(bundleJson);
         JSONObject firstItem = (JSONObject) jsonArray.get(0);
         bundleJson = firstItem.getJSONObject("bundle").toString();
+
+        fhirServerUrl = System.getenv("FHIR_SERVER");
+        if (fhirServerUrl == null) fhirServerUrl = "http://localhost:3000/4_0_0";
     }
 
     @BeforeMethod
@@ -123,7 +127,7 @@ public class BMI001Test {
         libraryParameter.libraryName = "BMI001";
 
         libraryParameter.libraryUrl = testResourcePath + "/" + folder + "/cql";
-        libraryParameter.terminologyUrl = "http://localhost:3000/4_0_0";
+        libraryParameter.terminologyUrl = fhirServerUrl;
         libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
         libraryParameter.model.modelBundle = bundleJson;
@@ -167,7 +171,7 @@ public class BMI001Test {
         LibraryParameter libraryParameter = new LibraryParameter();
         String folder = "bmi001";
 
-        libraryParameter.libraryUrl = "http://localhost:3000/4_0_0";
+        libraryParameter.libraryUrl = fhirServerUrl;
         libraryParameter.libraryName = "BMI001";
         libraryParameter.libraryVersion = "1.0.0";
         libraryParameter.terminologyUrl = testResourcePath + "/" + folder + "/terminology";
@@ -213,10 +217,10 @@ public class BMI001Test {
         List<LibraryParameter> libraries = new ArrayList<>();
         LibraryParameter libraryParameter = new LibraryParameter();
 
-        libraryParameter.libraryUrl = "http://localhost:3000/4_0_0";
+        libraryParameter.libraryUrl = fhirServerUrl;
         libraryParameter.libraryName = "BMI001";
         libraryParameter.libraryVersion = "1.0.0";
-        libraryParameter.terminologyUrl = "http://localhost:3000/4_0_0";
+        libraryParameter.terminologyUrl = fhirServerUrl;
         libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
         libraryParameter.model.modelBundle = bundleJson;
@@ -273,10 +277,10 @@ public class BMI001Test {
         List<LibraryParameter> libraries = new ArrayList<>();
         LibraryParameter libraryParameter = new LibraryParameter();
 
-        libraryParameter.libraryUrl = "http://localhost:3000/4_0_0";
+        libraryParameter.libraryUrl = fhirServerUrl;
         libraryParameter.libraryName = "BMI001";
         libraryParameter.libraryVersion = "1.0.0";
-        libraryParameter.terminologyUrl = "http://localhost:3000/4_0_0";
+        libraryParameter.terminologyUrl = fhirServerUrl;
         libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
         libraryParameter.model.modelBundle = bundleContainedJson;

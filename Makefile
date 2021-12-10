@@ -47,3 +47,8 @@ endif
 .PHONY: tests
 tests: loadfhir
 	mvn test
+
+
+# docker run -it --rm --name my-maven-project --network=host -v "$(pwd)":/usr/src/mymaven -v maven-repo:/root/.m2 -w /usr/src/mymaven maven:3-openjdk-8-slim mvn test
+# docker run -it --rm --name my-maven-project -e FHIR_SERVER='http://fhir:3000/4_0_0' -v "$(pwd)":/usr/src/mymaven -v maven-repo:/root/.m2 -w /usr/src/mymaven maven:3-openjdk-8-slim mvn test
+# docker-compose run maven bash -c "mvn test"

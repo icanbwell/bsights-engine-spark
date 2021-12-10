@@ -28,7 +28,7 @@ public class ResourceLoaderTest {
     public void setup() {
         File file = new File(testResourceRelativePath);
         testResourcePath = file.getAbsolutePath();
-        System.out.println(String.format("Test resource directory: %s", testResourcePath));
+        System.out.printf("Test resource directory: %s%n", testResourcePath);
     }
 
     @Test
@@ -38,7 +38,7 @@ public class ResourceLoaderTest {
         String bundleJson = null;
 
         try {
-            bundleJson = FileUtils.readFileToString(f, Charset.forName("UTF-8"));
+            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }
