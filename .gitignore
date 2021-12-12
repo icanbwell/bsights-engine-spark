@@ -24,6 +24,7 @@ hs_err_pid*
 /.idea/
 
 /target/
+!/target/cql_spark_engine-1.0-SNAPSHOT.jar
 
 # .DS_Store
 **/.DS_Store
