@@ -1,4 +1,4 @@
-# helix.cql_spark
+# bsights-measure-engine-spark
 
 ### Project Information
 This project creates an Apache Spark UDF (User Defined Function) wrapper for the CQL (Clinical Quality Language) Engine (https://github.com/DBCG/cql-evaluator) so we can use it in Spark.
