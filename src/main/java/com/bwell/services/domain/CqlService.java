@@ -44,8 +44,13 @@ public class CqlService {
 
             // if not in cache then load it
             if (libraryContentProvider == null) {
+                EndpointInfo endpointInfo = new EndpointInfo().setAddress(library.libraryUrl);
+                if (library.libraryUrlHeaders != null && library.libraryUrlHeaders.size() > 0){
+                    endpointInfo.setHeaders(library.libraryUrlHeaders);
+                }
+
                 libraryContentProvider = cqlEvaluatorComponent.createLibraryContentProviderFactory()
-                        .create(new EndpointInfo().setAddress(library.libraryUrl));
+                        .create(endpointInfo);
                 // put it in cache
                 libraryContentProviderIndex.put(library.libraryUrl, libraryContentProvider);
             }
@@ -59,8 +64,13 @@ public class CqlService {
                 TerminologyProvider terminologyProvider = terminologyProviderIndex.get(library.terminologyUrl);
                 if (terminologyProvider == null) {
                     // if terminology is not in cache then load ut
+                    EndpointInfo endpointInfo = new EndpointInfo().setAddress(library.terminologyUrl);
+                    if (library.terminologyUrlHeaders != null && library.terminologyUrlHeaders.size() > 0){
+                        endpointInfo.setHeaders(library.terminologyUrlHeaders);
+                    }
+
                     terminologyProvider = cqlEvaluatorComponent.createTerminologyProviderFactory()
-                            .create(new EndpointInfo().setAddress(library.terminologyUrl));
+                            .create(endpointInfo);
                     // add to cache
                     terminologyProviderIndex.put(library.terminologyUrl, terminologyProvider);
                 }
