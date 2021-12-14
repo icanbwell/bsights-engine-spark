@@ -24,7 +24,7 @@ hs_err_pid*
 /.idea/
 
 /target/
-!/target/cql_spark_engine-1.0-SNAPSHOT.jar
+!/target/bsights-engine-spark-1.0.0.jar
 
 # .DS_Store
 **/.DS_Store

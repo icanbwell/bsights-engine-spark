@@ -46,7 +46,6 @@ public class BMI001Test {
     private static String bundleJson = null;
     private static String bundleContainedJson = null;
 
-
     @BeforeClass
     public void setup() {
         File file = new File(testResourceRelativePath);

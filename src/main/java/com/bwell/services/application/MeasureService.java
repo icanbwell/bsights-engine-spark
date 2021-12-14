@@ -17,24 +17,24 @@ public class MeasureService {
     /**
      * Runs the CQL Library
      *
-     * @param cqlLibraryUrl:        link to fhir server that holds the CQL library
-     * @param cqlLibraryHeaders:    comma-separated list of haeders to include in the call to get the CQL library
-     * @param cqlLibraryName:       name of cql library
-     * @param cqlLibraryVersion:    version of cql library
-     * @param terminologyUrl:       link to fhir server that holds the value set
-     * @param terminologyUrlHeaders:    comma-separated list of headers to include in the call to get the terminology library
-     * @param cqlVariablesToReturn: comma separated list of cql variables.  This functions returns a dictionary of values for these
-     * @param fhirBundle:           FHIR bundle that contains the patient resource and any related resources like observations, conditions etc
-     * @param contextName:          Optional context name
-     * @param contextValue:         Optional context value
-     * @return map (dictionary) of variable name, value
+     * @param libraryUrl:               URL to FHIR server containing the cql library to run
+     * @param libraryUrlHeaders:        HTTP headers for call to the fhir server - auth
+     * @param libraryName:              name of the CQL library to run
+     * @param libraryVersion:           version of the CQL library to run
+     * @param terminologyUrl:           URL to FHIR server that has value sets
+     * @param terminologyUrlHeaders:    HTTP headers for the call to the terminology server - auth
+     * @param cqlVariablesToReturn:     list of the CQL variables that we should return the values for
+     * @param fhirBundle:               FHIR resource bundle as a string
+     * @param contextName:              Optional context name
+     * @param contextValue:             Optional context value
+     * @return map (dictionary) of CQL variable name, value
      * @throws Exception exception
      */
     public Map<String, String> runCqlLibrary(
-            String cqlLibraryUrl,
-            String cqlLibraryHeaders,
-            String cqlLibraryName,
-            String cqlLibraryVersion,
+            String libraryUrl,
+            String libraryUrlHeaders,
+            String libraryName,
+            String libraryVersion,
             String terminologyUrl,
             String terminologyUrlHeaders,
             String cqlVariablesToReturn,
@@ -45,10 +45,10 @@ public class MeasureService {
         String fhirVersion = "R4";
         List<LibraryParameter> libraries = new ArrayList<>();
         LibraryParameter libraryParameter = new LibraryParameter();
-        libraryParameter.libraryName = cqlLibraryName;
+        libraryParameter.libraryName = libraryName;
 
-        libraryParameter.libraryUrl = cqlLibraryUrl;
-        libraryParameter.libraryVersion = cqlLibraryVersion;
+        libraryParameter.libraryUrl = libraryUrl;
+        libraryParameter.libraryVersion = libraryVersion;
         libraryParameter.terminologyUrl = terminologyUrl;
         libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
@@ -65,8 +65,8 @@ public class MeasureService {
         libraries.add(libraryParameter);
 
         List<String> cqlVariables = Arrays.stream(cqlVariablesToReturn.split(",")).map(String::trim).collect(Collectors.toList());
-        if (cqlLibraryHeaders != null && !cqlLibraryHeaders.equals("")){
-            libraryParameter.libraryUrlHeaders = Arrays.stream(cqlLibraryHeaders.split(",")).map(String::trim).collect(Collectors.toList());
+        if (libraryUrlHeaders != null && !libraryUrlHeaders.equals("")){
+            libraryParameter.libraryUrlHeaders = Arrays.stream(libraryUrlHeaders.split(",")).map(String::trim).collect(Collectors.toList());
         }
         if (terminologyUrlHeaders != null && !terminologyUrlHeaders.equals("")){
             libraryParameter.terminologyUrlHeaders = Arrays.stream(terminologyUrlHeaders.split(",")).map(String::trim).collect(Collectors.toList());

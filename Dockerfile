@@ -17,6 +17,6 @@ COPY ./src/ /helix.pipelines/src/
 
 # skip running tests since it requires a fhir server
 RUN mvn -Dmaven.test.skip package && \
-    cp ./target/cql_spark_engine-1.0-SNAPSHOT.jar /opt/bitnami/spark/jars/
+    cp ./target/bsights-engine-spark-1.0.0.jar /opt/bitnami/spark/jars/
 
 # USER 1001
