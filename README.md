@@ -1,4 +1,4 @@
-# bsights-measure-engine-spark
+# bsights-engine-spark
 
 ### Project Information
 This project creates an Apache Spark UDF (User Defined Function) wrapper for the CQL (Clinical Quality Language) Engine (https://github.com/DBCG/cql-evaluator) so we can use it in Spark.
@@ -62,3 +62,5 @@ This project requires Docker, Java 1.8 and Maven.
 To run tests: `make tests`
 
 To compile the jar: `make buildjar`
+
+To deploy to local dev docker: `make loadfhir`

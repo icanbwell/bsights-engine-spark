@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.bwell</groupId>
-    <artifactId>bsights-measure-engine-spark</artifactId>
+    <artifactId>bsights-engine-spark</artifactId>
     <version>1.0.0</version>
 
     <properties>
@@ -194,7 +194,7 @@
         <repository>
             <id>github</id>
             <name>GitHub icanbwell Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/icanbwell/bsights-measure-engine-spark</url>
+            <url>https://maven.pkg.github.com/icanbwell/bsights-engine-spark</url>
         </repository>
     </distributionManagement>
 </project>

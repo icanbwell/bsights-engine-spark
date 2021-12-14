@@ -21,7 +21,7 @@ services:
     #    build:
     #      dockerfile: Dockerfile
     #      context: ../fhir-server
-    container_name: 'bsights_measure_engine_spark_fhir'
+    container_name: 'bsights_engine_spark_fhir'
     environment:
       SERVER_PORT: 3000
       MONGO_HOSTNAME: mongo
@@ -47,7 +47,7 @@ services:
 
   mongo:
     image: docker.io/bitnami/mongodb:4.4.9
-    container_name: 'bsights_measure_engine_spark_mongodb'
+    container_name: 'bsights_engine_spark_mongodb'
     ports:
       - '27017:27017'
     environment:
@@ -59,7 +59,7 @@ services:
 
   scriptrunner:
     image: python:3.8.12-slim-buster
-    container_name: 'bsights-measure-engine-spark-scriptrunner'
+    container_name: 'bsights-engine-spark-scriptrunner'
     volumes:
       - ./scripts/load_fhir_server.py:/scripts/load_fhir_server.py
       - ./src/test/resources/bmi001/cql:/data/cql/bmi001/
