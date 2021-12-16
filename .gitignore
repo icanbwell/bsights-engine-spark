@@ -24,6 +24,7 @@ hs_err_pid*
 /.idea/
 
 /target/
+!/target/bsights-engine-spark-1.0.0.jar
 
 # .DS_Store
 **/.DS_Store

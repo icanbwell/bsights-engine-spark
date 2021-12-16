@@ -1,4 +1,4 @@
-# helix.cql_spark
+# bsights-engine-spark
 
 ### Project Information
 This project creates an Apache Spark UDF (User Defined Function) wrapper for the CQL (Clinical Quality Language) Engine (https://github.com/DBCG/cql-evaluator) so we can use it in Spark.
@@ -53,6 +53,8 @@ define InDemographicComposed:
 
 [CQL 101 Video](https://youtu.be/BETFiQzLb8o)
 
+[CQL Wiki](https://github.com/cqframework/CQL-Formatting-and-Usage-Wiki/wiki/Authoring-Measures-in-CQL)
+
 
 ### Contributing
 This project requires Docker, Java 1.8 and Maven.
@@ -60,3 +62,5 @@ This project requires Docker, Java 1.8 and Maven.
 To run tests: `make tests`
 
 To compile the jar: `make buildjar`
+
+To deploy to local dev docker: `make loadfhir`
