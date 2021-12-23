@@ -14,7 +14,7 @@ up: ## Brings up all the services in docker-compose
 	echo "`docker-compose --version | awk '{print $$4;}'`" && \
 	if [[ "`docker-compose --version | awk '{print $$4;}'`" == "v2."* ]]; then echo "ERROR: Docker Compose version should be < 2.  Uncheck Use Docker Compose V2 checkbox in Docker Settings and restart Docker." && exit 1; fi && \
 	docker-compose -f docker-compose.yml up --build --no-start && \
-	docker-compose -f docker-compose.yml up -d --no-recreate && \
+	docker-compose -f docker-compose.yml up -d --force-recreate  && \
 	echo "\nwaiting for Mongo server to become healthy" && \
 	while [ "`docker inspect --format {{.State.Health.Status}} bsights_engine_spark_mongodb`" != "healthy" ] && [ "`docker inspect --format {{.State.Health.Status}} bsights_engine_spark_mongodb`" != "unhealthy" ] && [ "`docker inspect --format {{.State.Status}} bsights_engine_spark_mongodb`" != "restarting" ]; do printf "." && sleep 2; done && \
 	if [ "`docker inspect --format {{.State.Health.Status}} bsights_engine_spark_mongodb`" != "healthy" ]; then docker ps && printf "========== ERROR: bsights_engine_spark_mongodb did not start. Run docker logs bsights_engine_spark_mongodb =========\n" && exit 1; fi && \
