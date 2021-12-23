@@ -2,7 +2,7 @@ library DIAB001 version '1.0.0'
 
 using FHIR version '4.0.1'
 
-include "FHIRHelpers" version '4.0.1' called FHIRHelpers
+include "FHIRHelpers" version '4.0.1'
 
 parameter "MeasurementPeriod" Interval<DateTime> default Interval[@2021-01-01T00:00:00, @2021-12-31T00:00:00]
 
@@ -11,14 +11,6 @@ code "451061000124104": '451061000124104' from "SNOMED" display 'Hemoglobin A1c 
 
 context Patient
 
-/* Test inline definition */
-define "InDemographicInline":
-  exists([Observation: "451061000124104"] observation
-            where (ToDate((observation.effective as FHIR.dateTime).value) in MeasurementPeriod)
-                  and
-                  observation.status in {'final', 'amended'}
-        )
-
   define "InObservationCohort":
         exists([Observation: "451061000124104"] observation
                 where (ToDate((observation.effective as FHIR.dateTime).value) in MeasurementPeriod)
@@ -26,6 +18,5 @@ define "InDemographicInline":
                       observation.status in {'final', 'amended'}
               )
 
-  define InDemographicComposed:
-    [Patient] patient
-        where InObservationCohort
+  define InDemographic:
+      InObservationCohort
