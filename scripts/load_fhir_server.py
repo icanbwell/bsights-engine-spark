@@ -35,8 +35,8 @@ def send_resource_to_fhir_server(data) -> None:
     }
 
     # for design time only - comment next two lines before release
-    # print("Printing Entire Post Request")
-    # print(json_content)
+    print("Printing Entire Post Request")
+    print(json_content)
 
     response = requests.post(f'http://fhir:3000/4_0_0/{resourceType}/0/$merge', json=json_content, headers=headers)
     print("Status code: ", response.status_code)
@@ -63,12 +63,18 @@ def send_cql_to_fhir_server(library_name: str, library_version: str,  cql: str) 
         "name": library_name,
         "content": [
             {
+                "id": "1",
                 "contentType": "text/cql",
                 "data": base64.b64encode(cql.encode('ascii')).decode('ascii')
             }
         ]
     }
+
+    print(resource["resourceType"])
+    print(resource["id"])
     send_resource_to_fhir_server(resource)
+
+
 
 parent_path = "/data"
 

@@ -17,10 +17,10 @@ services:
     depends_on:
       - mongo
     image: imranq2/node-fhir-server-mongo:2.0.84
-    # To use local fhir code, comment above line and uncomment below
-    #    build:
-    #      dockerfile: Dockerfile
-    #      context: ../fhir-server
+     # To use local fhir code, comment above line and uncomment below
+#    build:
+#        dockerfile: Dockerfile
+#        context: ../fhir-server
     container_name: 'bsights_engine_spark_fhir'
     environment:
       SERVER_PORT: 3000

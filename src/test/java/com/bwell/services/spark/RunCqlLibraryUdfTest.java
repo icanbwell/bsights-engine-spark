@@ -54,7 +54,7 @@ public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
         String cqllibraryVersion = "1.0.0";
         String terminologyUrl = "http://localhost:3000/4_0_0";
         String terminologyHeaders = "";
-        String cqlVariablesToReturn = "InAgeCohort,InDemographicExists";
+        String cqlVariablesToReturn = "PatientId,InAgeCohort,InObservationCohort,InDemographic";
 
         String command = String.format(
                 "runCqlLibrary('%s', '%s', '%s','%s','%s', '%s', '%s', %s, %s, %s)",
@@ -64,10 +64,25 @@ public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
         result_df.printSchema();
         result_df.show(10, false);
 
+        result_df.selectExpr("ruleResults['PatientId'] as PatientId").show();
+        List<Row> rows = result_df.selectExpr("ruleResults['PatientId'] as PatientId").collectAsList();
+        Assert.assertEquals(rows.get(0).get(0), "1");
+        Assert.assertEquals(rows.get(1).get(0), "2");
+
         result_df.selectExpr("ruleResults['InAgeCohort'] as InAgeCohort").show();
-        List<Row> rows = result_df.selectExpr("ruleResults['InAgeCohort'] as InAgeCohort").collectAsList();
+        rows = result_df.selectExpr("ruleResults['InAgeCohort'] as InAgeCohort").collectAsList();
         Assert.assertEquals(rows.get(0).get(0), "true");
         Assert.assertEquals(rows.get(1).get(0), "false");
+
+/*        result_df.selectExpr("ruleResults['InObservationCohort'] as InObservationCohort").show();
+        rows = result_df.selectExpr("ruleResults['InObservationCohort'] as InObservationCohort").collectAsList();
+        Assert.assertEquals(rows.get(0).get(0), "true");
+        Assert.assertEquals(rows.get(1).get(0), "true");
+
+        result_df.selectExpr("ruleResults['InDemographic'] as InDemographic").show();
+        rows = result_df.selectExpr("ruleResults['InDemographic'] as InDemographic").collectAsList();
+        Assert.assertEquals(rows.get(0).get(0), "true");
+        Assert.assertEquals(rows.get(1).get(0), "false");*/
 //        result_df.selectExpr("ruleResults['key2'] as key2").show();
     }
 }
