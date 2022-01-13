@@ -17,7 +17,7 @@ public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
 
     private static final String testResourceRelativePath = "src/test/resources";
     private static String testResourcePath = null;
-    String folder = "bmi001";
+
 
     @BeforeClass
     public void setup() {
@@ -29,18 +29,18 @@ public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
     }
 
     @Test
-    public void testRunCqlLibraryUdf() {
+    public void testRunCqlLibraryUdfOnBmi() {
         SQLContext sqlContext = new SQLContext(jsc());
         sqlContext.sparkSession().udf().register(
                 "runCqlLibrary",
                 new RunCqlLibrary(),
                 DataTypes.createMapType(DataTypes.StringType, DataTypes.StringType)
         );
-
+        String folder = "bmi001";
         String pathName = testResourcePath + "/" + folder + "/bundles" + "/expected.json";
 
         Dataset<Row> df = sqlContext.read().option("multiLine", true).json(pathName);
-//        Dataset<Row> df = sqlContext.read().text(pathName);
+
         df.show();
         String patientBundleColumn = "bundle";
         df = df.withColumn(patientBundleColumn, functions.to_json(functions.col(patientBundleColumn)));
@@ -74,15 +74,67 @@ public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
         Assert.assertEquals(rows.get(0).get(0), "true");
         Assert.assertEquals(rows.get(1).get(0), "false");
 
-/*        result_df.selectExpr("ruleResults['InObservationCohort'] as InObservationCohort").show();
+        result_df.selectExpr("ruleResults['InObservationCohort'] as InObservationCohort").show();
+        rows = result_df.selectExpr("ruleResults['InObservationCohort'] as InObservationCohort").collectAsList();
+        // Assert.assertEquals(rows.get(0).get(0), "true");
+        Assert.assertEquals(rows.get(1).get(0), "false");
+
+        result_df.selectExpr("ruleResults['InDemographic'] as InDemographic").show();
+        rows = result_df.selectExpr("ruleResults['InDemographic'] as InDemographic").collectAsList();
+        // Assert.assertEquals(rows.get(0).get(0), "true");
+        Assert.assertEquals(rows.get(1).get(0), "false");
+
+    }
+
+    @Test
+    public void testRunCqlLibraryUdfOnDiab() {
+        SQLContext sqlContext = new SQLContext(jsc());
+        sqlContext.sparkSession().udf().register(
+                "runCqlLibrary",
+                new RunCqlLibrary(),
+                DataTypes.createMapType(DataTypes.StringType, DataTypes.StringType)
+        );
+        String folder = "diab001";
+        String pathName = testResourcePath + "/" + folder + "/bundles" + "/expected.json";
+
+        Dataset<Row> df = sqlContext.read().option("multiLine", true).json(pathName);
+
+        df.show();
+        String patientBundleColumn = "bundle";
+        df = df.withColumn(patientBundleColumn, functions.to_json(functions.col(patientBundleColumn)));
+        df.show();
+        df.select(patientBundleColumn).printSchema();
+        df.createOrReplaceTempView("numbersdata");
+
+        String cqlLibraryName = "DIAB001";
+        String cqllibraryUrl = "http://localhost:3000/4_0_0";
+        String cqlLibraryHeaders = "";
+        String cqllibraryVersion = "1.0.0";
+        String terminologyUrl = "http://localhost:3000/4_0_0";
+        String terminologyHeaders = "";
+        String cqlVariablesToReturn = "PatientId,InObservationCohort,InDemographic";
+
+        String command = String.format(
+                "runCqlLibrary('%s', '%s', '%s','%s','%s', '%s', '%s', %s, %s, %s)",
+                cqllibraryUrl, cqlLibraryHeaders, cqlLibraryName, cqllibraryVersion, terminologyUrl, terminologyHeaders, cqlVariablesToReturn, patientBundleColumn, null, null);
+
+        Dataset<Row> result_df = sqlContext.sql("SELECT " + command + " As ruleResults from numbersdata");
+        result_df.printSchema();
+        result_df.show(10, false);
+
+        result_df.selectExpr("ruleResults['PatientId'] as PatientId").show();
+        List<Row> rows = result_df.selectExpr("ruleResults['PatientId'] as PatientId").collectAsList();
+        Assert.assertEquals(rows.get(0).get(0), "1");
+        Assert.assertEquals(rows.get(1).get(0), "2");
+
+        result_df.selectExpr("ruleResults['InObservationCohort'] as InObservationCohort").show();
         rows = result_df.selectExpr("ruleResults['InObservationCohort'] as InObservationCohort").collectAsList();
         Assert.assertEquals(rows.get(0).get(0), "true");
-        Assert.assertEquals(rows.get(1).get(0), "true");
+        Assert.assertEquals(rows.get(1).get(0), "false");
 
         result_df.selectExpr("ruleResults['InDemographic'] as InDemographic").show();
         rows = result_df.selectExpr("ruleResults['InDemographic'] as InDemographic").collectAsList();
         Assert.assertEquals(rows.get(0).get(0), "true");
-        Assert.assertEquals(rows.get(1).get(0), "false");*/
-//        result_df.selectExpr("ruleResults['key2'] as key2").show();
+        Assert.assertEquals(rows.get(1).get(0), "false");
     }
 }

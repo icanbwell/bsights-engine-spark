@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class DIAB001Test {
 
@@ -148,6 +149,22 @@ public class DIAB001Test {
                 System.out.println(key + ": Patient ID = " + patientId);
                 assertEquals(patientId, "1");
 
+                // patient active flag
+                boolean isActive = patient.getActive();
+                System.out.println(key + ": Patient Active = " + isActive);
+                assertTrue(isActive);
+            }
+
+            if (key.equals("InObservationCohort")) {
+                Boolean isInObservationCohort = (Boolean) value;
+                System.out.println(key + ": " + isInObservationCohort);
+                assertTrue(isInObservationCohort);
+            }
+
+            if (key.equals("InDemographic")) {
+                Boolean isInDemographic = (Boolean) value;
+                System.out.println(key + ": " + isInDemographic);
+                assertTrue(isInDemographic);
             }
 
             System.out.println(key + "=" + tempConvert(value));
@@ -199,6 +216,18 @@ public class DIAB001Test {
                     System.out.println(key + ": Patient ID = " + patientId);
                     assertEquals(patientId, "1");
 
+                }
+
+                if (key.equals("InObservationCohort")) {
+                    Boolean isInObservationCohort = (Boolean) value;
+                    System.out.println(key + ": " + isInObservationCohort);
+                    assertTrue(isInObservationCohort);
+                }
+
+                if (key.equals("InDemographic")) {
+                    Boolean isInDemographic = (Boolean) value;
+                    System.out.println(key + ": " + isInDemographic);
+                    assertTrue(isInDemographic);
                 }
 
                 System.out.println(key + "=" + tempConvert(value));
@@ -261,6 +290,18 @@ public class DIAB001Test {
 
                 }
 
+                if (key.equals("InObservationCohort")) {
+                    Boolean isInObservationCohort = (Boolean) value;
+                    System.out.println(key + ": " + isInObservationCohort);
+                    assertTrue(isInObservationCohort);
+                }
+
+                if (key.equals("InDemographic")) {
+                    Boolean isInDemographic = (Boolean) value;
+                    System.out.println(key + ": " + isInDemographic);
+                    assertTrue(isInDemographic);
+                }
+
                 System.out.println(key + "=" + tempConvert(value));
 
             }
@@ -319,6 +360,18 @@ public class DIAB001Test {
                     System.out.println(key + ": Patient ID = " + patientId);
                     assertEquals(patientId, "1");
 
+                }
+
+                if (key.equals("InObservationCohort")) {
+                    Boolean isInObservationCohort = (Boolean) value;
+                    System.out.println(key + ": " + isInObservationCohort);
+                    assertTrue(isInObservationCohort);
+                }
+
+                if (key.equals("InDemographic")) {
+                    Boolean isInDemographic = (Boolean) value;
+                    System.out.println(key + ": " + isInDemographic);
+                    assertTrue(isInDemographic);
                 }
 
                 System.out.println(key + "=" + tempConvert(value));
@@ -380,6 +433,18 @@ public class DIAB001Test {
                     assertEquals(patientId, "1");
 
                 }
+
+//                if (key.equals("InObservationCohort")) {
+//                    Boolean isInObservationCohort = (Boolean) value;
+//                    System.out.println(key + ": " + isInObservationCohort);
+//                    assertTrue(isInObservationCohort);
+//                }
+//
+//                if (key.equals("InDemographic")) {
+//                    Boolean isInDemographic = (Boolean) value;
+//                    System.out.println(key + ": " + isInDemographic);
+//                    assertTrue(isInDemographic);
+//                }
 
                 System.out.println(key + "=" + tempConvert(value));
 
