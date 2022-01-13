@@ -11,12 +11,12 @@ code "451061000124104": '451061000124104' from "SNOMED" display 'Hemoglobin A1c 
 
 context Patient
 
-  define "InObservationCohort":
-        exists([Observation: "451061000124104"] observation
-                where (ToDate((observation.effective as FHIR.dateTime).value) in MeasurementPeriod)
-                      and
-                      observation.status in {'final', 'amended'}
-              )
+define "InObservationCohort":
+    exists([Observation: "451061000124104"] observation
+            where (ToDate((observation.effective as FHIR.dateTime).value) in MeasurementPeriod)
+                  and
+                  observation.status in {'final', 'amended'}
+          )
 
-  define InDemographic:
-      InObservationCohort
+define InDemographic:
+  InObservationCohort

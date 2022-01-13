@@ -66,7 +66,7 @@ public class MeasureServiceTest {
         String cqllibraryUrl = testResourcePath + "/" + folder + "/cql";
         String cqllibraryVersion = "1.0.0";
         String terminologyUrl = testResourcePath + "/" + folder + "/terminology";
-        String cqlVariablesToReturn = "InAgeCohort,InQualifyingObservationCohort,InDemographicComposed";
+        String cqlVariablesToReturn = "InAgeCohort,InObservationCohort,InDemographic";
 
         String bundleJson = null;
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
@@ -93,24 +93,25 @@ public class MeasureServiceTest {
                     null,
                     null
             );
-            assertEquals(result.get("InAgeCohort"), "true");
             assertEquals(result.get("PatientId"), "1");
+            assertEquals(result.get("InAgeCohort"), "true");
+            assertEquals(result.get("InObservationCohort"), "true");
+            assertEquals(result.get("InDemographic"), "true");
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
         }
 
         System.out.println();
-
     }
 
     @Test
-    public void testRunCqlLibrary() throws Exception {
+    public void testRunCqlLibraryFromFhirServer() throws Exception {
         String cqlLibraryName = "BMI001";
         String cqllibraryUrl = "http://localhost:3000/4_0_0";
         String cqllibraryVersion = "1.0.0";
         String terminologyUrl = "http://localhost:3000/4_0_0";
-        String cqlVariablesToReturn = "InAgeCohort,InQualifyingObservationCohort,InDemographicComposed";
+        String cqlVariablesToReturn = "InAgeCohort,InObservationCohort,InDemographic";
 
         String bundleJson = null;
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
@@ -137,24 +138,25 @@ public class MeasureServiceTest {
                     null,
                     null
             );
-            assertEquals(result.get("InAgeCohort"), "true");
             assertEquals(result.get("PatientId"), "1");
+            assertEquals(result.get("InAgeCohort"), "true");
+//            assertEquals(result.get("InObservationCohort"), "true");
+//            assertEquals(result.get("InDemographic"), "true");
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
         }
 
         System.out.println();
-
     }
 
     @Test
-    public void testRunCqlLibraryWithContainedResources() throws Exception {
+    public void testRunCqlLibraryFromFhirServerWithContainedResources() throws Exception {
         String cqlLibraryName = "BMI001";
         String cqllibraryUrl = "http://localhost:3000/4_0_0";
         String cqllibraryVersion = "1.0.0";
         String terminologyUrl = "http://localhost:3000/4_0_0";
-        String cqlVariablesToReturn = "InAgeCohort,InQualifyingObservationCohort,InDemographicComposed";
+        String cqlVariablesToReturn = "InAgeCohort,InObservationCohort,InDemographic";
 
         String bundleJson = null;
         File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected_contained.json");
@@ -181,15 +183,16 @@ public class MeasureServiceTest {
                     null,
                     null
             );
-            assertEquals(result.get("InAgeCohort"), "true");
             assertEquals(result.get("PatientId"), "1");
+            assertEquals(result.get("InAgeCohort"), "true");
+//            assertEquals(result.get("InObservationCohort"), "true");
+//            assertEquals(result.get("InDemographic"), "true");
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
         }
 
         System.out.println();
-
     }
 
 }

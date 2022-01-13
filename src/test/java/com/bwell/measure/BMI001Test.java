@@ -25,6 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class BMI001Test {
 
@@ -149,6 +150,29 @@ public class BMI001Test {
                 System.out.println(key + ": Patient ID = " + patientId);
                 assertEquals(patientId, "1");
 
+                // patient active flag
+                boolean isActive = patient.getActive();
+                System.out.println(key + ": Patient Active = " + isActive);
+                assertTrue(isActive);
+
+            }
+
+            if (key.equals("InAgeCohort")) {
+                Boolean isInAgeCohort = (Boolean) value;
+                System.out.println(key + ": " + isInAgeCohort);
+                assertTrue(isInAgeCohort);
+            }
+
+            if (key.equals("InObservationCohort")) {
+                Boolean isInObservationCohort = (Boolean) value;
+                System.out.println(key + ": " + isInObservationCohort);
+                assertTrue(isInObservationCohort);
+            }
+
+            if (key.equals("InDemographic")) {
+                Boolean isInDemographic = (Boolean) value;
+                System.out.println(key + ": " + isInDemographic);
+                assertTrue(isInDemographic);
             }
 
             System.out.println(key + "=" + tempConvert(value));
@@ -165,7 +189,7 @@ public class BMI001Test {
         List<LibraryParameter> libraries = new ArrayList<>();
 
         LibraryParameter libraryParameter = new LibraryParameter();
-        libraryParameter.terminologyUrl = fhirServerUrl;
+        libraryParameter.terminologyUrl = fhirServerUrl;  // set it to FHIR server url, instead of terminologyPath var
         libraryParameter.libraryUrl = cqlPath;
         libraryParameter.libraryName = libraryName;
         libraryParameter.libraryVersion = libraryVersion;
@@ -200,7 +224,30 @@ public class BMI001Test {
                     System.out.println(key + ": Patient ID = " + patientId);
                     assertEquals(patientId, "1");
 
+                    // patient active flag
+                    boolean isActive = patient.getActive();
+                    System.out.println(key + ": Patient Active = " + isActive);
+                    assertTrue(isActive);
+
                 }
+
+                if (key.equals("InAgeCohort")) {
+                    Boolean isInAgeCohort = (Boolean) value;
+                    System.out.println(key + ": " + isInAgeCohort);
+                    assertTrue(isInAgeCohort);
+                }
+
+//                if (key.equals("InObservationCohort")) {
+//                    Boolean isInObservationCohort = (Boolean) value;
+//                    System.out.println(key + ": " + isInObservationCohort);
+//                    assertTrue(isInObservationCohort);
+//                }
+//
+//                if (key.equals("InDemographic")) {
+//                    Boolean isInDemographic = (Boolean) value;
+//                    System.out.println(key + ": " + isInDemographic);
+//                    assertTrue(isInDemographic);
+//                }
 
                 System.out.println(key + "=" + tempConvert(value));
 
@@ -226,7 +273,7 @@ public class BMI001Test {
 
         LibraryParameter libraryParameter = new LibraryParameter();
         libraryParameter.terminologyUrl = terminologyPath;
-        libraryParameter.libraryUrl = fhirServerUrl;
+        libraryParameter.libraryUrl = fhirServerUrl;  // set it to FHIR server url
         libraryParameter.libraryName = libraryName;
         libraryParameter.libraryVersion = libraryVersion;
         libraryParameter.model = modelParameter;
@@ -262,6 +309,24 @@ public class BMI001Test {
 
                 }
 
+                if (key.equals("InAgeCohort")) {
+                    Boolean isInAgeCohort = (Boolean) value;
+                    System.out.println(key + ": " + isInAgeCohort);
+                    assertTrue(isInAgeCohort);
+                }
+
+                if (key.equals("InObservationCohort")) {
+                    Boolean isInObservationCohort = (Boolean) value;
+                    System.out.println(key + ": " + isInObservationCohort);
+                    assertTrue(isInObservationCohort);
+                }
+
+                if (key.equals("InDemographic")) {
+                    Boolean isInDemographic = (Boolean) value;
+                    System.out.println(key + ": " + isInDemographic);
+                    assertTrue(isInDemographic);
+                }
+
                 System.out.println(key + "=" + tempConvert(value));
 
             }
@@ -286,9 +351,9 @@ public class BMI001Test {
 
         LibraryParameter libraryParameter = new LibraryParameter();
         libraryParameter.libraryName = libraryName;
-        libraryParameter.libraryUrl = fhirServerUrl;
+        libraryParameter.libraryUrl = fhirServerUrl;  // set it to FHIR server url
         libraryParameter.libraryVersion = libraryVersion;
-        libraryParameter.terminologyUrl = fhirServerUrl;
+        libraryParameter.terminologyUrl = fhirServerUrl;  // set it to FHIR server url
         libraryParameter.model = modelParameter;
         libraryParameter.model.modelName = modelName;
         libraryParameter.model.modelBundle = bundleJson;
@@ -297,20 +362,49 @@ public class BMI001Test {
 
         try {
             EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraries);
+
             Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
+
             for (Map.Entry<String, Object> libraryEntry : entrySet) {
+
                 String key = libraryEntry.getKey();
                 Object value = libraryEntry.getValue();
+
                 if (key.equals("Patient")) {
+
                     Patient patient = (Patient) value;
-                    String mr_identifier_value = patient.getIdentifier().get(0).getValue(); // medical record number
+
+                    // medical record number
+                    String mr_identifier_value = patient.getIdentifier().get(0).getValue();
                     System.out.println(key + ": Medical Record ID = " + mr_identifier_value);
                     assertEquals(mr_identifier_value, "12345");
-                    String patient_id = patient.getId();  // patient id
+
+                    // patient id
+                    String patient_id = patient.getId();
                     System.out.println(key + ": Patient ID = " + patient_id);
                     assertEquals(patient_id, "1");
+
                 }
-                System.out.println(key + "=" + tempConvert(value));
+
+                if (key.equals("InAgeCohort")) {
+                    Boolean isInAgeCohort = (Boolean) value;
+                    System.out.println(key + ": " + isInAgeCohort);
+                    assertTrue(isInAgeCohort);
+                }
+
+//                if (key.equals("InObservationCohort")) {
+//                    Boolean isInObservationCohort = (Boolean) value;
+//                    System.out.println(key + ": " + isInObservationCohort);
+//                    assertTrue(isInObservationCohort);
+//                }
+//
+//                if (key.equals("InDemographic")) {
+//                    Boolean isInDemographic = (Boolean) value;
+//                    System.out.println(key + ": " + isInDemographic);
+//                    assertTrue(isInDemographic);
+//                }
+
+                 System.out.println(key + "=" + tempConvert(value));
             }
         } catch (CqlException e) {
             if (Objects.equals(e.getMessage(), "Unexpected exception caught during execution: ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException: HTTP 404 Not Found")) {
@@ -332,8 +426,8 @@ public class BMI001Test {
         List<LibraryParameter> libraries = new ArrayList<>();
 
         LibraryParameter libraryParameter = new LibraryParameter();
-        libraryParameter.terminologyUrl = fhirServerUrl;
-        libraryParameter.libraryUrl = fhirServerUrl;
+        libraryParameter.terminologyUrl = fhirServerUrl;  // set it to FHIR server url
+        libraryParameter.libraryUrl = fhirServerUrl;   // set it to FHIR server url
         libraryParameter.libraryName = libraryName;
         libraryParameter.libraryVersion = libraryVersion;
         libraryParameter.model = modelParameter;
@@ -369,7 +463,25 @@ public class BMI001Test {
 
                 }
 
-                System.out.println(key + "=" + tempConvert(value));
+                if (key.equals("InAgeCohort")) {
+                    Boolean isInAgeCohort = (Boolean) value;
+                    System.out.println(key + ": " + isInAgeCohort);
+                    assertTrue(isInAgeCohort);
+                }
+
+//                if (key.equals("InObservationCohort")) {
+//                    Boolean isInObservationCohort = (Boolean) value;
+//                    System.out.println(key + ": " + isInObservationCohort);
+//                    assertTrue(isInObservationCohort);
+//                }
+//
+//                if (key.equals("InDemographic")) {
+//                    Boolean isInDemographic = (Boolean) value;
+//                    System.out.println(key + ": " + isInDemographic);
+//                    assertTrue(isInDemographic);
+//                }
+
+                 System.out.println(key + "=" + tempConvert(value));
 
             }
         } catch (CqlException e) {
