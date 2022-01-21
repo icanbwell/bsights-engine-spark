@@ -54,7 +54,7 @@ public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
         String cqllibraryVersion = "1.0.0";
         String terminologyUrl = "http://localhost:3000/4_0_0";
         String terminologyHeaders = "";
-        String cqlVariablesToReturn = "PatientId,InAgeCohort,InObservationCohort,InDemographic";
+        String cqlVariablesToReturn = "InAgeCohort,InObservationCohort,InDemographic";
 
         String command = String.format(
                 "runCqlLibrary('%s', '%s', '%s','%s','%s', '%s', '%s', %s, %s, %s)",
@@ -112,7 +112,7 @@ public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
         String cqllibraryVersion = "1.0.0";
         String terminologyUrl = "http://localhost:3000/4_0_0";
         String terminologyHeaders = "";
-        String cqlVariablesToReturn = "PatientId,InObservationCohort,InDemographic";
+        String cqlVariablesToReturn = "InObservationCohort,InDemographic";
 
         String command = String.format(
                 "runCqlLibrary('%s', '%s', '%s','%s','%s', '%s', '%s', %s, %s, %s)",
