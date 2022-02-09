@@ -3,7 +3,8 @@ build:
 	docker build -t imranq2/cql-spark .
 
 shell:
-	docker run -it imranq2/cql-spark sh
+	docker build -t imranq2/cql-spark . && \
+    docker run -it imranq2/cql-spark sh
 
 up1:
 	docker build -t imranq2/cql-spark . && \
