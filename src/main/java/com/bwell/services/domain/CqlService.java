@@ -26,6 +26,15 @@ public class CqlService {
     private final Map<String, LibraryContentProvider> libraryContentProviderIndex = new HashMap<>();
     private final Map<String, TerminologyProvider> terminologyProviderIndex = new HashMap<>();
 
+    private static final Object lock = new Object();
+
+    /**
+     * Runs the CQL library
+     *
+     * @param fhirVersion version of FHIR
+     * @param libraries   list of libraries
+     * @return result of evaluation
+     */
     public EvaluationResult runCqlLibrary(String fhirVersion, List<LibraryParameter> libraries) {
         FhirVersionEnum fhirVersionEnum = FhirVersionEnum.valueOf(fhirVersion);
 
@@ -35,7 +44,42 @@ public class CqlService {
 
         // load cql libraries
         for (LibraryParameter library : libraries) {
+            CqlEvaluator evaluator = buildCqlEvaluator(cqlEvaluatorComponent, library);
 
+            VersionedIdentifier identifier = new VersionedIdentifier().withId(library.libraryName);
+            if (library.libraryVersion != null) {
+                identifier = identifier.withVersion(library.libraryVersion);
+            }
+
+            // add any context parameters
+            Pair<String, Object> contextParameter = null;
+
+            if (library.context != null) {
+                contextParameter = Pair.of(library.context.contextName, library.context.contextValue);
+            }
+
+            //noinspection CaughtExceptionImmediatelyRethrown
+            try {
+                // run evaluator and return result
+                return evaluator.evaluate(identifier, contextParameter);
+            } catch (Exception e) {
+                throw e;
+            }
+
+        }
+        return null;
+    }
+
+    /**
+     * Builds an evaluator using the configuration values passed in.
+     * Uses synchronized to avoid multiple threads updating the underlying caches at the same time
+     *
+     * @param cqlEvaluatorComponent evaluator component
+     * @param library               library configuration
+     * @return a CqlEvaluator built with the passed in configuration
+     */
+    private CqlEvaluator buildCqlEvaluator(CqlEvaluatorComponent cqlEvaluatorComponent, LibraryParameter library) {
+        synchronized (lock) {
             // create a cql evaluator builder
             CqlEvaluatorBuilder cqlEvaluatorBuilder = cqlEvaluatorComponent.createBuilder();
 
@@ -45,7 +89,7 @@ public class CqlService {
             // if not in cache then load it
             if (libraryContentProvider == null) {
                 EndpointInfo endpointInfo = new EndpointInfo().setAddress(library.libraryUrl);
-                if (library.libraryUrlHeaders != null && library.libraryUrlHeaders.size() > 0){
+                if (library.libraryUrlHeaders != null && library.libraryUrlHeaders.size() > 0) {
                     endpointInfo.setHeaders(library.libraryUrlHeaders);
                 }
 
@@ -65,7 +109,7 @@ public class CqlService {
                 if (terminologyProvider == null) {
                     // if terminology is not in cache then load ut
                     EndpointInfo endpointInfo = new EndpointInfo().setAddress(library.terminologyUrl);
-                    if (library.terminologyUrlHeaders != null && library.terminologyUrlHeaders.size() > 0){
+                    if (library.terminologyUrlHeaders != null && library.terminologyUrlHeaders.size() > 0) {
                         endpointInfo.setHeaders(library.terminologyUrlHeaders);
                     }
 
@@ -102,28 +146,7 @@ public class CqlService {
                     dataProvider.getRight());
 
             // build the evaluator
-            CqlEvaluator evaluator = cqlEvaluatorBuilder.build();
-
-            VersionedIdentifier identifier = new VersionedIdentifier().withId(library.libraryName);
-            if (library.libraryVersion != null) {
-                identifier = identifier.withVersion(library.libraryVersion);
-            }
-
-            // add any context parameters
-            Pair<String, Object> contextParameter = null;
-
-            if (library.context != null) {
-                contextParameter = Pair.of(library.context.contextName, library.context.contextValue);
-            }
-
-            try {
-                // run evaluator and return result
-                return evaluator.evaluate(identifier, contextParameter);
-            } catch (Exception e) {
-                throw e;
-            }
-
+            return cqlEvaluatorBuilder.build();
         }
-        return null;
     }
 }
