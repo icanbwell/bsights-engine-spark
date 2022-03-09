@@ -1,6 +1,6 @@
 {
   "resourceType": "Patient",
-  "id": "unitypoint",
+  "id": "example-unitypoint",
   "meta": {
     "versionId": "5",
     "lastUpdated": "2022-03-07T21:36:27.000Z",
@@ -212,12 +212,12 @@
   ],
   "generalPractitioner": [
     {
-      "reference": "Practitioner/e3E1V5LfkTjmTM5dFwBL7CQ3",
+      "reference": "Practitioner/example",
       "display": "L Nees"
     }
   ],
   "managingOrganization": {
-    "reference": "Organization/e4956MRMZEcQEg.U6PsIIeA3",
+    "reference": "Organization/example",
     "display": "UnityPoint Health"
   }
 }

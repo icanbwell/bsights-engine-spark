@@ -75,7 +75,7 @@ public class ResourceRunnerTest {
         libraryParameter.model.modelUrl = testResourcePath + "/r4";
         libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
-        libraryParameter.context.contextValue = "example";
+        libraryParameter.context.contextValue = "example-unitypoint";
 
         libraries.add(libraryParameter);
 
@@ -89,7 +89,7 @@ public class ResourceRunnerTest {
                 Patient patient = (Patient) value;
                 String identifier_value = patient.getIdentifier().get(0).getValue();
                 System.out.println(key + "Id = " + identifier_value);
-                assertEquals(identifier_value, "12345");
+                assertEquals(identifier_value, "E900019216");
             }
             System.out.println(key + "=" + tempConvert(value));
         }

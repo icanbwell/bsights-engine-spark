@@ -1,6 +1,6 @@
 {
   "resourceType": "ChargeItem",
-  "id": "unitypoint",
+  "id": "example-unitypoint",
   "status": "unknown",
   "code": {
     "coding": [
@@ -27,10 +27,10 @@
     ]
   },
   "subject": {
-    "reference": "Patient/unitypoint"
+    "reference": "Patient/example-unitypoint"
   },
   "context": {
-    "reference": "Encounter/unitypoint"
+    "reference": "Encounter/example-unitypoint"
   },
   "reason": [
     {
