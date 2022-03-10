@@ -30,7 +30,7 @@ context Encounter
 
 /*note*
 If we need only Unity Point data? potentially for future?
-define potentialy meta.security.coding.code = ‘unitypoint’
+define potentialy meta.security.coding.code = 'unitypoint'
 */
 define currentperiod: Now()
 

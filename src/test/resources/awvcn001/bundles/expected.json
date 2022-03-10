@@ -339,6 +339,73 @@
               }
             ]
           }
+        },
+        {
+          "resource": {
+            "resourceType": "ChargeItem",
+            "id": "unitypoint-8509838a-0405-45c3-8582-c76341b97c95",
+            "meta": {
+              "versionId": "1",
+              "lastUpdated": "2022-02-24T23:04:52.000Z",
+              "source": "https://epicfhir.unitypoint.org/NonProdFHIR/api/FHIR/R4/metadatametadata",
+              "security": [
+                {
+                  "system": "https://www.icanbwell.com/owner",
+                  "code": "unitypoint"
+                },
+                {
+                  "system": "https://www.icanbwell.com/access",
+                  "code": "unitypoint"
+                },
+                {
+                  "system": "https://www.icanbwell.com/vendor",
+                  "code": "unitypoint"
+                }
+              ]
+            },
+            "status": "unknown",
+            "code": {
+              "coding": [
+                {
+                  "system": "https://epicfhir.unitypoint.org/NonProdFHIR",
+                  "code": "10",
+                  "display": "ChargeContext"
+                },
+                {
+                  "system": "https://epicfhir.unitypoint.org/NonProdFHIR",
+                  "code": "G0439",
+                  "display": "ProcedureID"
+                },
+                {
+                  "system": "https://epicfhir.unitypoint.org/NonProdFHIR",
+                  "code": "NA",
+                  "display": "RevenueCodeID"
+                },
+                {
+                  "system": "https://epicfhir.unitypoint.org/NonProdFHIR",
+                  "code": "NA",
+                  "display": "RevenueCodeIDType"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/unitypoint-eFQWoGGaBo8dUJyl3DuS7lxGLvVFXjDVWEzu2h9X0DY43"
+            },
+            "context": {
+              "reference": "Encounter/unitypoint-e2fR5T29LV7PbsURf6HlLHA3"
+            },
+            "reason": [
+              {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/sid/icd-10",
+                    "code": "B08.5",
+                    "display": "IDType"
+                  }
+                ]
+              }
+            ]
+          }
         }
       ]
     }
