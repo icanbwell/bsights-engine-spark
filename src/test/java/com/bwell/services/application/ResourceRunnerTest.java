@@ -68,14 +68,19 @@ public class ResourceRunnerTest {
         LibraryParameter libraryParameter = new LibraryParameter();
         libraryParameter.libraryName = "TestFHIR";
         libraryParameter.libraryUrl = testResourcePath + "/r4";
-//        libraryParameter.libraryVersion = libraryParameter.libraryVersion;
+        // libraryParameter.libraryVersion = libraryParameter.libraryVersion;
         libraryParameter.terminologyUrl = testResourcePath + "/r4/vocabulary/ValueSet";
         libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
         libraryParameter.model.modelUrl = testResourcePath + "/r4";
         libraryParameter.context = new ContextParameter();
         libraryParameter.context.contextName = "Patient";
-        libraryParameter.context.contextValue = "example";
+        // [FINDINGs]
+        // FHIR resource json data to be tested should have this contextValue as their "id" values,
+        // because this test method would find and load those FHIR resource JSON data with the same "context" data,
+        //  for instance, to test unitypoint FHIR data, Patient, Encounter, and ChargeItem data have the "example-unitypoint" as "id" value.
+        //  when running this testR4 method, you will see only the FHIR data under this context, "example-unitypoint" will be loaded
+        libraryParameter.context.contextValue = "example-unitypoint"; // previously, "example"
 
         libraries.add(libraryParameter);
 
@@ -89,7 +94,7 @@ public class ResourceRunnerTest {
                 Patient patient = (Patient) value;
                 String identifier_value = patient.getIdentifier().get(0).getValue();
                 System.out.println(key + "Id = " + identifier_value);
-                assertEquals(identifier_value, "12345");
+                assertEquals(identifier_value, "E900019216");  // previously, "12345" for "example" Patient
             }
             System.out.println(key + "=" + tempConvert(value));
         }

@@ -1,0 +1,223 @@
+{
+  "resourceType": "Patient",
+  "id": "example-unitypoint",
+  "meta": {
+    "versionId": "5",
+    "lastUpdated": "2022-03-07T21:36:27.000Z",
+    "source": "https://epicfhir.unitypoint.org/NonProdFHIR/api/FHIR/R4/metadata",
+    "security": [
+      {
+        "system": "https://www.icanbwell.com/owner",
+        "code": "unitypoint"
+      },
+      {
+        "system": "https://www.icanbwell.com/access",
+        "code": "unitypoint"
+      },
+      {
+        "system": "https://www.icanbwell.com/vendor",
+        "code": "unitypoint"
+      }
+    ]
+  },
+  "extension": [
+    {
+      "extension": [
+        {
+          "url": "text",
+          "valueString": "Other Race"
+        }
+      ],
+      "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-race"
+    },
+    {
+      "extension": [
+        {
+          "url": "ombCategory"
+        },
+        {
+          "url": "text",
+          "valueString": "Not Hispanic or Latino"
+        }
+      ],
+      "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity"
+    },
+    {
+      "url": "http://open.epic.com/FHIR/StructureDefinition/extension/legal-sex"
+    }
+  ],
+  "identifier": [
+    {
+      "use": "usual",
+      "type": {
+        "text": "EPI"
+      },
+      "system": "urn:oid:1.2.840.114350.1.13.283.3.7.5.737384.0",
+      "value": "E900019216"
+    },
+    {
+      "use": "usual",
+      "type": {
+        "text": "EXTERNAL"
+      },
+      "system": "urn:oid:1.2.840.114350.1.13.283.3.7.2.698084",
+      "value": "Z900019732"
+    },
+    {
+      "use": "usual",
+      "type": {
+        "text": "FHIR"
+      },
+      "system": "http://open.epic.com/FHIR/StructureDefinition/patient-dstu2-fhir-id",
+      "value": "TeARYSKNCIoiTeex7NLn90wyU.2rEDXflP8V4arielmcB"
+    },
+    {
+      "use": "usual",
+      "type": {
+        "text": "FHIR STU3"
+      },
+      "system": "http://open.epic.com/FHIR/StructureDefinition/patient-fhir-id",
+      "value": "eFQWoGGaBo8dUJyl3DuS7lxGLvVFXjDVWEzu2h9X0DY43"
+    },
+    {
+      "use": "usual",
+      "type": {
+        "text": "IHSMRN"
+      },
+      "system": "urn:oid:1.2.840.114350.1.13.283",
+      "value": "90019200"
+    },
+    {
+      "use": "usual",
+      "type": {
+        "text": "INTERNAL"
+      },
+      "system": "urn:oid:1.2.840.114350.1.13.283.3.7.2.698084",
+      "value": " Z900019732"
+    },
+    {
+      "use": "usual",
+      "type": {
+        "text": "MYCHARTLOGIN"
+      },
+      "system": "urn:oid:1.2.840.114350.1.13.283.3.7.3.878082.110",
+      "value": "AWVGDCP2"
+    },
+    {
+      "use": "usual",
+      "type": {
+        "text": "WPRINTERNAL"
+      },
+      "system": "urn:oid:1.2.840.114350.1.13.283.3.7.2.878082",
+      "value": "414910"
+    },
+    {
+      "use": "usual",
+      "system": "https://open.epic.com/FHIR/StructureDefinition/PayerMemberId",
+      "value": "2GE5TE8NM27"
+    },
+    {
+      "id": "bwell-member-id",
+      "system": "https://icanbwell.com/Bwell_Platform/member_id",
+      "value": "X2Uljnj"
+    }
+  ],
+  "active": true,
+  "name": [
+    {
+      "use": "old",
+      "text": "TWO,GDCP2",
+      "family": "Two",
+      "given": [
+        "Gdcp2"
+      ]
+    },
+    {
+      "use": "official",
+      "text": "Gdcp Two",
+      "family": "Two",
+      "given": [
+        "Gdcp"
+      ]
+    },
+    {
+      "use": "usual",
+      "text": "Gdcp Two \"Gdcp2\"",
+      "family": "Two",
+      "given": [
+        "Gdcp2"
+      ]
+    }
+  ],
+  "telecom": [
+    {
+      "system": "phone",
+      "value": "515-444-9999",
+      "use": "home"
+    },
+    {
+      "system": "phone",
+      "value": "515-444-3333",
+      "use": "mobile"
+    },
+    {
+      "system": "email",
+      "value": "jeffrey.swim@unitypoint.org"
+    }
+  ],
+  "gender": "female",
+  "birthDate": "1954-02-22",
+  "deceasedBoolean": false,
+  "address": [
+    {
+      "use": "old",
+      "line": [
+        "258 6th Ave"
+      ],
+      "city": "BEAVERDALE",
+      "district": "POLK",
+      "state": "IA",
+      "postalCode": "50310",
+      "country": "USA"
+    },
+    {
+      "use": "home",
+      "line": [
+        "258 6th Ave"
+      ],
+      "city": "BEAVERDALE",
+      "district": "POLK",
+      "state": "IA",
+      "postalCode": "50310",
+      "country": "USA"
+    }
+  ],
+  "maritalStatus": {
+    "text": "Single"
+  },
+  "communication": [
+    {
+      "language": {
+        "coding": [
+          {
+            "system": "urn:ietf:bcp:47",
+            "code": "en",
+            "display": "English"
+          }
+        ],
+        "text": "English"
+      },
+      "preferred": true
+    }
+  ],
+  "generalPractitioner": [
+    {
+      "reference": "Practitioner/example",
+      "display": "L Nees"
+    }
+  ],
+  "managingOrganization": {
+    "reference": "Organization/example",
+    "display": "UnityPoint Health"
+  }
+}
