@@ -312,7 +312,7 @@
                   "text": "BMI"
                 },
                 "subject": {
-                  "reference": "Patient/example",
+                  "reference": "Patient/1",
                   "display": "Amy Shaw"
                 },
                 "encounter": {
@@ -320,7 +320,7 @@
                 },
                 "effectiveDateTime": "1999-07-02",
                 "valueQuantity": {
-                  "value": 16.2,
+                  "value": 36.2,
                   "unit": "kg/m2",
                   "system": "http://unitsofmeasure.org",
                   "code": "kg/m2"
@@ -645,7 +645,7 @@
                   "text": "BMI"
                 },
                 "subject": {
-                  "reference": "Patient/example",
+                  "reference": "Patient/2",
                   "display": "Amy Shaw"
                 },
                 "encounter": {
@@ -653,7 +653,7 @@
                 },
                 "effectiveDateTime": "1999-07-02",
                 "valueQuantity": {
-                  "value": 16.2,
+                  "value": 36.2,
                   "unit": "kg/m2",
                   "system": "http://unitsofmeasure.org",
                   "code": "kg/m2"
