@@ -38,7 +38,7 @@ public class ResourceLoaderTest {
         String bundleJson = null;
 
         try {
-            bundleJson = FileUtils.readFileToString(f, Charset.forName("UTF-8"));
+            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -58,26 +58,26 @@ public class ResourceLoaderTest {
         assertEquals("12345", patient_first_identifier);
     }
 
-    @Test
-    public void testLoadingResource() {
-        String folder = "bmi001";
-        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected_resource_only.json");
-        String bundleJson = null;
-
-        try {
-            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        IBaseBundle bundle = new ResourceLoader().loadResourceFromString(bundleJson);
-        assertNotNull(bundle);
-        ArrayList entry = (ArrayList) ((Bundle) bundle).getEntry();
-        Bundle.BundleEntryComponent bundleEntryComponent = (Bundle.BundleEntryComponent) entry.get(0);
-        Patient patient = (Patient) bundleEntryComponent.getResource();
-        ArrayList identifier = (ArrayList) patient.getIdentifier();
-        Identifier identifier1 = (Identifier) identifier.get(0);
-        String patient_first_identifier = identifier1.getValue();
-        assertEquals("12345", patient_first_identifier);
-    }
+//    @Test
+//    public void testLoadingContainedResources() {
+//        String folder = "bmi001";
+//        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected_resource_only.json");
+//        String bundleJson = null;
+//
+//        try {
+//            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        IBaseBundle bundle = new ResourceLoader().loadResourceFromString(bundleJson);
+//        assertNotNull(bundle);
+//        ArrayList entry = (ArrayList) ((Bundle) bundle).getEntry();
+//        Bundle.BundleEntryComponent bundleEntryComponent = (Bundle.BundleEntryComponent) entry.get(0);
+//        Patient patient = (Patient) bundleEntryComponent.getResource();
+//        ArrayList identifier = (ArrayList) patient.getIdentifier();
+//        Identifier identifier1 = (Identifier) identifier.get(0);
+//        String patient_first_identifier = identifier1.getValue();
+//        assertEquals("12345", patient_first_identifier);
+//    }
 }

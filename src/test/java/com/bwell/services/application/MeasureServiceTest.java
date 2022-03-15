@@ -1,11 +1,6 @@
 package com.bwell.services.application;
 
-import org.apache.commons.io.FileUtils;
-import org.hl7.fhir.instance.model.api.IBase;
-import org.hl7.fhir.instance.model.api.IBaseDatatype;
-import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.bwell.utilities.Utilities;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -13,10 +8,9 @@ import org.testng.annotations.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.testng.Assert.assertEquals;
 
@@ -62,23 +56,15 @@ public class MeasureServiceTest {
 
     @Test
     public void testRunCqlLibraryFromFile() throws Exception {
-        String cqlLibraryName = "BMI001";
-        String cqllibraryUrl = testResourcePath + "/" + folder + "/cql";
+        String cqlLibraryName = "AWVCN001";
+        String cqllibraryUrl = testResourcePath + "/" + "awvcn001" + "/cql";
         String cqllibraryVersion = "1.0.0";
-        String terminologyUrl = testResourcePath + "/" + folder + "/terminology";
-        String cqlVariablesToReturn = "InAgeCohort,InObservationCohort,InDemographic";
+        String terminologyUrl = testResourcePath + "/" + "awvcn001" + "/terminology";
+        String cqlVariablesToReturn = "InAgeCohort,HadAWV1year,NeedAWV1year";
 
-        String bundleJson = null;
-        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
-        try {
-            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        JSONArray jsonArray = new JSONArray(bundleJson);
-        JSONObject firstItem = (JSONObject) jsonArray.get(0);
-        bundleJson = firstItem.getJSONObject("bundle").toString();
+        String bundleJson = Utilities.getBundle(testResourcePath, "awvcn001");
+        String rawJson = Utilities.getRawJson(testResourcePath, "awvcn001", "rawJson.txt");
+        String bundleRawJson = bundleSeparateResourcesJson(rawJson);
 
         try {
             Map<String, String> result = new MeasureService().runCqlLibrary(
@@ -89,20 +75,34 @@ public class MeasureServiceTest {
                     terminologyUrl,
                     null,
                     cqlVariablesToReturn,
-                    bundleJson,
+                    rawJson, //bundleJson, //
                     null,
                     null
             );
-            assertEquals(result.get("PatientId"), "1");
+            assertEquals(result.get("PatientId"), "unitypoint-eFQWoGGaBo8dUJyl3DuS7lxGLvVFXjDVWEzu2h9X0DY43");
             assertEquals(result.get("InAgeCohort"), "true");
-            assertEquals(result.get("InObservationCohort"), "true");
-            assertEquals(result.get("InDemographic"), "true");
+            assertEquals(result.get("HadAWV1year"), "true");
+            assertEquals(result.get("NeedAWV1year"), "false");
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
         }
 
         System.out.println();
+    }
+
+    private String bundleSeparateResourcesJson(String rawSeparatedJson) {
+        // the JSON string from the FhirTextReader in the CQL pipeline has the separated resources,
+        String separatedResourcesBundleJson = "";
+        String[] lines = rawSeparatedJson.split(System.getProperty("line.separator"));
+        for(int i=0; i<lines.length; i++) {
+            // wrap in a resource
+            separatedResourcesBundleJson += ((i!=0 ? "," : "") + "{\"resource\":" + lines[i] + "}");
+        }
+
+        UUID uuid = UUID.randomUUID();
+        separatedResourcesBundleJson = "{\"resourceType\":\"Bundle\", \"id\":\"" + uuid.toString() + "\", \"entry\":[" + separatedResourcesBundleJson + "]}";
+        return separatedResourcesBundleJson;
     }
 
     @Test
@@ -113,17 +113,7 @@ public class MeasureServiceTest {
         String terminologyUrl = "http://localhost:3000/4_0_0";
         String cqlVariablesToReturn = "InAgeCohort,InObservationCohort,InDemographic";
 
-        String bundleJson = null;
-        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
-        try {
-            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        JSONArray jsonArray = new JSONArray(bundleJson);
-        JSONObject firstItem = (JSONObject) jsonArray.get(0);
-        bundleJson = firstItem.getJSONObject("bundle").toString();
+        String bundleJson = Utilities.getBundle(testResourcePath, folder);
 
         try {
             Map<String, String> result = new MeasureService().runCqlLibrary(
@@ -158,18 +148,8 @@ public class MeasureServiceTest {
         String terminologyUrl = "http://localhost:3000/4_0_0";
         String cqlVariablesToReturn = "InAgeCohort,InObservationCohort,InDemographic";
 
-        String bundleJson = null;
-        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected_contained.json");
-        try {
-            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String bundleJson = Utilities.getContainedBundle(testResourcePath, folder);
 
-        JSONArray jsonArray = new JSONArray(bundleJson);
-        JSONObject firstItem = (JSONObject) jsonArray.get(0);
-//        bundleJson = firstItem.toString();
-        bundleJson = firstItem.getJSONObject("bundle").toString();
         try {
             Map<String, String> result = new MeasureService().runCqlLibrary(
                     cqllibraryUrl,

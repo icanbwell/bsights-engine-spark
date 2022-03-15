@@ -7,6 +7,7 @@ import org.hl7.fhir.r4.model.ResourceType;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.util.UUID;
 
 /**
  * This class loads a FHIR resource from a file or a string
@@ -46,9 +47,16 @@ public class ResourceLoader {
             Resource resource = parser.parse(resourceJson);
             ResourceType resourceType = resource.getResourceType();
             if (resourceType != ResourceType.Bundle) {
-                // wrap in a bundle
-                resourceJson = "{\"resourceType\":\"Bundle\", \"id\":\"" + resource.getId() + "\", \"entry\":[" + "{\"resource\":" + resourceJson + "}" + "]}";
-                bundle = (IBaseBundle) parser.parse(resourceJson);
+                if (!resourceJson.contains("contained")) {
+                    // the JSON string from the FhirTextReader in the CQL pipeline has the separated resources,
+                    String separatedResourcesBundleJson = bundleSeparateResourcesJson(resourceJson);
+                    bundle = (IBaseBundle) parser.parse(separatedResourcesBundleJson);
+                }
+                else {
+                    // wrap in a bundle
+                    resourceJson = "{\"resourceType\":\"Bundle\", \"id\":\"" + resource.getId() + "\", \"entry\":[" + resourceJson + "]}";
+                    bundle = (IBaseBundle) parser.parse(resourceJson);
+                }
             }
             else {
                 bundle = (IBaseBundle) resource;
@@ -57,5 +65,19 @@ public class ResourceLoader {
             e.printStackTrace();
         }
         return bundle;
+    }
+
+    private String bundleSeparateResourcesJson(String rawSeparatedJson) {
+        // the JSON string from the FhirTextReader in the CQL pipeline has the separated resources,
+        String separatedResourcesBundleJson = "";
+        String[] lines = rawSeparatedJson.split(System.getProperty("line.separator"));
+        for(int i=0; i<lines.length; i++) {
+            // wrap in a resource
+            separatedResourcesBundleJson += ((i!=0 ? "," : "") + "{\"resource\":" + lines[i] + "}");
+        }
+
+        // wrap in a bundle
+        separatedResourcesBundleJson = "{\"resourceType\":\"Bundle\", \"id\":\"" + UUID.randomUUID().toString() + "\", \"entry\":[" + separatedResourcesBundleJson + "]}";
+        return separatedResourcesBundleJson;
     }
 }
