@@ -47,13 +47,16 @@ public class ResourceLoader {
             Resource resource = parser.parse(resourceJson);
             ResourceType resourceType = resource.getResourceType();
             if (resourceType != ResourceType.Bundle) {
-                // the JSON string from the FhirTextReader in the CQL pipeline has the separated resources,
-                String separatedResourcesBundleJson = bundleSeparateResourcesJson(resourceJson);
-                bundle = (IBaseBundle) parser.parse(separatedResourcesBundleJson);
-
-                // wrap in a bundle
-                // resourceJson = "{\"resourceType\":\"Bundle\", \"id\":\"" + resource.getId() + "\", \"entry\":[" + resourcesJson + "]}";
-                // bundle = (IBaseBundle) parser.parse(resourceJson);
+                if (!resourceJson.contains("contained")) {
+                    // the JSON string from the FhirTextReader in the CQL pipeline has the separated resources,
+                    String separatedResourcesBundleJson = bundleSeparateResourcesJson(resourceJson);
+                    bundle = (IBaseBundle) parser.parse(separatedResourcesBundleJson);
+                }
+                else {
+                    // wrap in a bundle
+                    resourceJson = "{\"resourceType\":\"Bundle\", \"id\":\"" + resource.getId() + "\", \"entry\":[" + resourceJson + "]}";
+                    bundle = (IBaseBundle) parser.parse(resourceJson);
+                }
             }
             else {
                 bundle = (IBaseBundle) resource;

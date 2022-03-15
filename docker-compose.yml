@@ -62,6 +62,8 @@ services:
     container_name: 'bsights-engine-spark-scriptrunner'
     volumes:
       - ./scripts/load_fhir_server.py:/scripts/load_fhir_server.py
+      - ./src/test/resources/awvcn001/cql:/data/cql/awvcn001/
+      - ./src/test/resources/awvcn001/terminology:/data/terminology/awvcn001/
       - ./src/test/resources/bmi001/cql:/data/cql/bmi001/
       - ./src/test/resources/bmi001/terminology:/data/terminology/bmi001/
       - ./src/test/resources/diab001/cql:/data/cql/diab001/
