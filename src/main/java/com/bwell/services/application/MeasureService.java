@@ -83,7 +83,7 @@ public class MeasureService {
 
                 if ("Patient".equals(key)) {
                     Patient patient = (Patient) value;
-                    newMap.put("PatientId", patient.hasId() ? patient.getId() : null);
+                    newMap.put("PatientId", (patient != null && patient.hasId()) ? patient.getId() : null);
 
                 }else{
                     if (cqlVariables.contains(key)) {
