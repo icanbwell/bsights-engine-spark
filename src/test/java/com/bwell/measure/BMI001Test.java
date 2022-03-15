@@ -3,13 +3,11 @@ package com.bwell.measure;
 import com.bwell.core.entities.LibraryParameter;
 import com.bwell.core.entities.ModelParameter;
 import com.bwell.services.domain.CqlService;
-import org.apache.commons.io.FileUtils;
+import com.bwell.utilities.Utilities;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseDatatype;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Patient;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.execution.EvaluationResult;
 import org.testng.annotations.AfterMethod;
@@ -19,9 +17,7 @@ import org.testng.annotations.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static org.testng.Assert.assertEquals;
@@ -56,37 +52,8 @@ public class BMI001Test {
         terminologyPath = testResourcePath + "/" + folder + "/terminology";
         cqlPath = testResourcePath + "/" + folder + "/cql";
 
-        bundleJson = getBundle();
-        bundleContainedJson = getContainedBundle();
-
-    }
-
-    private String getBundle() {
-        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
-        try {
-            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        JSONArray jsonArray = new JSONArray(bundleJson);
-        JSONObject firstItem = (JSONObject) jsonArray.get(0);
-        bundleJson = firstItem.getJSONObject("bundle").toString();
-        return bundleJson;
-    }
-
-    private String getContainedBundle() {
-        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected_contained.json");
-        try {
-            bundleContainedJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        JSONArray jsonArray = new JSONArray(bundleContainedJson);
-        JSONObject firstItem = (JSONObject) jsonArray.get(0);
-        bundleContainedJson = firstItem.getJSONObject("bundle").toString();
-        return bundleContainedJson;
+        bundleJson = Utilities.getBundle(testResourcePath, folder);
+        bundleContainedJson = Utilities.getContainedBundle(testResourcePath, folder);
     }
 
     @BeforeMethod
@@ -502,34 +469,34 @@ public class BMI001Test {
             return "null";
         }
 
-        String result = "";
+        StringBuilder result = new StringBuilder();
         if (value instanceof Iterable) {
-            result += "[";
+            result.append("[");
             Iterable<?> values = (Iterable<?>) value;
             for (Object o : values) {
 
-                result += (tempConvert(o) + ", ");
+                result.append(tempConvert(o)).append(", ");
             }
 
             if (result.length() > 1) {
-                result = result.substring(0, result.length() - 2);
+                result = new StringBuilder(result.substring(0, result.length() - 2));
             }
 
-            result += "]";
+            result.append("]");
         } else if (value instanceof IBaseResource) {
             IBaseResource resource = (IBaseResource) value;
-            result = resource.fhirType() + (resource.getIdElement() != null && resource.getIdElement().hasIdPart()
+            result = new StringBuilder(resource.fhirType() + (resource.getIdElement() != null && resource.getIdElement().hasIdPart()
                     ? "(id=" + resource.getIdElement().getIdPart() + ")"
-                    : "");
+                    : ""));
         } else if (value instanceof IBase) {
-            result = ((IBase) value).fhirType();
+            result = new StringBuilder(((IBase) value).fhirType());
         } else if (value instanceof IBaseDatatype) {
-            result = ((IBaseDatatype) value).fhirType();
+            result = new StringBuilder(((IBaseDatatype) value).fhirType());
         } else {
-            result = value.toString();
+            result = new StringBuilder(value.toString());
         }
 
-        return result;
+        return result.toString();
     }
 
 }

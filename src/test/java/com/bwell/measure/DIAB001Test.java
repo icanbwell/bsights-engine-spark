@@ -2,13 +2,11 @@ package com.bwell.measure;
 
 import com.bwell.core.entities.*;
 import com.bwell.services.domain.*;
-import org.apache.commons.io.FileUtils;
+import com.bwell.utilities.Utilities;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseDatatype;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Patient;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.execution.EvaluationResult;
 import org.testng.annotations.AfterMethod;
@@ -18,9 +16,7 @@ import org.testng.annotations.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static org.testng.Assert.assertEquals;
@@ -55,37 +51,8 @@ public class DIAB001Test {
         terminologyPath = testResourcePath + "/" + folder + "/terminology";
         cqlPath = testResourcePath + "/" + folder + "/cql";
 
-        bundleJson = getBundle();
-        bundleContainedJson = getContainedBundle();
-
-    }
-
-    private String getBundle() {
-        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
-        try {
-            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        JSONArray jsonArray = new JSONArray(bundleJson);
-        JSONObject firstItem = (JSONObject) jsonArray.get(0);
-        bundleJson = firstItem.getJSONObject("bundle").toString();
-        return bundleJson;
-    }
-
-    private String getContainedBundle() {
-        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected_contained.json");
-        try {
-            bundleContainedJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        JSONArray jsonArray = new JSONArray(bundleContainedJson);
-        JSONObject firstItem = (JSONObject) jsonArray.get(0);
-        bundleContainedJson = firstItem.getJSONObject("bundle").toString();
-        return bundleContainedJson;
+        bundleJson = Utilities.getBundle(testResourcePath, folder);
+        bundleContainedJson = Utilities.getContainedBundle(testResourcePath, folder);
     }
 
     @BeforeMethod

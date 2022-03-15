@@ -3,13 +3,11 @@ package com.bwell.measure;
 import com.bwell.core.entities.LibraryParameter;
 import com.bwell.core.entities.ModelParameter;
 import com.bwell.services.domain.CqlService;
-import org.apache.commons.io.FileUtils;
+import com.bwell.utilities.Utilities;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseDatatype;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Patient;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.execution.EvaluationResult;
 import org.opencds.cqf.cql.engine.runtime.Date;
@@ -20,9 +18,7 @@ import org.testng.annotations.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 
@@ -57,66 +53,9 @@ public class AWVCN001Test {
         terminologyPath = testResourcePath + "/" + folder + "/terminology";
         cqlPath = testResourcePath + "/" + folder + "/cql";
 
-        bundleJson = getBundle();
-        bundleContainedJson = getContainedBundle();
+        bundleJson = Utilities.getBundle(testResourcePath, folder);
+        bundleContainedJson = Utilities.getContainedBundle(testResourcePath, folder);
     }
-
-    private String getBundle() {
-        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
-        try {
-            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        JSONArray jsonArray = new JSONArray(bundleJson);
-        JSONObject firstItem = (JSONObject) jsonArray.get(0);
-        bundleJson = firstItem.getJSONObject("bundle").toString();
-        return bundleJson;
-    }
-
-    private String getContainedBundle() {
-        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected_contained.json");
-        try {
-            bundleContainedJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        JSONArray jsonArray = new JSONArray(bundleContainedJson);
-        JSONObject firstItem = (JSONObject) jsonArray.get(0);
-
-        bundleContainedJson = firstItem.getJSONObject("bundle").toString();
-        //bundleContainedJson = convertContainedToSeparateResources(firstItem.getJSONObject("bundle")).toString();
-
-        return bundleContainedJson;
-    }
-
-//    private JSONObject convertContainedToSeparateResources(JSONObject jsonBundleObject) {
-//        JSONArray entryArray = jsonBundleObject.getJSONArray("entry");
-//        JSONObject firstElement = (JSONObject) entryArray.get(0);
-//
-//        JSONObject firstResource = firstElement.getJSONObject("resource");
-//        if (firstResource != null) {
-//            JSONArray containedArray = firstResource.getJSONArray("contained");
-//            if (containedArray.length() > 0) {
-//                for(int i=0; i<containedArray.length(); i++) {
-//                    JSONObject resourceObj = containedArray.getJSONObject(i);
-//                    jsonBundleObject
-//                            .getJSONArray("entry")
-//                            .put(new JSONObject("{\"resource\":" + resourceObj.toString() + "}"));
-//                }
-//            }
-//        }
-//
-//        ((JSONObject) jsonBundleObject.getJSONArray("entry").get(0))
-//                .getJSONObject("resource")
-//                .remove("contained");
-//
-//        System.out.println(jsonBundleObject.toString());
-//
-//        return jsonBundleObject;
-//    }
 
     @BeforeMethod
     public void setUpStreams() {
@@ -288,6 +227,121 @@ public class AWVCN001Test {
 
         System.out.println();
     }
+
+//    @Test
+//    public void testAWV001RAwJson() {
+//
+//        ModelParameter modelParameter = new ModelParameter();
+//        List<LibraryParameter> libraries = new ArrayList<>();
+//
+//        LibraryParameter libraryParameter = new LibraryParameter();
+//        libraryParameter.terminologyUrl = terminologyPath;
+//        libraryParameter.libraryUrl = cqlPath;
+//        libraryParameter.libraryName = libraryName;
+//        libraryParameter.libraryVersion = libraryVersion;
+//        libraryParameter.model = modelParameter;
+//        libraryParameter.model.modelName = modelName;
+//        libraryParameter.model.modelBundle = bundledRawJson;
+//
+//        libraries.add(libraryParameter);
+//
+//        EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraries);
+//
+//        Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
+//
+//        for (Map.Entry<String, Object> libraryEntry : entrySet) {
+//
+//            String key = libraryEntry.getKey();
+//            Object value = libraryEntry.getValue();
+//
+//            if (key.equals("Patient")) {
+//
+//                Patient patient = (Patient) value;
+//
+//                // EMPI
+//                String empiId = patient.getIdentifier().get(0).getValue();
+//                System.out.println(key + ": EMPI ID = " + empiId);
+//                assertEquals(empiId, "E900019216");
+//
+//                // patient id
+//                String patientId = patient.getId();
+//                System.out.println(key + ": Patient ID = " + patientId);
+//                assertEquals(patientId, "unitypoint-eFQWoGGaBo8dUJyl3DuS7lxGLvVFXjDVWEzu2h9X0DY43");
+//
+//                // patient active flag
+//                boolean isActive = patient.getActive();
+//                System.out.println(key + ": Patient Active = " + isActive);
+//                assertTrue(isActive);
+//            }
+//
+//            // InAgeCohort - true
+//            if (key.equals("InAgeCohort")) {
+//                Boolean isInAgeCohort = (Boolean) value;
+//                System.out.println(key + ": " + isInAgeCohort);
+//                assertTrue(isInAgeCohort);
+//            }
+//
+//            // AWEncounters - false
+//            if (key.equals("AWEncounters")) {
+//                Boolean awEncounters = (Boolean) value;
+//                System.out.println(key + ": " + awEncounters);
+//                assertFalse(awEncounters);
+//            }
+//
+//            // AWDateEnc - null
+//            if (key.equals("AWDateEnc")) {
+//                Date awDateEnd = (Date) value;
+//                System.out.println(key + ": " + awDateEnd);
+//                assertNull(awDateEnd);
+//            }
+//
+//            // AWCharges - true
+//            if (key.equals("AWCharges")) {
+//                Boolean awCharges = (Boolean) value;
+//                System.out.println(key + ": " + awCharges);
+//                assertTrue(awCharges);
+//            }
+//
+//            // AWDateCharge - 2021-09-01
+//            if (key.equals("AWDateCharge")) {
+//                Date awDateCharge = (Date) value;
+//                System.out.println(key + ": " + awDateCharge);
+//                assertEquals(awDateCharge.toString(), "2021-09-01");
+//            }
+//
+//            // AWVDates - 2021-09-01
+//            if (key.equals("AWVDates")) {
+//                Date awvDates = (Date) value;
+//                System.out.println(key + ": " + awvDates);
+//                assertEquals(awvDates.toString(), "2021-09-01");
+//            }
+//
+//            // AWVReminder - 2022-06-01
+//            if (key.equals("AWVReminder")) {
+//                Date awvReminder = (Date) value;
+//                System.out.println(key + ": " + awvReminder);
+//                assertEquals(awvReminder.toString(), "2022-06-01");
+//            }
+//
+//            // HadAWV1year - true
+//            if (key.equals("HadAWV1year")) {
+//                Boolean hadAWV1year = (Boolean) value;
+//                System.out.println(key + ": " + hadAWV1year);
+//                assertTrue(hadAWV1year);
+//            }
+//
+//            // NeedAWV1year - false
+//            if (key.equals("NeedAWV1year")) {
+//                Boolean needAWV1year = (Boolean) value;
+//                System.out.println(key + ": " + needAWV1year);
+//                assertFalse(needAWV1year);
+//            }
+//
+//            System.out.println(key + "=" + tempConvert(value));
+//        }
+//
+//        System.out.println();
+//    }
 
     @Test
     public void testAWV001BundleWithContainedResources() throws Exception {
