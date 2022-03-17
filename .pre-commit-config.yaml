@@ -1,6 +1,6 @@
+exclude: (^.idea/|^notebooks/)
 repos:
-  - repo: https://github.com/gherynos/pre-commit-java
-    rev: v0.1.0  # Use the ref you want to point at
+  - repo: local
     hooks:
       - id: pmd
         exclude: /test/
