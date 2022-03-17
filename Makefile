@@ -48,4 +48,5 @@ endif
 
 .PHONY: tests
 tests: loadfhir
-	mvn test
+	docker run --rm -v ${PWD}:/bsights-engine-spark maven:3.6.3-openjdk-15-slim \
+	sh -c "cd /bsights-engine-spark && mvn test"
