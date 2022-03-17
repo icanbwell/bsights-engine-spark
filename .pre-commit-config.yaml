@@ -1,5 +1,7 @@
 exclude: (^.idea/|^notebooks/)
 repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.2.0
   - repo: local
     hooks:
       - id: pmd
