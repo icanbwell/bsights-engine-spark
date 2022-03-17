@@ -53,6 +53,8 @@ public class ResourceLoader {
                     // get the contained array
                     List<Resource> contained = ((Patient) resource).getContained();
 
+                    resourceJson = resourceJson.trim();
+
                     // separate contained resources
                     String separatedRawResources = separateContainedResources(resourceJson, contained.size());
 
@@ -102,12 +104,12 @@ public class ResourceLoader {
                 }
             }
             else {
-                resourceStr = rawContainedJson.substring(indexLocations[i], rawContainedJson.length() - 3);
+                resourceStr = rawContainedJson.substring(indexLocations[i], rawContainedJson.length() - 2);
                 // trim
                 resourceStr = resourceStr.trim();
             }
 
-            separatedContainedResourcesJson += (resourceStr+"\r\n");
+            separatedContainedResourcesJson += ("\r\n" + resourceStr);
         }
 
         return separatedContainedResourcesJson;
@@ -123,7 +125,8 @@ public class ResourceLoader {
         }
 
         // wrap in a bundle
-        separatedResourcesBundleJson = "{\"resourceType\":\"Bundle\", \"id\":\"" + UUID.randomUUID().toString() + "\", \"entry\":[" + separatedResourcesBundleJson + "]}";
+        separatedResourcesBundleJson = "{\"resourceType\":\"Bundle\", \"entry\":[" + separatedResourcesBundleJson + "]}";
+
         return separatedResourcesBundleJson;
     }
 }
