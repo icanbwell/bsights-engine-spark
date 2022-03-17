@@ -2,11 +2,13 @@ package com.bwell.services.domain;
 
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.r4.formats.JsonParser;
+import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.ResourceType;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -47,10 +49,17 @@ public class ResourceLoader {
             Resource resource = parser.parse(resourceJson);
             ResourceType resourceType = resource.getResourceType();
             if (resourceType != ResourceType.Bundle) {
-                if (!resourceJson.contains("contained")) {
-                    // the JSON string from the FhirTextReader in the CQL pipeline has the separated resources,
-                    String separatedResourcesBundleJson = bundleSeparateResourcesJson(resourceJson);
-                    bundle = (IBaseBundle) parser.parse(separatedResourcesBundleJson);
+                if (resourceJson.contains("contained")) {
+                    // get the contained array
+                    List<Resource> contained = ((Patient) resource).getContained();
+
+                    // separate contained resources
+                    String separatedRawResources = separateContainedResources(resourceJson, contained.size());
+
+                    // bundle separated resources
+                    String separatedResourcesBundleJson = bundleSeparateResourcesJson(separatedRawResources);
+                    Resource r = parser.parse(separatedResourcesBundleJson);
+                    bundle = (IBaseBundle) r;
                 }
                 else {
                     // wrap in a bundle
@@ -65,6 +74,43 @@ public class ResourceLoader {
             e.printStackTrace();
         }
         return bundle;
+    }
+
+    private String separateContainedResources(String rawContainedJson, int numberOfContainedResources) {
+        int[] indexLocations = new int[numberOfContainedResources];
+        int count = 0;
+
+        String token = "{\"resourceType\":";
+        int index = rawContainedJson.indexOf(token);
+        while(index >= 0) {
+            index = rawContainedJson.indexOf(token, index + 1);
+            if (index != -1)
+                indexLocations[count++] = index;
+        }
+
+        String resourceStr = null;
+        String separatedContainedResourcesJson = rawContainedJson;
+        for(int i=0; i<indexLocations.length; i++) {
+            resourceStr = "";
+            if (i+1 <= indexLocations.length - 1) {
+                resourceStr = rawContainedJson.substring(indexLocations[i], indexLocations[i+1]);
+                // trim
+                resourceStr = resourceStr.trim();
+                // remove comma, if exists
+                if (resourceStr.charAt(resourceStr.length()-1) == ',') {
+                    resourceStr = resourceStr.substring(0, resourceStr.length()-1);
+                }
+            }
+            else {
+                resourceStr = rawContainedJson.substring(indexLocations[i], rawContainedJson.length() - 3);
+                // trim
+                resourceStr = resourceStr.trim();
+            }
+
+            separatedContainedResourcesJson += (resourceStr+"\r\n");
+        }
+
+        return separatedContainedResourcesJson;
     }
 
     private String bundleSeparateResourcesJson(String rawSeparatedJson) {
