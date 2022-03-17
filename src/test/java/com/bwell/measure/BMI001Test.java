@@ -8,6 +8,7 @@ import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseDatatype;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Patient;
+import org.json.JSONException;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.execution.EvaluationResult;
 import org.testng.annotations.AfterMethod;
@@ -37,6 +38,7 @@ public class BMI001Test {
     private static final String libraryName = "BMI001";
     private static final String libraryVersion = "1.0.0";
     private static final String testResourceRelativePath = "src/test/resources";
+    @SuppressWarnings("FieldCanBeLocal")
     private static String testResourcePath = null;
     private static String terminologyPath = null;
     private static String cqlPath = null;
@@ -44,7 +46,7 @@ public class BMI001Test {
     private static String bundleContainedJson = null;
 
     @BeforeClass
-    public void setup() {
+    public void setup() throws JSONException {
         File file = new File(testResourceRelativePath);
         testResourcePath = file.getAbsolutePath();
         System.out.printf("Test resource directory: %s%n", testResourcePath);
@@ -204,18 +206,6 @@ public class BMI001Test {
                     assertTrue(isInAgeCohort);
                 }
 
-//                if (key.equals("InObservationCohort")) {
-//                    Boolean isInObservationCohort = (Boolean) value;
-//                    System.out.println(key + ": " + isInObservationCohort);
-//                    assertTrue(isInObservationCohort);
-//                }
-//
-//                if (key.equals("InDemographic")) {
-//                    Boolean isInDemographic = (Boolean) value;
-//                    System.out.println(key + ": " + isInDemographic);
-//                    assertTrue(isInDemographic);
-//                }
-
                 System.out.println(key + "=" + tempConvert(value));
 
             }
@@ -359,19 +349,7 @@ public class BMI001Test {
                     assertTrue(isInAgeCohort);
                 }
 
-//                if (key.equals("InObservationCohort")) {
-//                    Boolean isInObservationCohort = (Boolean) value;
-//                    System.out.println(key + ": " + isInObservationCohort);
-//                    assertTrue(isInObservationCohort);
-//                }
-//
-//                if (key.equals("InDemographic")) {
-//                    Boolean isInDemographic = (Boolean) value;
-//                    System.out.println(key + ": " + isInDemographic);
-//                    assertTrue(isInDemographic);
-//                }
-
-                 System.out.println(key + "=" + tempConvert(value));
+                System.out.println(key + "=" + tempConvert(value));
             }
         } catch (CqlException e) {
             if (Objects.equals(e.getMessage(), "Unexpected exception caught during execution: ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException: HTTP 404 Not Found")) {
@@ -436,19 +414,7 @@ public class BMI001Test {
                     assertTrue(isInAgeCohort);
                 }
 
-//                if (key.equals("InObservationCohort")) {
-//                    Boolean isInObservationCohort = (Boolean) value;
-//                    System.out.println(key + ": " + isInObservationCohort);
-//                    assertTrue(isInObservationCohort);
-//                }
-//
-//                if (key.equals("InDemographic")) {
-//                    Boolean isInDemographic = (Boolean) value;
-//                    System.out.println(key + ": " + isInDemographic);
-//                    assertTrue(isInDemographic);
-//                }
-
-                 System.out.println(key + "=" + tempConvert(value));
+                System.out.println(key + "=" + tempConvert(value));
 
             }
         } catch (CqlException e) {
@@ -490,7 +456,8 @@ public class BMI001Test {
                     : ""));
         } else if (value instanceof IBase) {
             result = new StringBuilder(((IBase) value).fhirType());
-        } else if (value instanceof IBaseDatatype) {
+        } else //noinspection ConstantConditions
+            if (value instanceof IBaseDatatype) {
             result = new StringBuilder(((IBaseDatatype) value).fhirType());
         } else {
             result = new StringBuilder(value.toString());

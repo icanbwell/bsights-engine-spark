@@ -2,6 +2,7 @@ package com.bwell.utilities;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -11,16 +12,16 @@ import java.util.UUID;
 
 public class Utilities {
 
-    public static String getBundle(String testResourcePath, String folder) {
+    public static String getBundle(String testResourcePath, String folder) throws JSONException {
         return getBundleJsonString(testResourcePath, folder, "expected.json");
     }
 
-    public static String getContainedBundle(String testResourcePath, String folder) {
+    public static String getContainedBundle(String testResourcePath, String folder) throws JSONException {
         return getBundleJsonString(testResourcePath, folder, "expected_contained.json");
     }
 
-    private static String getBundleJsonString(String testResourcePath, String folder, String filename) {
-        String bundleJson = null;
+    private static String getBundleJsonString(String testResourcePath, String folder, String filename) throws JSONException {
+        String bundleJson;
 
         bundleJson = getRawJson(testResourcePath, folder, filename);
 
@@ -43,11 +44,11 @@ public class Utilities {
         return rawJson;
     }
 
-    public static String separateResourcesFromContainedJson(String rawContainedJson) {
+    public static String separateResourcesFromContainedJson(String rawContainedJson) throws JSONException {
         UUID uuid = UUID.randomUUID();
         String bundleContainedJson = "[{\"bundle\": "
                 + "{\"resourceType\":\"Bundle\", \"id\":\""
-                + uuid.toString()
+                + uuid
                 + "\", \"entry\":[" + rawContainedJson + "]}"
                 + "}]";
 
@@ -58,7 +59,7 @@ public class Utilities {
         return convertedJsonObj.toString();
     }
 
-    public static JSONObject convertContainedBundleToNormalBundle(JSONObject jsonBundleObject) {
+    public static JSONObject convertContainedBundleToNormalBundle(JSONObject jsonBundleObject) throws JSONException {
         JSONArray entryArray = jsonBundleObject.getJSONArray("entry");
         JSONObject firstElement = (JSONObject) entryArray.get(0);
 
@@ -79,7 +80,7 @@ public class Utilities {
                 .getJSONObject("resource")
                 .remove("contained");
 
-        System.out.println(jsonBundleObject.toString());
+        System.out.println(jsonBundleObject);
 
         return jsonBundleObject;
     }
