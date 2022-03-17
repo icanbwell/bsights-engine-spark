@@ -1,0 +1,14 @@
+#!/bin/bash
+
+
+if [ -n "$1" ] && [ "$1" = "pre_commit_all_files" ] ; then
+  PRE_COMMIT_ALL_FILES=true
+  echo "PRE_COMMIT_ALL_FILES is set"
+else
+  PRE_COMMIT_ALL_FILES=false
+  echo "PRE_COMMIT_ALL_FILES is NOT set"
+fi
+
+GIT_PROJECT_ROOT=$(git rev-parse --show-toplevel)
+cd "$($GIT_PROJECT_ROOT "$0")" || exit
+docker build -f ./pre-commit.Dockerfile -t pre-commit-bsights-engine . && docker run --rm --name pre-commit-run-bsights-engine -e PRE_COMMIT_ALL_FILES=$PRE_COMMIT_ALL_FILES -v pre-commit:/.cache/pre-commit:delegated -v $(pwd)/:/sourcecode:delegated pre-commit-bsights-engine

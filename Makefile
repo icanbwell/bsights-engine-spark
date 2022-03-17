@@ -48,5 +48,17 @@ endif
 
 .PHONY: tests
 tests: loadfhir
-	docker-compose run --rm --name helix_tests dev \
+	docker-compose run --rm --name bsight_engine_tests dev \
 	sh -c "cd /bsights-engine-spark && mvn test"
+
+.PHONY:clean-pre-commit
+clean-pre-commit: ## removes pre-commit hook
+	rm -f .git/hooks/pre-commit
+
+.PHONY:setup-pre-commit
+setup-pre-commit:
+	cp ./pre-commit-hook ./.git/hooks/pre-commit
+
+.PHONY:run-pre-commit
+run-pre-commit: setup-pre-commit
+	./.git/hooks/pre-commit pre_commit_all_files
