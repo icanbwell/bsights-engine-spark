@@ -32,7 +32,7 @@ down: ## Brings down all the services in docker-compose
 
 .PHONY:buildjar
 buildjar:  ## Updates all the packages using Pipfile # (it takes a long time) make run-pre-commit
-	docker run --rm -v ${PWD}:/bsights-engine-spark maven:3.6.3-openjdk-15-slim \
+	docker-compose run --rm --name helix_tests dev \
 	sh -c "cd /bsights-engine-spark && mvn clean && mvn -Dmaven.test.skip package && \
 	mvn dependency:copy-dependencies -DoutputDirectory=target/jars -Dhttps.protocols=TLSv1.2"
 
@@ -48,5 +48,5 @@ endif
 
 .PHONY: tests
 tests: loadfhir
-	docker run --rm -v ${PWD}:/bsights-engine-spark maven:3.6.3-openjdk-15-slim \
+	docker-compose run --rm --name helix_tests dev \
 	sh -c "cd /bsights-engine-spark && mvn test"

@@ -32,7 +32,7 @@ public class DIAB001Test {
 
     private static final String fhirVersion = "R4";
     private static final String modelName = "FHIR";
-    private static final String fhirServerUrl = "http://localhost:3000/4_0_0";
+    private static final String fhirServerUrl = "http://fhir:3000/4_0_0";
     private static final String folder = "diab001";
     private static final String libraryName = "DIAB001";
     private static final String libraryVersion = "1.0.0";

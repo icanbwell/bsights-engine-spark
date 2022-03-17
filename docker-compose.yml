@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile
       context: .
     volumes:
-      - ./:/helix.pipelines/
+      - ./:/bsights-engine-spark/
     container_name: bsights-measure-engine-spark
     environment:
       LOGLEVEL: DEBUG
