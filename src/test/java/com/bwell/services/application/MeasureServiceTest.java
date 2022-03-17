@@ -10,7 +10,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
 import java.util.Map;
-import java.util.UUID;
 
 import static org.testng.Assert.assertEquals;
 
@@ -60,11 +59,10 @@ public class MeasureServiceTest {
         String cqllibraryUrl = testResourcePath + "/" + "awvcn001" + "/cql";
         String cqllibraryVersion = "1.0.0";
         String terminologyUrl = testResourcePath + "/" + "awvcn001" + "/terminology";
-        String cqlVariablesToReturn = "InAgeCohort,HadAWV1year,NeedAWV1year";
+        String cqlVariablesToReturn = "InAgeCohort,AWCharges,AWDateCharge,AWVDates,AWVReminder,HadAWV1year,NeedAWV1year";
 
         String bundleJson = Utilities.getBundle(testResourcePath, "awvcn001");
-        String rawJson = Utilities.getRawJson(testResourcePath, "awvcn001", "rawJson.txt");
-        String bundleRawJson = bundleSeparateResourcesJson(rawJson);
+        String rawContainedJson = Utilities.getRawJson(testResourcePath, "awvcn001", "rawJson.txt");
 
         try {
             Map<String, String> result = new MeasureService().runCqlLibrary(
@@ -75,12 +73,16 @@ public class MeasureServiceTest {
                     terminologyUrl,
                     null,
                     cqlVariablesToReturn,
-                    rawJson, //bundleJson, //
+                    rawContainedJson, // bundleJson,
                     null,
                     null
             );
-            assertEquals(result.get("PatientId"), "unitypoint-eFQWoGGaBo8dUJyl3DuS7lxGLvVFXjDVWEzu2h9X0DY43");
+            assertEquals(result.get("PatientId"), "unitypoint-eegf5bWyPXkfiquWgAid7W.saxiV7j4TrzYoOWsvANmc3");
             assertEquals(result.get("InAgeCohort"), "true");
+            assertEquals(result.get("AWCharges"), "true");
+            assertEquals(result.get("AWDateCharge"), "2022-01-25");
+            assertEquals(result.get("AWVDates"), "2022-01-25");
+            assertEquals(result.get("AWVReminder"), "2022-10-25");
             assertEquals(result.get("HadAWV1year"), "true");
             assertEquals(result.get("NeedAWV1year"), "false");
         } catch (Exception e) {
@@ -89,20 +91,6 @@ public class MeasureServiceTest {
         }
 
         System.out.println();
-    }
-
-    private String bundleSeparateResourcesJson(String rawSeparatedJson) {
-        // the JSON string from the FhirTextReader in the CQL pipeline has the separated resources,
-        String separatedResourcesBundleJson = "";
-        String[] lines = rawSeparatedJson.split(System.getProperty("line.separator"));
-        for(int i=0; i<lines.length; i++) {
-            // wrap in a resource
-            separatedResourcesBundleJson += ((i!=0 ? "," : "") + "{\"resource\":" + lines[i] + "}");
-        }
-
-        UUID uuid = UUID.randomUUID();
-        separatedResourcesBundleJson = "{\"resourceType\":\"Bundle\", \"id\":\"" + uuid.toString() + "\", \"entry\":[" + separatedResourcesBundleJson + "]}";
-        return separatedResourcesBundleJson;
     }
 
     @Test
