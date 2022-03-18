@@ -9,19 +9,19 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * This class loads a FHIR resource from a file or a string
  */
 public class ResourceLoader {
-    /**
-     * Reads a FHIR resource from a file
-     *
-     * @param path: path to file
+    private static final org.slf4j.Logger myLogger = org.slf4j.LoggerFactory.getLogger(ResourceLoader.class);
+    /*
+      Reads a FHIR resource from a file
+
+      @param path: path to file
      * @return IBaseBundle
      */
-/*
+/*¬
     @Nullable
     public static IBaseBundle loadResourceFromFile(String path) {
         File f = new File(path);
@@ -42,9 +42,9 @@ public class ResourceLoader {
      * @return IBaseBundle
      */
     @Nullable
-    public IBaseBundle loadResourceFromString(String resourceJson) {
+    public IBaseBundle loadResourceFromString(String resourceJson) throws IOException {
         JsonParser parser = new JsonParser();
-        IBaseBundle bundle = null;
+        IBaseBundle bundle;
         try {
             Resource resource = parser.parse(resourceJson);
             ResourceType resourceType = resource.getResourceType();
@@ -62,19 +62,20 @@ public class ResourceLoader {
                     String separatedResourcesBundleJson = bundleSeparateResourcesJson(separatedRawResources);
                     Resource r = parser.parse(separatedResourcesBundleJson);
                     bundle = (IBaseBundle) r;
-                }
-                else {
+                } else {
                     // wrap in a bundle
                     resourceJson = "{\"resourceType\":\"Bundle\", \"id\":\"" + resource.getId() + "\", \"entry\":[" + resourceJson + "]}";
                     bundle = (IBaseBundle) parser.parse(resourceJson);
                 }
-            }
-            else {
+            } else {
                 bundle = (IBaseBundle) resource;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            myLogger.error("Error parsing {}: {}", resourceJson, e.toString());
+            throw e;
         }
+        myLogger.debug("Read resources from {}: {}", resourceJson, bundle);
+
         return bundle;
     }
 
@@ -84,26 +85,24 @@ public class ResourceLoader {
 
         String token = "{\"resourceType\":";
         int index = rawContainedJson.indexOf(token);
-        while(index >= 0) {
+        while (index >= 0) {
             index = rawContainedJson.indexOf(token, index + 1);
             if (index != -1)
                 indexLocations[count++] = index;
         }
 
-        String resourceStr = null;
+        String resourceStr;
         String separatedContainedResourcesJson = rawContainedJson;
-        for(int i=0; i<indexLocations.length; i++) {
-            resourceStr = "";
-            if (i+1 <= indexLocations.length - 1) {
-                resourceStr = rawContainedJson.substring(indexLocations[i], indexLocations[i+1]);
+        for (int i = 0; i < indexLocations.length; i++) {
+            if (i + 1 <= indexLocations.length - 1) {
+                resourceStr = rawContainedJson.substring(indexLocations[i], indexLocations[i + 1]);
                 // trim
                 resourceStr = resourceStr.trim();
                 // remove comma, if exists
-                if (resourceStr.charAt(resourceStr.length()-1) == ',') {
-                    resourceStr = resourceStr.substring(0, resourceStr.length()-1);
+                if (resourceStr.charAt(resourceStr.length() - 1) == ',') {
+                    resourceStr = resourceStr.substring(0, resourceStr.length() - 1);
                 }
-            }
-            else {
+            } else {
                 resourceStr = rawContainedJson.substring(indexLocations[i], rawContainedJson.length() - 2);
                 // trim
                 resourceStr = resourceStr.trim();
@@ -119,9 +118,9 @@ public class ResourceLoader {
         // the JSON string from the FhirTextReader in the CQL pipeline has the separated resources,
         String separatedResourcesBundleJson = "";
         String[] lines = rawSeparatedJson.split(System.getProperty("line.separator"));
-        for(int i=0; i<lines.length; i++) {
+        for (int i = 0; i < lines.length; i++) {
             // wrap in a resource
-            separatedResourcesBundleJson += ((i!=0 ? "," : "") + "{\"resource\":" + lines[i] + "}");
+            separatedResourcesBundleJson += ((i != 0 ? "," : "") + "{\"resource\":" + lines[i] + "}");
         }
 
         // wrap in a bundle

@@ -17,6 +17,7 @@ import org.testng.annotations.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.*;
 
@@ -79,7 +80,7 @@ public class DIAB001Test {
     }
 
     @Test
-    public void testDIAB001Bundle() {
+    public void testDIAB001Bundle() throws IOException {
 
         ModelParameter modelParameter = new ModelParameter();
         List<LibraryParameter> libraries = new ArrayList<>();

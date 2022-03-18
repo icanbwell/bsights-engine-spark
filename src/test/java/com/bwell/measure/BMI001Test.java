@@ -18,6 +18,7 @@ import org.testng.annotations.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.*;
 
@@ -80,7 +81,7 @@ public class BMI001Test {
     }
 
     @Test
-    public void testBMI001Bundle() {
+    public void testBMI001Bundle() throws IOException {
 
         ModelParameter modelParameter = new ModelParameter();
         List<LibraryParameter> libraries = new ArrayList<>();

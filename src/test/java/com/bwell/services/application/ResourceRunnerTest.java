@@ -2,6 +2,7 @@ package com.bwell.services.application;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class ResourceRunnerTest {
     public void setup() {
         File file = new File(testResourceRelativePath);
         testResourcePath = file.getAbsolutePath();
-        System.out.println(String.format("Test resource directory: %s", testResourcePath));
+        System.out.printf("Test resource directory: %s%n", testResourcePath);
     }
 
     @BeforeMethod
@@ -62,7 +63,7 @@ public class ResourceRunnerTest {
     }
 
     @Test
-    public void testR4() {
+    public void testR4() throws IOException {
         String fhirVersion = "R4";
         List<LibraryParameter> libraries = new ArrayList<>();
         LibraryParameter libraryParameter = new LibraryParameter();
@@ -104,7 +105,7 @@ public class ResourceRunnerTest {
     }
 
     @Test
-    public void testR4WithHelpers() {
+    public void testR4WithHelpers() throws IOException {
         String fhirVersion = "R4";
         List<LibraryParameter> libraries = new ArrayList<>();
         LibraryParameter libraryParameter = new LibraryParameter();
