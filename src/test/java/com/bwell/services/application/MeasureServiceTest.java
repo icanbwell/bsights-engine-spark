@@ -96,9 +96,9 @@ public class MeasureServiceTest {
     @Test
     public void testRunCqlLibraryFromFhirServer() throws Exception {
         String cqlLibraryName = "BMI001";
-        String cqllibraryUrl = "http://localhost:3000/4_0_0";
+        String cqllibraryUrl = "http://fhir:3000/4_0_0";
         String cqllibraryVersion = "1.0.0";
-        String terminologyUrl = "http://localhost:3000/4_0_0";
+        String terminologyUrl = "http://fhir:3000/4_0_0";
         String cqlVariablesToReturn = "InAgeCohort,InObservationCohort,InDemographic";
 
         String bundleJson = Utilities.getBundle(testResourcePath, folder);
@@ -131,9 +131,9 @@ public class MeasureServiceTest {
     @Test
     public void testRunCqlLibraryFromFhirServerWithContainedResources() throws Exception {
         String cqlLibraryName = "BMI001";
-        String cqllibraryUrl = "http://localhost:3000/4_0_0";
+        String cqllibraryUrl = "http://fhir:3000/4_0_0";
         String cqllibraryVersion = "1.0.0";
-        String terminologyUrl = "http://localhost:3000/4_0_0";
+        String terminologyUrl = "http://fhir:3000/4_0_0";
         String cqlVariablesToReturn = "InAgeCohort,InObservationCohort,InDemographic";
 
         String bundleJson = Utilities.getContainedBundle(testResourcePath, folder);

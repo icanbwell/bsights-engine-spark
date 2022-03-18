@@ -57,7 +57,23 @@ define InDemographicComposed:
 
 
 ### Contributing
-This project requires Docker, Java 1.8 and Maven.
+This project requires Docker only except for debugging.
+
+For debugging in IntelliJ IDEA:
+
+On Mac (https://mkyong.com/java/how-to-install-java-on-mac-osx/):
+
+One time setup of SDKMan: https://sdkman.io/install
+
+1. ```sdk list java``` (to see java version available)
+2. JDK 15 is now too old to be included in sdkman, so you have to download manually:
+
+```shell
+wget https://download.java.net/java/GA/jdk15.0.2/0d1cfde4252546c6931946de8db48ee2/7/GPL/openjdk-15.0.2_osx-x64_bin.tar.gz -P $TMPDIR
+tar -xvf $TMPDIR/openjdk-15.0.2_osx-x64_bin.tar.gz -C ~/.sdkman/candidates/java/
+mv ~/.sdkman/candidates/java/jdk-15.0.2.jdk ~/.sdkman/candidates/java/15.0.2-open
+sdk default java 15.0.2-open
+```
 
 To run tests: `make tests`
 
