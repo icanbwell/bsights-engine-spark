@@ -19,18 +19,19 @@ ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 
 #RUN apt-get -y update && apt-get -y install curl autoconf build-essential && apt-get clean
 
-ENV PYTHONPATH=/helix.pipelines
+ENV PYTHONPATH=/bsights-engine-spark
 ENV PYTHONPATH "/opt/project:${PYTHONPATH}"
-ENV CLASSPATH=/helix.pipelines/jars:/opt/spark/jars/:$CLASSPATH
+ENV CLASSPATH=/bsights-engine-spark/jars:/opt/spark/jars/:$CLASSPATH
 
 # first get just the pom.xml and download dependencies (so we don't do this again when the code changes)
-COPY ./pom.xml /helix.pipelines/
-WORKDIR /helix.pipelines
+COPY ./pom.xml /bsights-engine-spark/
+WORKDIR /bsights-engine-spark
 
-RUN mvn --batch-mode --update-snapshots verify clean
+RUN mvn --batch-mode verify
+#RUN mvn --batch-mode --update-snapshots verify clean
 
 # now get the rest of the code and create the package
-COPY ./src/ /helix.pipelines/src/
+COPY ./src/ /bsights-engine-spark/src/
 
 ## skip running tests since it requires a fhir server
 RUN mvn -Dmaven.test.skip package && \

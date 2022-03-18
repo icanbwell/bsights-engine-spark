@@ -1,5 +1,6 @@
 package com.bwell.services.domain;
 
+import com.bwell.services.application.MeasureService;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.r4.formats.JsonParser;
 import org.hl7.fhir.r4.model.Patient;
@@ -15,13 +16,14 @@ import java.util.UUID;
  * This class loads a FHIR resource from a file or a string
  */
 public class ResourceLoader {
-    /**
-     * Reads a FHIR resource from a file
-     *
-     * @param path: path to file
+    private static final org.slf4j.Logger myLogger = org.slf4j.LoggerFactory.getLogger(ResourceLoader.class);
+    /*
+      Reads a FHIR resource from a file
+
+      @param path: path to file
      * @return IBaseBundle
      */
-/*
+/*¬
     @Nullable
     public static IBaseBundle loadResourceFromFile(String path) {
         File f = new File(path);
@@ -75,6 +77,8 @@ public class ResourceLoader {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        myLogger.debug("Read resources from {}: {}", resourceJson, bundle);
+
         return bundle;
     }
 
