@@ -1,5 +1,7 @@
 package com.bwell.services.domain;
 
+import com.bwell.infrastructure.FhirJsonExporter;
+import com.bwell.infrastructure.PropertyInspector;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.r4.formats.JsonParser;
 import org.hl7.fhir.r4.model.Patient;
@@ -74,7 +76,7 @@ public class ResourceLoader {
             myLogger.error("Error parsing {}: {}", resourceJson, e.toString());
             throw e;
         }
-        myLogger.debug("Read resources from {}: {}", resourceJson, bundle);
+        myLogger.debug("Read resources from {}: {}", resourceJson, FhirJsonExporter.getResourceAsJson(bundle));
 
         return bundle;
     }

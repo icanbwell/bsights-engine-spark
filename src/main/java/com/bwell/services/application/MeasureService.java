@@ -1,9 +1,11 @@
 package com.bwell.services.application;
 
-import com.bwell.core.entities.*;
+import com.bwell.core.entities.ContextParameter;
+import com.bwell.core.entities.LibraryParameter;
+import com.bwell.core.entities.ModelParameter;
+import com.bwell.infrastructure.FhirJsonExporter;
 import com.bwell.services.domain.CqlService;
 import org.hl7.fhir.r4.model.Patient;
-import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.execution.EvaluationResult;
 
 import java.util.*;
@@ -81,13 +83,18 @@ public class MeasureService {
         try {
             EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraries);
             Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
+            myLogger.debug("Received result from CQL Engine={} for bundle={}",
+                    FhirJsonExporter.getMapSetAsJson(entrySet),
+                    fhirBundle);
             for (Map.Entry<String, Object> libraryEntry : entrySet) {
                 String key = libraryEntry.getKey();
                 Object value = libraryEntry.getValue();
 
                 if ("Patient".equals(key)) {
                     Patient patient = (Patient) value;
-                    newMap.put("PatientId", (patient != null && patient.hasId()) ? patient.getId() : null);
+                    myLogger.debug("Received Patient in CQL result={}",
+                            patient != null ? FhirJsonExporter.getResourceAsJson(patient) : null);
+                    newMap.put("PatientId", (patient != null) ? patient.getId() : null);
                 } else {
                     if (cqlVariables.contains(key)) {
                         newMap.put(key, value != null ? value.toString() : null);
@@ -95,17 +102,12 @@ public class MeasureService {
 
                 }
             }
-        }
-        catch (ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException e){
-            if (Objects.equals(e.getMessage(), "Unexpected exception caught during execution: ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException: HTTP 404 Not Found")) {
-                throw new Exception("NOTE: Did you run make loadfhir to load the fhir server?");
-            }
-        } catch (CqlException e1) {
-            myLogger.error("Error={}", e1.toString());
+        } catch (Exception e1) {
+            myLogger.error("Error={} for bundle={}", e1, fhirBundle);
             throw e1;
         }
 
-        myLogger.debug("Calculated CQL variables={}", newMap);
+        myLogger.debug("Calculated CQL variables={} for bundle={}", FhirJsonExporter.getMapAsJson(newMap), fhirBundle);
 
         return newMap;
     }
