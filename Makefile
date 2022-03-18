@@ -49,7 +49,7 @@ endif
 .PHONY: tests
 tests: loadfhir
 	docker-compose run --rm --name bsight_engine_tests dev \
-	sh -c "cd /bsights-engine-spark && mvn test"
+	sh -c "cd /bsights-engine-spark && mvn test 2> test_results.txt"
 
 .PHONY:clean-pre-commit
 clean-pre-commit: ## removes pre-commit hook

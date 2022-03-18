@@ -9,6 +9,7 @@ services:
       context: .
     volumes:
       - ./:/bsights-engine-spark/
+      - ~/.m2:/root/.m2
     container_name: bsights-measure-engine-spark
     environment:
       LOGLEVEL: DEBUG
