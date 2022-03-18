@@ -2,3 +2,5 @@ Makefile
 Dockerfile
 .idea
 spark-warehouse
+*.txt
+.github
