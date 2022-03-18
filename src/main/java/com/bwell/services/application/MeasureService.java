@@ -9,9 +9,6 @@ import org.opencds.cqf.cql.engine.execution.EvaluationResult;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * This class provides CQL Measure Library processing
  */
@@ -67,7 +64,7 @@ public class MeasureService {
             }
         }
 
-        myLogger.info("Running with libraryUrl={}, terminologyUrl={}, fhir={}", libraryUrl, terminologyUrl, fhirBundle);
+        myLogger.debug("Running with libraryUrl={}, terminologyUrl={}, fhir={}", libraryUrl, terminologyUrl, fhirBundle);
 
         libraries.add(libraryParameter);
 
@@ -108,7 +105,7 @@ public class MeasureService {
             throw e1;
         }
 
-        myLogger.info("Calculated CQL variables={}", newMap);
+        myLogger.debug("Calculated CQL variables={}", newMap);
 
         return newMap;
     }
