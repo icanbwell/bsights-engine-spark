@@ -2,8 +2,19 @@
   "resourceType": "ValueSet",
   "id": "2.16.840.1.113762.1.4.1235.31",
   "meta": {
-    "versionId": "6",
-    "lastUpdated": "2022-02-10T13:11:43.000-05:00"
+    "versionId": "2",
+    "lastUpdated": "2022-03-02T02:49:24.000Z",
+    "source": "https://icanbwell.com",
+    "security": [
+      {
+        "system": "https://www.icanbwell.com/access",
+        "code": "bwell"
+      },
+      {
+        "system": "https://www.icanbwell.com/owner",
+        "code": "bwell"
+      }
+    ]
   },
   "text": {
     "status": "generated",

@@ -249,6 +249,9 @@ public class AWVCN001Test {
 
         libraries.add(libraryParameter);
 
+        System.out.printf("Reading libraryUrl: %s%n", cqlPath);
+        System.out.printf("Reading terminologyUrl: %s%n", terminologyPath);
+
         try {
 
             EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraries);
@@ -267,12 +270,12 @@ public class AWVCN001Test {
                     // EMPI
                     String empiId = patient.getIdentifier().get(0).getValue();
                     System.out.println(key + ": EMPI ID = " + empiId);
-                    assertEquals(empiId, "E900019216");
+                    assertEquals(empiId, "E900019248");
 
                     // patient id
                     String patientId = patient.getId();
                     System.out.println(key + ": Patient ID = " + patientId);
-                    assertEquals(patientId, "unitypoint-eFQWoGGaBo8dUJyl3DuS7lxGLvVFXjDVWEzu2h9X0DY43");
+                    assertEquals(patientId, "unitypoint-eegf5bWyPXkfiquWgAid7W.saxiV7j4TrzYoOWsvANmc3");
 
                     // patient active flag
                     boolean isActive = patient.getActive();
@@ -296,13 +299,13 @@ public class AWVCN001Test {
                 if (key.equals("AWVDates")) {
                     String awvDates = value.toString();
                     System.out.println(key + ": " + awvDates);
-                    assertEquals(awvDates, "2021-09-01");
+                    assertEquals(awvDates, "2022-01-25");
                 }
 
                 if (key.equals("AWVReminder")) {
                     String awvReminder = value.toString();
                     System.out.println(key + ": " + awvReminder);
-                    assertEquals(awvReminder, "2022-06-01");
+                    assertEquals(awvReminder, "2022-10-25");
                 }
 
                 System.out.println(key + "=" + tempConvert(value));

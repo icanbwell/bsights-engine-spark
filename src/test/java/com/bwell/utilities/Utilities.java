@@ -25,16 +25,21 @@ public class Utilities {
 
         bundleJson = getRawJson(testResourcePath, folder, filename);
 
-        JSONArray jsonArray = new JSONArray(bundleJson);
-        JSONObject firstItem = (JSONObject) jsonArray.get(0);
-        bundleJson = firstItem.getJSONObject("bundle").toString();
+        if (bundleJson.stripLeading().startsWith("[")) {
+            JSONArray jsonArray = new JSONArray(bundleJson);
+            JSONObject firstItem = (JSONObject) jsonArray.get(0);
+            bundleJson = firstItem.getJSONObject("bundle").toString();
+        }
         return bundleJson;
     }
 
     public static String getRawJson(String testResourcePath, String folder, String filename) {
         String rawJson = null;
 
-        File f = new File(testResourcePath + "/" + folder + "/bundles/" + filename);
+        String path = testResourcePath + "/" + folder + "/bundles/" + filename;
+        System.out.printf("Reading file: %s%n", path);
+
+        File f = new File(path);
         try {
             rawJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
         } catch (IOException e) {
