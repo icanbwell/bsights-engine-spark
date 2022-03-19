@@ -104,11 +104,6 @@ public class ResourceLoaderTest {
         IBaseBundle bundle = new ResourceLoader().loadResourceFromString(bundleJson);
         assertNotNull(bundle);
         ArrayList<Bundle.BundleEntryComponent> entry = (ArrayList<Bundle.BundleEntryComponent>) ((Bundle) bundle).getEntry();
-        Bundle.BundleEntryComponent bundleEntryComponent = entry.get(0);
-        Patient patient = (Patient) bundleEntryComponent.getResource();
-        ArrayList<org.hl7.fhir.r4.model.Identifier> identifier = (ArrayList<org.hl7.fhir.r4.model.Identifier>) patient.getIdentifier();
-        Identifier identifier1 = identifier.get(0);
-        String patient_first_identifier = identifier1.getValue();
-        assertEquals("12345", patient_first_identifier);
+        assertEquals(0, entry.size());
     }
 }

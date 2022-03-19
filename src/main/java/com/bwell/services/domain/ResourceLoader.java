@@ -1,6 +1,7 @@
 package com.bwell.services.domain;
 
 import com.bwell.infrastructure.FhirJsonExporter;
+import org.hl7.fhir.exceptions.FHIRFormatError;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.r4.formats.JsonParser;
 import org.hl7.fhir.r4.model.*;
@@ -55,9 +56,9 @@ public class ResourceLoader {
                 Bundle.BundleEntryComponent entryComponent = new Bundle.BundleEntryComponent();
                 entryComponent.setResource(resource);
                 newEntries.add(entryComponent);
-                ((Bundle)bundle).setEntry(newEntries);
+                ((Bundle) bundle).setEntry(newEntries);
             } else {
-                bundle = (Bundle)resource;
+                bundle = (Bundle) resource;
             }
             myLogger.debug("Read resources from {}: {}", resourceJson, FhirJsonExporter.getResourceAsJson(bundle));
             bundle = moveContainedResourcesToTopLevel(bundle);
@@ -65,6 +66,9 @@ public class ResourceLoader {
             bundle = clean_and_fix_bundle(bundle);
             myLogger.debug("Cleaned resources from {}: {}", resourceJson, FhirJsonExporter.getResourceAsJson(bundle));
             return bundle;
+        } catch (FHIRFormatError e1) {
+            myLogger.error("Bad FHIR data {}: {}", resourceJson, e1.toString());
+            return new Bundle(); // bad FHIR.  log error and continue processing other records
         } catch (IOException e) {
             myLogger.error("Error parsing {}: {}", resourceJson, e.toString());
             throw e;
