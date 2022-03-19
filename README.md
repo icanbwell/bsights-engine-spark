@@ -74,6 +74,14 @@ tar -xvf $TMPDIR/openjdk-15.0.2_osx-x64_bin.tar.gz -C ~/.sdkman/candidates/java/
 mv ~/.sdkman/candidates/java/jdk-15.0.2.jdk ~/.sdkman/candidates/java/15.0.2-open
 sdk default java 15.0.2-open
 ```
+In our tests we use `http://fhir` so if you're debugging in PyCharm you need to make a hosts entry:
+1. Run `sudo nano /etc/hosts` and type in your admin password
+2. Paste the following line:
+
+```
+127.0.0.1 fhir
+```
+
 
 To run tests: `make tests`
 
