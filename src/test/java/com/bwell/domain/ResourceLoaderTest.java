@@ -85,4 +85,25 @@ public class ResourceLoaderTest {
         assertEquals("12345", patient_first_identifier);
     }
 
+    @Test
+    public void testLoadingBundleWithBadFhirDiv() throws JSONException, IOException {
+        String folder = "bmi001";
+        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/bad_fhir_div.json");
+        String bundleJson = null;
+
+        try {
+            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        JSONArray jsonArray = new JSONArray(bundleJson);
+        JSONObject firstItem = (JSONObject) jsonArray.get(0);
+        bundleJson = firstItem.getJSONObject("bundle").toString();
+
+        IBaseBundle bundle = new ResourceLoader().loadResourceFromString(bundleJson);
+        assertNotNull(bundle);
+        ArrayList<Bundle.BundleEntryComponent> entry = (ArrayList<Bundle.BundleEntryComponent>) ((Bundle) bundle).getEntry();
+        assertEquals(0, entry.size());
+    }
 }
