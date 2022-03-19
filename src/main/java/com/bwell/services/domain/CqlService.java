@@ -64,6 +64,7 @@ public class CqlService {
                 // run evaluator and return result
                 return evaluator.evaluate(identifier, contextParameter);
             } catch (Exception e) {
+                System.out.println(e.getMessage() + " : " + Arrays.toString(e.getStackTrace()));
                 throw e;
             }
 
@@ -81,73 +82,80 @@ public class CqlService {
      */
     private CqlEvaluator buildCqlEvaluator(CqlEvaluatorComponent cqlEvaluatorComponent, LibraryParameter library) throws IOException {
         synchronized (lock) {
-            // create a cql evaluator builder
-            CqlEvaluatorBuilder cqlEvaluatorBuilder = cqlEvaluatorComponent.createBuilder();
+            try {
 
-            // check if it is in the cache
-            LibraryContentProvider libraryContentProvider = libraryContentProviderIndex.get(library.libraryUrl);
+                // create a cql evaluator builder
+                CqlEvaluatorBuilder cqlEvaluatorBuilder = cqlEvaluatorComponent.createBuilder();
 
-            // if not in cache then load it
-            if (libraryContentProvider == null) {
-                EndpointInfo endpointInfo = new EndpointInfo().setAddress(library.libraryUrl);
-                if (library.libraryUrlHeaders != null && library.libraryUrlHeaders.size() > 0) {
-                    endpointInfo.setHeaders(library.libraryUrlHeaders);
-                }
+                // check if it is in the cache
+                LibraryContentProvider libraryContentProvider = libraryContentProviderIndex.get(library.libraryUrl);
 
-                libraryContentProvider = cqlEvaluatorComponent.createLibraryContentProviderFactory()
-                        .create(endpointInfo);
-                // put it in cache
-                libraryContentProviderIndex.put(library.libraryUrl, libraryContentProvider);
-            }
-
-            // add libraries to cql evaluator builder
-            cqlEvaluatorBuilder.withLibraryContentProvider(libraryContentProvider);
-
-            // load terminology
-            if (library.terminologyUrl != null) {
-                // check if terminology is in cache
-                TerminologyProvider terminologyProvider = terminologyProviderIndex.get(library.terminologyUrl);
-                if (terminologyProvider == null) {
-                    // if terminology is not in cache then load ut
-                    EndpointInfo endpointInfo = new EndpointInfo().setAddress(library.terminologyUrl);
-                    if (library.terminologyUrlHeaders != null && library.terminologyUrlHeaders.size() > 0) {
-                        endpointInfo.setHeaders(library.terminologyUrlHeaders);
+                // if not in cache then load it
+                if (libraryContentProvider == null) {
+                    EndpointInfo endpointInfo = new EndpointInfo().setAddress(library.libraryUrl);
+                    if (library.libraryUrlHeaders != null && library.libraryUrlHeaders.size() > 0) {
+                        endpointInfo.setHeaders(library.libraryUrlHeaders);
                     }
 
-                    terminologyProvider = cqlEvaluatorComponent.createTerminologyProviderFactory()
+                    libraryContentProvider = cqlEvaluatorComponent.createLibraryContentProviderFactory()
                             .create(endpointInfo);
-                    // add to cache
-                    terminologyProviderIndex.put(library.terminologyUrl, terminologyProvider);
+                    // put it in cache
+                    libraryContentProviderIndex.put(library.libraryUrl, libraryContentProvider);
                 }
 
-                // add terminology to cql evaluator builder
-                cqlEvaluatorBuilder.withTerminologyProvider(terminologyProvider);
-            }
+                // add libraries to cql evaluator builder
+                cqlEvaluatorBuilder.withLibraryContentProvider(libraryContentProvider);
 
-            // load the data to evaluate
-            Triple<String, ModelResolver, RetrieveProvider> dataProvider;
-            DataProviderFactory dataProviderFactory = cqlEvaluatorComponent.createDataProviderFactory();
-            if (library.model != null) {
-                // if model is provided as text then use it
-                if (library.model.modelBundle != null) {
-                    IBaseBundle bundle = new ResourceLoader().loadResourceFromString(library.model.modelBundle);
-                    dataProvider = dataProviderFactory.create(bundle);
-                } else {
-                    // load model from url
-                    dataProvider = dataProviderFactory.create(new EndpointInfo().setAddress(library.model.modelUrl));
+                // load terminology
+                if (library.terminologyUrl != null) {
+                    // check if terminology is in cache
+                    TerminologyProvider terminologyProvider = terminologyProviderIndex.get(library.terminologyUrl);
+                    if (terminologyProvider == null) {
+                        // if terminology is not in cache then load ut
+                        EndpointInfo endpointInfo = new EndpointInfo().setAddress(library.terminologyUrl);
+                        if (library.terminologyUrlHeaders != null && library.terminologyUrlHeaders.size() > 0) {
+                            endpointInfo.setHeaders(library.terminologyUrlHeaders);
+                        }
+
+                        terminologyProvider = cqlEvaluatorComponent.createTerminologyProviderFactory()
+                                .create(endpointInfo);
+                        // add to cache
+                        terminologyProviderIndex.put(library.terminologyUrl, terminologyProvider);
+                    }
+
+                    // add terminology to cql evaluator builder
+                    cqlEvaluatorBuilder.withTerminologyProvider(terminologyProvider);
                 }
-            }
-            // default to FHIR
-            else {
-                dataProvider = dataProviderFactory.create(new EndpointInfo().setType(Constants.HL7_FHIR_FILES_CODE));
-            }
 
-            // add data to cql evaluator builder
-            cqlEvaluatorBuilder.withModelResolverAndRetrieveProvider(dataProvider.getLeft(), dataProvider.getMiddle(),
-                    dataProvider.getRight());
+                // load the data to evaluate
+                Triple<String, ModelResolver, RetrieveProvider> dataProvider;
+                DataProviderFactory dataProviderFactory = cqlEvaluatorComponent.createDataProviderFactory();
+                if (library.model != null) {
+                    // if model is provided as text then use it
+                    if (library.model.modelBundle != null) {
+                        IBaseBundle bundle = new ResourceLoader().loadResourceFromString(library.model.modelBundle);
+                        dataProvider = dataProviderFactory.create(bundle);
+                    } else {
+                        // load model from url
+                        dataProvider = dataProviderFactory.create(new EndpointInfo().setAddress(library.model.modelUrl));
+                    }
+                }
+                // default to FHIR
+                else {
+                    dataProvider = dataProviderFactory.create(new EndpointInfo().setType(Constants.HL7_FHIR_FILES_CODE));
+                }
 
-            // build the evaluator
-            return cqlEvaluatorBuilder.build();
+                // add data to cql evaluator builder
+                cqlEvaluatorBuilder.withModelResolverAndRetrieveProvider(dataProvider.getLeft(), dataProvider.getMiddle(),
+                        dataProvider.getRight());
+
+                // build the evaluator
+                return cqlEvaluatorBuilder.build();
+            }
+            catch (Exception e) {
+                System.out.println(e.getMessage() + " : " + Arrays.toString(e.getStackTrace()));
+                throw e;
+            }
         }
     }
 }
