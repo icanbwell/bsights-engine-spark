@@ -29,6 +29,60 @@ public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
     }
 
     @Test
+    public void testRunCqlLibraryUdfOnAwv() {
+        SQLContext sqlContext = new SQLContext(jsc());
+        sqlContext.sparkSession().udf().register(
+                "runCqlLibrary",
+                new RunCqlLibrary(),
+                DataTypes.createMapType(DataTypes.StringType, DataTypes.StringType)
+        );
+        String folder = "awvcn001";
+        String pathName = testResourcePath + "/" + folder + "/bundles" + "/expected.json";
+
+        Dataset<Row> df = sqlContext.read().option("multiLine", true).json(pathName);
+
+        df.show();
+        String patientBundleColumn = "bundle";
+        df = df.withColumn(patientBundleColumn, functions.to_json(functions.col(patientBundleColumn)));
+        df.show();
+        df.select(patientBundleColumn).printSchema();
+        df.createOrReplaceTempView("numbersdata");
+
+        String cqlLibraryName = "AWVCN001";
+        String cqllibraryUrl = "http://localhost:3000/4_0_0";
+        String cqlLibraryHeaders = "";
+        String cqllibraryVersion = "1.0.0";
+        String terminologyUrl = "http://localhost:3000/4_0_0";
+        String terminologyHeaders = "";
+        String cqlVariablesToReturn = "InAgeCohort,HadAWV1year,NeedAWV1year";
+
+        String command = String.format(
+                "runCqlLibrary('%s', '%s', '%s','%s','%s', '%s', '%s', %s, %s, %s)",
+                cqllibraryUrl, cqlLibraryHeaders, cqlLibraryName, cqllibraryVersion, terminologyUrl, terminologyHeaders, cqlVariablesToReturn, patientBundleColumn, null, null);
+
+        Dataset<Row> result_df = sqlContext.sql("SELECT " + command + " As ruleResults from numbersdata");
+        result_df.printSchema();
+        result_df.show(10, false);
+
+        result_df.selectExpr("ruleResults['PatientId'] as PatientId").show();
+        List<Row> rows = result_df.selectExpr("ruleResults['PatientId'] as PatientId").collectAsList();
+        Assert.assertEquals(rows.get(0).get(0), "unitypoint-eFQWoGGaBo8dUJyl3DuS7lxGLvVFXjDVWEzu2h9X0DY43");
+
+        result_df.selectExpr("ruleResults['InAgeCohort'] as InAgeCohort").show();
+        rows = result_df.selectExpr("ruleResults['InAgeCohort'] as InAgeCohort").collectAsList();
+        Assert.assertEquals(rows.get(0).get(0), "true");
+
+        result_df.selectExpr("ruleResults['HadAWV1year'] as HadAWV1year").show();
+        rows = result_df.selectExpr("ruleResults['HadAWV1year'] as HadAWV1year").collectAsList();
+        Assert.assertEquals(rows.get(0).get(0), "true");
+
+        result_df.selectExpr("ruleResults['NeedAWV1year'] as NeedAWV1year").show();
+        rows = result_df.selectExpr("ruleResults['NeedAWV1year'] as NeedAWV1year").collectAsList();
+        Assert.assertEquals(rows.get(0).get(0), "false");
+
+    }
+
+    @Test
     public void testRunCqlLibraryUdfOnBmi() {
         SQLContext sqlContext = new SQLContext(jsc());
         sqlContext.sparkSession().udf().register(
@@ -76,12 +130,12 @@ public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
 
         result_df.selectExpr("ruleResults['InObservationCohort'] as InObservationCohort").show();
         rows = result_df.selectExpr("ruleResults['InObservationCohort'] as InObservationCohort").collectAsList();
-        // Assert.assertEquals(rows.get(0).get(0), "true");
-        Assert.assertEquals(rows.get(1).get(0), "false");
+        Assert.assertEquals(rows.get(0).get(0), "true");
+        Assert.assertEquals(rows.get(1).get(0), "true"); // should be true
 
         result_df.selectExpr("ruleResults['InDemographic'] as InDemographic").show();
         rows = result_df.selectExpr("ruleResults['InDemographic'] as InDemographic").collectAsList();
-        // Assert.assertEquals(rows.get(0).get(0), "true");
+        Assert.assertEquals(rows.get(0).get(0), "true");
         Assert.assertEquals(rows.get(1).get(0), "false");
 
     }
