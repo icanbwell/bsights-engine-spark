@@ -281,10 +281,28 @@ public class AWVCN001Test {
                 }
 
                 // InAgeCohort - true
-                if (key.equals("InAgeCohort")) {
-                    Boolean isInAgeCohort = (Boolean) value;
-                    System.out.println(key + ": " + isInAgeCohort);
-                    assertTrue(isInAgeCohort);
+                if (key.equals("HadAWV1year")) {
+                    Boolean hadAWV1year = (Boolean) value;
+                    System.out.println(key + ": " + hadAWV1year);
+                    assertTrue(hadAWV1year);
+                }
+
+                if (key.equals("NeedAWV1year")) {
+                    Boolean needAWV1year = (Boolean) value;
+                    System.out.println(key + ": " + needAWV1year);
+                    assertFalse(needAWV1year);
+                }
+
+                if (key.equals("AWVDates")) {
+                    String awvDates = value.toString();
+                    System.out.println(key + ": " + awvDates);
+                    assertEquals(awvDates, "2021-09-01");
+                }
+
+                if (key.equals("AWVReminder")) {
+                    String awvReminder = value.toString();
+                    System.out.println(key + ": " + awvReminder);
+                    assertEquals(awvReminder, "2022-06-01");
                 }
 
                 System.out.println(key + "=" + tempConvert(value));

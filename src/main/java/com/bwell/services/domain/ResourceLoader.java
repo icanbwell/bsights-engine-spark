@@ -4,12 +4,11 @@ import com.bwell.infrastructure.FhirJsonExporter;
 import com.bwell.infrastructure.PropertyInspector;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.r4.formats.JsonParser;
-import org.hl7.fhir.r4.model.Patient;
-import org.hl7.fhir.r4.model.Resource;
-import org.hl7.fhir.r4.model.ResourceType;
+import org.hl7.fhir.r4.model.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,13 +70,42 @@ public class ResourceLoader {
                 }
             } else {
                 bundle = (IBaseBundle) resource;
+                bundle = moveContainedResourcesToTopLevel(bundle);
             }
         } catch (IOException e) {
             myLogger.error("Error parsing {}: {}", resourceJson, e.toString());
             throw e;
         }
         myLogger.debug("Read resources from {}: {}", resourceJson, FhirJsonExporter.getResourceAsJson(bundle));
+        bundle = clean_and_fix_bundle(bundle);
+        return bundle;
+    }
 
+    private IBaseBundle moveContainedResourcesToTopLevel(IBaseBundle bundle) {
+        if (bundle instanceof Bundle) {
+            List<Bundle.BundleEntryComponent> newEntries = new ArrayList<>();
+            List<Bundle.BundleEntryComponent> entries = ((Bundle) bundle).getEntry();
+            for (Bundle.BundleEntryComponent entry : entries) {
+                Resource resource = entry.getResource();
+                if (resource instanceof DomainResource){
+                    List<Resource> contained = ((DomainResource) resource).getContained();
+                    if (contained.size() > 0){
+                        for(Resource containedResource: contained){
+                            Bundle.BundleEntryComponent entryComponent = new Bundle.BundleEntryComponent();
+                            entryComponent.setResource(containedResource);
+                            newEntries.add(entryComponent);
+                        }
+                        contained.clear();
+                    }
+                }
+            }
+            entries.addAll(newEntries);
+        }
+        return bundle;
+    }
+
+    private IBaseBundle clean_and_fix_bundle(IBaseBundle bundle) {
+        // some data we get is bad FHIR ,so we have to fix it
         return bundle;
     }
 
