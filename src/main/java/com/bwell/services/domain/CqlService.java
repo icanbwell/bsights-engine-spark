@@ -1,5 +1,6 @@
 package com.bwell.services.domain;
 
+import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import com.bwell.core.entities.LibraryParameter;
 import org.apache.commons.lang3.tuple.Pair;
@@ -39,9 +40,14 @@ public class CqlService {
     public EvaluationResult runCqlLibrary(String fhirVersion, List<LibraryParameter> libraries) throws IOException {
         FhirVersionEnum fhirVersionEnum = FhirVersionEnum.valueOf(fhirVersion);
 
-        // create an evaluator with the passed in fhirVersion
+        // first create a FhirContext for this version
+        // TODO: This is expensive so make it static lazy init
+        // https://hapifhir.io/hapi-fhir/apidocs/hapi-fhir-base/ca/uhn/fhir/context/FhirContext.html
+        FhirContext fhirContext = fhirVersionEnum.newContext();
+//        fhirContext.setRestfulClientFactory();
+        // create an evaluator with the FhirContext
         CqlEvaluatorComponent cqlEvaluatorComponent = DaggerCqlEvaluatorComponent.builder()
-                .fhirContext(fhirVersionEnum.newContext()).build();
+                .fhirContext(fhirContext).build();
 
         // load cql libraries
         for (LibraryParameter library : libraries) {
