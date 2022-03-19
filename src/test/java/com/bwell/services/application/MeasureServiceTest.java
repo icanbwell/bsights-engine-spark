@@ -163,4 +163,39 @@ public class MeasureServiceTest {
         System.out.println();
     }
 
+    @Test
+    public void testRunAWVCqlLibraryFromFhirServerWithContainedResources() throws Exception {
+        String cqlLibraryName = "AWVCN001";
+        String cqllibraryUrl = "http://fhir:3000/4_0_0";
+        String cqllibraryVersion = "1.0.0";
+        String terminologyUrl = "http://fhir:3000/4_0_0";
+        String cqlVariablesToReturn = "InAgeCohort,AWVDates,AWVReminder,HadAWV1year,NeedAWV1year";
+
+        String bundleJson = Utilities.getContainedBundle(testResourcePath, folder);
+
+        try {
+            Map<String, String> result = new MeasureService().runCqlLibrary(
+                    cqllibraryUrl,
+                    null,
+                    cqlLibraryName,
+                    cqllibraryVersion,
+                    terminologyUrl,
+                    null,
+                    cqlVariablesToReturn,
+                    bundleJson,
+                    null,
+                    null
+            );
+            assertEquals(result.get("PatientId"), "1");
+            assertEquals(result.get("HadAWV1year"), "true");
+//            assertEquals(result.get("InObservationCohort"), "true");
+//            assertEquals(result.get("InDemographic"), "true");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+
+        System.out.println();
+    }
+
 }
