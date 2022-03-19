@@ -1,0 +1,22 @@
+exclude: (^.idea/|^notebooks/)
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.2.0
+    hooks:
+      - id: end-of-file-fixer
+        types: [ python ]
+  - repo: local
+    hooks:
+      - id: black
+        name: black
+        language: system
+        types: [python]
+        require_serial: true
+        entry: black
+      - id: mypy
+        name: mypy
+        language: system
+        types: [ python ]
+        entry: mypy
+        require_serial: true
+        args: [ --strict, --python-version=3.6, --show-error-codes, --allow-untyped-decorators ]

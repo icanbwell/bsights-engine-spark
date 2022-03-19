@@ -7,6 +7,7 @@ import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseDatatype;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Patient;
+import org.json.JSONException;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.execution.EvaluationResult;
 import org.testng.annotations.AfterMethod;
@@ -16,6 +17,7 @@ import org.testng.annotations.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.*;
 
@@ -31,11 +33,12 @@ public class DIAB001Test {
 
     private static final String fhirVersion = "R4";
     private static final String modelName = "FHIR";
-    private static final String fhirServerUrl = "http://localhost:3000/4_0_0";
+    private static final String fhirServerUrl = "http://fhir:3000/4_0_0";
     private static final String folder = "diab001";
     private static final String libraryName = "DIAB001";
     private static final String libraryVersion = "1.0.0";
     private static final String testResourceRelativePath = "src/test/resources";
+    @SuppressWarnings("FieldCanBeLocal")
     private static String testResourcePath = null;
     private static String terminologyPath = null;
     private static String cqlPath = null;
@@ -43,7 +46,7 @@ public class DIAB001Test {
     private static String bundleContainedJson = null;
 
     @BeforeClass
-    public void setup() {
+    public void setup() throws JSONException {
         File file = new File(testResourceRelativePath);
         testResourcePath = file.getAbsolutePath();
         System.out.printf("Test resource directory: %s%n", testResourcePath);
@@ -77,7 +80,7 @@ public class DIAB001Test {
     }
 
     @Test
-    public void testDIAB001Bundle() {
+    public void testDIAB001Bundle() throws IOException {
 
         ModelParameter modelParameter = new ModelParameter();
         List<LibraryParameter> libraries = new ArrayList<>();
@@ -401,18 +404,6 @@ public class DIAB001Test {
 
                 }
 
-//                if (key.equals("InObservationCohort")) {
-//                    Boolean isInObservationCohort = (Boolean) value;
-//                    System.out.println(key + ": " + isInObservationCohort);
-//                    assertTrue(isInObservationCohort);
-//                }
-//
-//                if (key.equals("InDemographic")) {
-//                    Boolean isInDemographic = (Boolean) value;
-//                    System.out.println(key + ": " + isInDemographic);
-//                    assertTrue(isInDemographic);
-//                }
-
                 System.out.println(key + "=" + tempConvert(value));
 
             }
@@ -434,34 +425,35 @@ public class DIAB001Test {
             return "null";
         }
 
-        String result = "";
+        StringBuilder result = new StringBuilder();
         if (value instanceof Iterable) {
-            result += "[";
+            result.append("[");
             Iterable<?> values = (Iterable<?>) value;
             for (Object o : values) {
 
-                result += (tempConvert(o) + ", ");
+                result.append(tempConvert(o)).append(", ");
             }
 
             if (result.length() > 1) {
-                result = result.substring(0, result.length() - 2);
+                result = new StringBuilder(result.substring(0, result.length() - 2));
             }
 
-            result += "]";
+            result.append("]");
         } else if (value instanceof IBaseResource) {
             IBaseResource resource = (IBaseResource) value;
-            result = resource.fhirType() + (resource.getIdElement() != null && resource.getIdElement().hasIdPart()
+            result = new StringBuilder(resource.fhirType() + (resource.getIdElement() != null && resource.getIdElement().hasIdPart()
                     ? "(id=" + resource.getIdElement().getIdPart() + ")"
-                    : "");
+                    : ""));
         } else if (value instanceof IBase) {
-            result = ((IBase) value).fhirType();
-        } else if (value instanceof IBaseDatatype) {
-            result = ((IBaseDatatype) value).fhirType();
+            result = new StringBuilder(((IBase) value).fhirType());
+        } else //noinspection ConstantConditions
+            if (value instanceof IBaseDatatype) {
+            result = new StringBuilder(((IBaseDatatype) value).fhirType());
         } else {
-            result = value.toString();
+            result = new StringBuilder(value.toString());
         }
 
-        return result;
+        return result.toString();
     }
 
 }

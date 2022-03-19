@@ -1,27 +1,28 @@
 package com.bwell.services.domain;
 
+import com.bwell.infrastructure.FhirJsonExporter;
+import org.hl7.fhir.exceptions.FHIRFormatError;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.r4.formats.JsonParser;
-import org.hl7.fhir.r4.model.Patient;
-import org.hl7.fhir.r4.model.Resource;
-import org.hl7.fhir.r4.model.ResourceType;
+import org.hl7.fhir.r4.model.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * This class loads a FHIR resource from a file or a string
  */
 public class ResourceLoader {
-    /**
-     * Reads a FHIR resource from a file
-     *
-     * @param path: path to file
+    private static final org.slf4j.Logger myLogger = org.slf4j.LoggerFactory.getLogger(ResourceLoader.class);
+    /*
+      Reads a FHIR resource from a file
+
+      @param path: path to file
      * @return IBaseBundle
      */
-/*
+/*¬
     @Nullable
     public static IBaseBundle loadResourceFromFile(String path) {
         File f = new File(path);
@@ -42,91 +43,63 @@ public class ResourceLoader {
      * @return IBaseBundle
      */
     @Nullable
-    public IBaseBundle loadResourceFromString(String resourceJson) {
+    public IBaseBundle loadResourceFromString(String resourceJson) throws IOException {
         JsonParser parser = new JsonParser();
-        IBaseBundle bundle = null;
         try {
             Resource resource = parser.parse(resourceJson);
             ResourceType resourceType = resource.getResourceType();
+            IBaseBundle bundle;
             if (resourceType != ResourceType.Bundle) {
-                if (resourceJson.contains("contained")) {
-                    // get the contained array
-                    List<Resource> contained = ((Patient) resource).getContained();
-
-                    resourceJson = resourceJson.trim();
-
-                    // separate contained resources
-                    String separatedRawResources = separateContainedResources(resourceJson, contained.size());
-
-                    // bundle separated resources
-                    String separatedResourcesBundleJson = bundleSeparateResourcesJson(separatedRawResources);
-                    Resource r = parser.parse(separatedResourcesBundleJson);
-                    bundle = (IBaseBundle) r;
-                }
-                else {
-                    // wrap in a bundle
-                    resourceJson = "{\"resourceType\":\"Bundle\", \"id\":\"" + resource.getId() + "\", \"entry\":[" + resourceJson + "]}";
-                    bundle = (IBaseBundle) parser.parse(resourceJson);
-                }
+                bundle = new Bundle();
+                bundle.setId(resource.getId());
+                List<Bundle.BundleEntryComponent> newEntries = new ArrayList<>();
+                Bundle.BundleEntryComponent entryComponent = new Bundle.BundleEntryComponent();
+                entryComponent.setResource(resource);
+                newEntries.add(entryComponent);
+                ((Bundle) bundle).setEntry(newEntries);
+            } else {
+                bundle = (Bundle) resource;
             }
-            else {
-                bundle = (IBaseBundle) resource;
-            }
+            myLogger.debug("Read resources from {}: {}", resourceJson, FhirJsonExporter.getResourceAsJson(bundle));
+            bundle = moveContainedResourcesToTopLevel(bundle);
+            //noinspection ConstantConditions
+            bundle = clean_and_fix_bundle(bundle);
+            myLogger.debug("Cleaned resources from {}: {}", resourceJson, FhirJsonExporter.getResourceAsJson(bundle));
+            return bundle;
+        } catch (FHIRFormatError e1) {
+            myLogger.error("Bad FHIR data {}: {}", resourceJson, e1.toString());
+            return new Bundle(); // bad FHIR.  log error and continue processing other records
         } catch (IOException e) {
-            e.printStackTrace();
+            myLogger.error("Error parsing {}: {}", resourceJson, e.toString());
+            throw e;
+        }
+    }
+
+    private IBaseBundle moveContainedResourcesToTopLevel(IBaseBundle bundle) {
+        if (bundle instanceof Bundle) {
+            List<Bundle.BundleEntryComponent> newEntries = new ArrayList<>();
+            List<Bundle.BundleEntryComponent> entries = ((Bundle) bundle).getEntry();
+            for (Bundle.BundleEntryComponent entry : entries) {
+                Resource resource = entry.getResource();
+                if (resource instanceof DomainResource) {
+                    List<Resource> contained = ((DomainResource) resource).getContained();
+                    if (contained.size() > 0) {
+                        for (Resource containedResource : contained) {
+                            Bundle.BundleEntryComponent entryComponent = new Bundle.BundleEntryComponent();
+                            entryComponent.setResource(containedResource);
+                            newEntries.add(entryComponent);
+                        }
+                        contained.clear();
+                    }
+                }
+            }
+            entries.addAll(newEntries);
         }
         return bundle;
     }
 
-    private String separateContainedResources(String rawContainedJson, int numberOfContainedResources) {
-        int[] indexLocations = new int[numberOfContainedResources];
-        int count = 0;
-
-        String token = "{\"resourceType\":";
-        int index = rawContainedJson.indexOf(token);
-        while(index >= 0) {
-            index = rawContainedJson.indexOf(token, index + 1);
-            if (index != -1)
-                indexLocations[count++] = index;
-        }
-
-        String resourceStr = null;
-        String separatedContainedResourcesJson = rawContainedJson;
-        for(int i=0; i<indexLocations.length; i++) {
-            resourceStr = "";
-            if (i+1 <= indexLocations.length - 1) {
-                resourceStr = rawContainedJson.substring(indexLocations[i], indexLocations[i+1]);
-                // trim
-                resourceStr = resourceStr.trim();
-                // remove comma, if exists
-                if (resourceStr.charAt(resourceStr.length()-1) == ',') {
-                    resourceStr = resourceStr.substring(0, resourceStr.length()-1);
-                }
-            }
-            else {
-                resourceStr = rawContainedJson.substring(indexLocations[i], rawContainedJson.length() - 2);
-                // trim
-                resourceStr = resourceStr.trim();
-            }
-
-            separatedContainedResourcesJson += ("\r\n" + resourceStr);
-        }
-
-        return separatedContainedResourcesJson;
-    }
-
-    private String bundleSeparateResourcesJson(String rawSeparatedJson) {
-        // the JSON string from the FhirTextReader in the CQL pipeline has the separated resources,
-        String separatedResourcesBundleJson = "";
-        String[] lines = rawSeparatedJson.split(System.getProperty("line.separator"));
-        for(int i=0; i<lines.length; i++) {
-            // wrap in a resource
-            separatedResourcesBundleJson += ((i!=0 ? "," : "") + "{\"resource\":" + lines[i] + "}");
-        }
-
-        // wrap in a bundle
-        separatedResourcesBundleJson = "{\"resourceType\":\"Bundle\", \"entry\":[" + separatedResourcesBundleJson + "]}";
-
-        return separatedResourcesBundleJson;
+    private IBaseBundle clean_and_fix_bundle(IBaseBundle bundle) {
+        // some data we get is bad FHIR ,so we have to fix it
+        return bundle;
     }
 }

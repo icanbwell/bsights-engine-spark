@@ -8,6 +8,7 @@ import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseDatatype;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Patient;
+import org.json.JSONException;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.execution.EvaluationResult;
 import org.opencds.cqf.cql.engine.runtime.Date;
@@ -18,6 +19,7 @@ import org.testng.annotations.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.*;
 
@@ -33,11 +35,12 @@ public class AWVCN001Test {
 
     private static final String fhirVersion = "R4";
     private static final String modelName = "FHIR";
-    private static final String fhirServerUrl = "http://localhost:3000/4_0_0";
+//    private static final String fhirServerUrl = "http://fhir:3000/4_0_0";
     private static final String folder = "awvcn001";
     private static final String libraryName = "AWVCN001";
     private static final String libraryVersion = "1.0.0";
     private static final String testResourceRelativePath = "src/test/resources";
+    @SuppressWarnings("FieldCanBeLocal")
     private static String testResourcePath = null;
     private static String terminologyPath = null;
     private static String cqlPath = null;
@@ -45,7 +48,7 @@ public class AWVCN001Test {
     private static String bundleContainedJson = null;
 
     @BeforeClass
-    public void setup() {
+    public void setup() throws JSONException {
         File file = new File(testResourceRelativePath);
         testResourcePath = file.getAbsolutePath();
         System.out.printf("Test resource directory: %s%n", testResourcePath);
@@ -83,38 +86,39 @@ public class AWVCN001Test {
             return "null";
         }
 
-        String result = "";
+        StringBuilder result = new StringBuilder();
         if (value instanceof Iterable) {
-            result += "[";
+            result.append("[");
             Iterable<?> values = (Iterable<?>) value;
             for (Object o : values) {
 
-                result += (tempConvert(o) + ", ");
+                result.append(tempConvert(o)).append(", ");
             }
 
             if (result.length() > 1) {
-                result = result.substring(0, result.length() - 2);
+                result = new StringBuilder(result.substring(0, result.length() - 2));
             }
 
-            result += "]";
+            result.append("]");
         } else if (value instanceof IBaseResource) {
             IBaseResource resource = (IBaseResource) value;
-            result = resource.fhirType() + (resource.getIdElement() != null && resource.getIdElement().hasIdPart()
+            result = new StringBuilder(resource.fhirType() + (resource.getIdElement() != null && resource.getIdElement().hasIdPart()
                     ? "(id=" + resource.getIdElement().getIdPart() + ")"
-                    : "");
+                    : ""));
         } else if (value instanceof IBase) {
-            result = ((IBase) value).fhirType();
-        } else if (value instanceof IBaseDatatype) {
-            result = ((IBaseDatatype) value).fhirType();
+            result = new StringBuilder(((IBase) value).fhirType());
+        } else //noinspection ConstantConditions
+            if (value instanceof IBaseDatatype) {
+            result = new StringBuilder(((IBaseDatatype) value).fhirType());
         } else {
-            result = value.toString();
+            result = new StringBuilder(value.toString());
         }
 
-        return result;
+        return result.toString();
     }
 
     @Test
-    public void testAWV001Bundle() {
+    public void testAWV001Bundle() throws IOException {
 
         ModelParameter modelParameter = new ModelParameter();
         List<LibraryParameter> libraries = new ArrayList<>();
@@ -228,121 +232,6 @@ public class AWVCN001Test {
         System.out.println();
     }
 
-//    @Test
-//    public void testAWV001RAwJson() {
-//
-//        ModelParameter modelParameter = new ModelParameter();
-//        List<LibraryParameter> libraries = new ArrayList<>();
-//
-//        LibraryParameter libraryParameter = new LibraryParameter();
-//        libraryParameter.terminologyUrl = terminologyPath;
-//        libraryParameter.libraryUrl = cqlPath;
-//        libraryParameter.libraryName = libraryName;
-//        libraryParameter.libraryVersion = libraryVersion;
-//        libraryParameter.model = modelParameter;
-//        libraryParameter.model.modelName = modelName;
-//        libraryParameter.model.modelBundle = bundledRawJson;
-//
-//        libraries.add(libraryParameter);
-//
-//        EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraries);
-//
-//        Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
-//
-//        for (Map.Entry<String, Object> libraryEntry : entrySet) {
-//
-//            String key = libraryEntry.getKey();
-//            Object value = libraryEntry.getValue();
-//
-//            if (key.equals("Patient")) {
-//
-//                Patient patient = (Patient) value;
-//
-//                // EMPI
-//                String empiId = patient.getIdentifier().get(0).getValue();
-//                System.out.println(key + ": EMPI ID = " + empiId);
-//                assertEquals(empiId, "E900019216");
-//
-//                // patient id
-//                String patientId = patient.getId();
-//                System.out.println(key + ": Patient ID = " + patientId);
-//                assertEquals(patientId, "unitypoint-eFQWoGGaBo8dUJyl3DuS7lxGLvVFXjDVWEzu2h9X0DY43");
-//
-//                // patient active flag
-//                boolean isActive = patient.getActive();
-//                System.out.println(key + ": Patient Active = " + isActive);
-//                assertTrue(isActive);
-//            }
-//
-//            // InAgeCohort - true
-//            if (key.equals("InAgeCohort")) {
-//                Boolean isInAgeCohort = (Boolean) value;
-//                System.out.println(key + ": " + isInAgeCohort);
-//                assertTrue(isInAgeCohort);
-//            }
-//
-//            // AWEncounters - false
-//            if (key.equals("AWEncounters")) {
-//                Boolean awEncounters = (Boolean) value;
-//                System.out.println(key + ": " + awEncounters);
-//                assertFalse(awEncounters);
-//            }
-//
-//            // AWDateEnc - null
-//            if (key.equals("AWDateEnc")) {
-//                Date awDateEnd = (Date) value;
-//                System.out.println(key + ": " + awDateEnd);
-//                assertNull(awDateEnd);
-//            }
-//
-//            // AWCharges - true
-//            if (key.equals("AWCharges")) {
-//                Boolean awCharges = (Boolean) value;
-//                System.out.println(key + ": " + awCharges);
-//                assertTrue(awCharges);
-//            }
-//
-//            // AWDateCharge - 2021-09-01
-//            if (key.equals("AWDateCharge")) {
-//                Date awDateCharge = (Date) value;
-//                System.out.println(key + ": " + awDateCharge);
-//                assertEquals(awDateCharge.toString(), "2021-09-01");
-//            }
-//
-//            // AWVDates - 2021-09-01
-//            if (key.equals("AWVDates")) {
-//                Date awvDates = (Date) value;
-//                System.out.println(key + ": " + awvDates);
-//                assertEquals(awvDates.toString(), "2021-09-01");
-//            }
-//
-//            // AWVReminder - 2022-06-01
-//            if (key.equals("AWVReminder")) {
-//                Date awvReminder = (Date) value;
-//                System.out.println(key + ": " + awvReminder);
-//                assertEquals(awvReminder.toString(), "2022-06-01");
-//            }
-//
-//            // HadAWV1year - true
-//            if (key.equals("HadAWV1year")) {
-//                Boolean hadAWV1year = (Boolean) value;
-//                System.out.println(key + ": " + hadAWV1year);
-//                assertTrue(hadAWV1year);
-//            }
-//
-//            // NeedAWV1year - false
-//            if (key.equals("NeedAWV1year")) {
-//                Boolean needAWV1year = (Boolean) value;
-//                System.out.println(key + ": " + needAWV1year);
-//                assertFalse(needAWV1year);
-//            }
-//
-//            System.out.println(key + "=" + tempConvert(value));
-//        }
-//
-//        System.out.println();
-//    }
-
     @Test
     public void testAWV001BundleWithContainedResources() throws Exception {
 
@@ -392,67 +281,29 @@ public class AWVCN001Test {
                 }
 
                 // InAgeCohort - true
-                if (key.equals("InAgeCohort")) {
-                    Boolean isInAgeCohort = (Boolean) value;
-                    System.out.println(key + ": " + isInAgeCohort);
-                    assertTrue(isInAgeCohort);
+                if (key.equals("HadAWV1year")) {
+                    Boolean hadAWV1year = (Boolean) value;
+                    System.out.println(key + ": " + hadAWV1year);
+                    assertTrue(hadAWV1year);
                 }
 
-//                // AWEncounters - false
-//                if (key.equals("AWEncounters")) {
-//                    Boolean awEncounters = (Boolean) value;
-//                    System.out.println(key + ": " + awEncounters);
-//                    assertFalse(awEncounters);
-//                }
-//
-//                // AWDateEnc - null
-//                if (key.equals("AWDateEnc")) {
-//                    Date awDateEnd = (Date) value;
-//                    System.out.println(key + ": " + awDateEnd);
-//                    assertNull(awDateEnd);
-//                }
-//
-//                // AWCharges - true
-//                if (key.equals("AWCharges")) {
-//                    Boolean awCharges = (Boolean) value;
-//                    System.out.println(key + ": " + awCharges);
-//                    assertTrue(awCharges);
-//                }
-//
-//                // AWDateCharge - 2021-09-01
-//                if (key.equals("AWDateCharge")) {
-//                    Date awDateCharge = (Date) value;
-//                    System.out.println(key + ": " + awDateCharge);
-//                    assertEquals(awDateCharge.toString(), "2021-09-01");
-//                }
-//
-//                // AWVDates - 2021-09-01
-//                if (key.equals("AWVDates")) {
-//                    Date awvDates = (Date) value;
-//                    System.out.println(key + ": " + awvDates);
-//                    assertEquals(awvDates.toString(), "2021-09-01");
-//                }
-//
-//                // AWVReminder - 2022-06-01
-//                if (key.equals("AWVReminder")) {
-//                    Date awvReminder = (Date) value;
-//                    System.out.println(key + ": " + awvReminder);
-//                    assertEquals(awvReminder.toString(), "2022-06-01");
-//                }
-//
-//                // HadAWV1year - true
-//                if (key.equals("HadAWV1year")) {
-//                    Boolean hadAWV1year = (Boolean) value;
-//                    System.out.println(key + ": " + hadAWV1year);
-//                    assertTrue(hadAWV1year);
-//                }
-//
-//                // NeedAWV1year - false
-//                if (key.equals("NeedAWV1year")) {
-//                    Boolean needAWV1year = (Boolean) value;
-//                    System.out.println(key + ": " + needAWV1year);
-//                    assertFalse(needAWV1year);
-//                }
+                if (key.equals("NeedAWV1year")) {
+                    Boolean needAWV1year = (Boolean) value;
+                    System.out.println(key + ": " + needAWV1year);
+                    assertFalse(needAWV1year);
+                }
+
+                if (key.equals("AWVDates")) {
+                    String awvDates = value.toString();
+                    System.out.println(key + ": " + awvDates);
+                    assertEquals(awvDates, "2021-09-01");
+                }
+
+                if (key.equals("AWVReminder")) {
+                    String awvReminder = value.toString();
+                    System.out.println(key + ": " + awvReminder);
+                    assertEquals(awvReminder, "2022-06-01");
+                }
 
                 System.out.println(key + "=" + tempConvert(value));
 

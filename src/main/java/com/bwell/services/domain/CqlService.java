@@ -19,6 +19,7 @@ import org.opencds.cqf.cql.evaluator.cql2elm.content.LibraryContentProvider;
 import org.opencds.cqf.cql.evaluator.dagger.CqlEvaluatorComponent;
 import org.opencds.cqf.cql.evaluator.dagger.DaggerCqlEvaluatorComponent;
 
+import java.io.IOException;
 import java.util.*;
 
 public class CqlService {
@@ -35,7 +36,7 @@ public class CqlService {
      * @param libraries   list of libraries
      * @return result of evaluation
      */
-    public EvaluationResult runCqlLibrary(String fhirVersion, List<LibraryParameter> libraries) {
+    public EvaluationResult runCqlLibrary(String fhirVersion, List<LibraryParameter> libraries) throws IOException {
         FhirVersionEnum fhirVersionEnum = FhirVersionEnum.valueOf(fhirVersion);
 
         // create an evaluator with the passed in fhirVersion
@@ -78,7 +79,7 @@ public class CqlService {
      * @param library               library configuration
      * @return a CqlEvaluator built with the passed in configuration
      */
-    private CqlEvaluator buildCqlEvaluator(CqlEvaluatorComponent cqlEvaluatorComponent, LibraryParameter library) {
+    private CqlEvaluator buildCqlEvaluator(CqlEvaluatorComponent cqlEvaluatorComponent, LibraryParameter library) throws IOException {
         synchronized (lock) {
             // create a cql evaluator builder
             CqlEvaluatorBuilder cqlEvaluatorBuilder = cqlEvaluatorComponent.createBuilder();
