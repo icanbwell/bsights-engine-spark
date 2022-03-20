@@ -30,6 +30,28 @@ public class CqlService {
 
     private static final Object lock = new Object();
 
+    // private instance, so that it can be
+    // accessed by only by getInstance() method
+    private static volatile FhirContext fhirContextSharedInstance;
+
+    public static FhirContext getFhirContext()
+    {
+        if (fhirContextSharedInstance == null)
+        {
+            //synchronized block to remove overhead
+            synchronized (FhirContext.class)
+            {
+                if(fhirContextSharedInstance ==null)
+                {
+                    FhirVersionEnum fhirVersionEnum = FhirVersionEnum.valueOf("R4");
+                    // if instance is null, initialize
+                    fhirContextSharedInstance = fhirVersionEnum.newContext();
+                }
+
+            }
+        }
+        return fhirContextSharedInstance;
+    }
     /**
      * Runs the CQL library
      *
@@ -38,12 +60,12 @@ public class CqlService {
      * @return result of evaluation
      */
     public EvaluationResult runCqlLibrary(String fhirVersion, List<LibraryParameter> libraries) throws IOException {
-        FhirVersionEnum fhirVersionEnum = FhirVersionEnum.valueOf(fhirVersion);
+//        FhirVersionEnum fhirVersionEnum = FhirVersionEnum.valueOf(fhirVersion);
 
         // first create a FhirContext for this version
-        // TODO: This is expensive so make it static lazy init
+        // This is expensive so make it static lazy init
         // https://hapifhir.io/hapi-fhir/apidocs/hapi-fhir-base/ca/uhn/fhir/context/FhirContext.html
-        FhirContext fhirContext = fhirVersionEnum.newContext();
+        FhirContext fhirContext = getFhirContext();
 //        fhirContext.setRestfulClientFactory();
         // create an evaluator with the FhirContext
         CqlEvaluatorComponent cqlEvaluatorComponent = DaggerCqlEvaluatorComponent.builder()
