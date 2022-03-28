@@ -88,3 +88,20 @@ To run tests: `make tests`
 To compile the jar: `make buildjar`
 
 To deploy to local dev docker: `make loadfhir`
+
+To build a new jar for some updates or fixes on the engine: `make buildjar`
+* Pre-requisite: you may need to install the `maven` if not installed in your local machine,
+  * "Installing Apache Maven" - refer to https://maven.apache.org/install.html
+* BEFORE building a new jar library, please make sure you increment the version number for the jar library in these files below,
+  * in pom.xml - for the `<version>` tag
+    * ```
+      <groupId>com.bwell</groupId>
+      <artifactId>bsights-engine-spark</artifactId>
+      <version>1.0.3</version>
+      ```
+  * in Dockerfile - for the `cp` cli line,
+    * ```
+      ## skip running tests since it requires a fhir server
+      RUN mvn -Dmaven.test.skip package && \
+      cp ./target/bsights-engine-spark-1.0.3.jar /opt/spark/jars/
+      ```
