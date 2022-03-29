@@ -89,7 +89,7 @@ To compile the jar: `make buildjar`
 
 To deploy to local dev docker: `make loadfhir`
 
-To build a new jar for some updates or fixes on the engine: `make buildjar`
+### To build a new jar for some updates or fixes on the engine: `make buildjar`
 * Pre-requisite: you may need to install the `maven` if not installed in your local machine,
   * "Installing Apache Maven" - refer to https://maven.apache.org/install.html
 * BEFORE building a new jar library, please make sure you increment the version number for the jar library in these files below,
