@@ -1,6 +1,9 @@
 package com.bwell.utilities;
 
 import org.apache.commons.io.FileUtils;
+import org.hl7.fhir.instance.model.api.IBase;
+import org.hl7.fhir.instance.model.api.IBaseDatatype;
+import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -88,5 +91,41 @@ public class Utilities {
         System.out.println(jsonBundleObject);
 
         return jsonBundleObject;
+    }
+
+    public static String tempConvert(Object value) {
+        if (value == null) {
+            return "null";
+        }
+
+        StringBuilder result = new StringBuilder();
+        if (value instanceof Iterable) {
+            result.append("[");
+            Iterable<?> values = (Iterable<?>) value;
+            for (Object o : values) {
+
+                result.append(tempConvert(o)).append(", ");
+            }
+
+            if (result.length() > 1) {
+                result = new StringBuilder(result.substring(0, result.length() - 2));
+            }
+
+            result.append("]");
+        } else if (value instanceof IBaseResource) {
+            IBaseResource resource = (IBaseResource) value;
+            result = new StringBuilder(resource.fhirType() + (resource.getIdElement() != null && resource.getIdElement().hasIdPart()
+                    ? "(id=" + resource.getIdElement().getIdPart() + ")"
+                    : ""));
+        } else if (value instanceof IBase) {
+            result = new StringBuilder(((IBase) value).fhirType());
+        } else //noinspection ConstantConditions
+            if (value instanceof IBaseDatatype) {
+                result = new StringBuilder(((IBaseDatatype) value).fhirType());
+            } else {
+                result = new StringBuilder(value.toString());
+            }
+
+        return result.toString();
     }
 }

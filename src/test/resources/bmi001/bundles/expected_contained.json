@@ -278,7 +278,7 @@
             "contained": [
               {
                 "resourceType": "Observation",
-                "id": "bmi",
+                "id": "bmi-1",
                 "meta": {
                   "profile": [
                     "http://hl7.org/fhir/StructureDefinition/vitalsigns"
@@ -611,7 +611,7 @@
             "contained": [
               {
                 "resourceType": "Observation",
-                "id": "bmi",
+                "id": "bmi-2",
                 "meta": {
                   "profile": [
                     "http://hl7.org/fhir/StructureDefinition/vitalsigns"

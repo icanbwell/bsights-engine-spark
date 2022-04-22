@@ -112,31 +112,35 @@ public class CqlService {
             // create a cql evaluator builder
             CqlEvaluatorBuilder cqlEvaluatorBuilder = cqlEvaluatorComponent.createBuilder();
 
-            // check if it is in the cache
-            LibraryContentProvider libraryContentProvider = libraryContentProviderIndex.get(library.libraryUrl);
+            // load CQL library
+            if (library.libraryUrl != null) {
+                // check if it is in the cache
+                LibraryContentProvider libraryContentProvider = libraryContentProviderIndex.get(library.libraryUrl);
 
-            // if not in cache then load it
-            if (libraryContentProvider == null) {
-                EndpointInfo endpointInfo = new EndpointInfo().setAddress(library.libraryUrl);
-                if (library.libraryUrlHeaders != null && library.libraryUrlHeaders.size() > 0) {
-                    endpointInfo.setHeaders(library.libraryUrlHeaders);
+                // if not in cache then load it
+                if (libraryContentProvider == null) {
+                    EndpointInfo endpointInfo = new EndpointInfo().setAddress(library.libraryUrl);
+                    if (library.libraryUrlHeaders != null && library.libraryUrlHeaders.size() > 0) {
+                        endpointInfo.setHeaders(library.libraryUrlHeaders);
+                    }
+
+                    libraryContentProvider = cqlEvaluatorComponent.createLibraryContentProviderFactory()
+                            .create(endpointInfo);
+                    // add it to cache
+                    libraryContentProviderIndex.put(library.libraryUrl, libraryContentProvider);
                 }
 
-                libraryContentProvider = cqlEvaluatorComponent.createLibraryContentProviderFactory()
-                        .create(endpointInfo);
-                // put it in cache
-                libraryContentProviderIndex.put(library.libraryUrl, libraryContentProvider);
+                // add libraries to cql evaluator builder
+                cqlEvaluatorBuilder.withLibraryContentProvider(libraryContentProvider);
             }
-
-            // add libraries to cql evaluator builder
-            cqlEvaluatorBuilder.withLibraryContentProvider(libraryContentProvider);
 
             // load terminology
             if (library.terminologyUrl != null) {
                 // check if terminology is in cache
                 TerminologyProvider terminologyProvider = terminologyProviderIndex.get(library.terminologyUrl);
+
+                // if not in cache then load it
                 if (terminologyProvider == null) {
-                    // if terminology is not in cache then load ut
                     EndpointInfo endpointInfo = new EndpointInfo().setAddress(library.terminologyUrl);
                     if (library.terminologyUrlHeaders != null && library.terminologyUrlHeaders.size() > 0) {
                         endpointInfo.setHeaders(library.terminologyUrlHeaders);
@@ -144,7 +148,7 @@ public class CqlService {
 
                     terminologyProvider = cqlEvaluatorComponent.createTerminologyProviderFactory()
                             .create(endpointInfo);
-                    // add to cache
+                    // add it to cache
                     terminologyProviderIndex.put(library.terminologyUrl, terminologyProvider);
                 }
 
