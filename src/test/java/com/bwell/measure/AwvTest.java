@@ -19,7 +19,7 @@ public class AwvTest extends BaseTest {
     }
 
     // Override this method in the child class with assert logics in the method body
-    public void AssertExpressionResults(String key, Object value) {
+    public void assertExpressionResults(String key, Object value) {
         if (key.equals("Patient")) {
 
             Patient patient = (Patient) value;
