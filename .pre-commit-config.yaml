@@ -20,3 +20,10 @@ repos:
         entry: mypy
         require_serial: true
         args: [ --strict, --python-version=3.6, --show-error-codes, --allow-untyped-decorators ]
+  - repo: https://github.com/dustinsand/pre-commit-jvm
+    rev: v0.4.0
+    hooks:
+      - id: google-java-formatter-jdk11
+        args: [ --replace, --set-exit-if-changed ]
+      - id: pmd
+        args: [ -rulesets, pmd-ruleset.xml, -language, java, -cache, .pmd/cache, -dir, src/main/java, -dir, src/test/java, -f, textcolor ]

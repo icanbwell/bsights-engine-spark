@@ -272,7 +272,7 @@
   "contained": [
     {
       "resourceType": "Observation",
-      "id": "bmi",
+      "id": "bmi-1",
       "meta": {
         "profile": [
           "http://hl7.org/fhir/StructureDefinition/vitalsigns"
@@ -306,7 +306,7 @@
         "text": "BMI"
       },
       "subject": {
-        "reference": "Patient/example",
+        "reference": "Patient/1",
         "display": "Amy Shaw"
       },
       "encounter": {
