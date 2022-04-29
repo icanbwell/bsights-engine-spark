@@ -15,6 +15,7 @@ import java.util.List;
  * This class loads a FHIR resource from a file or a string
  */
 public class ResourceLoader {
+
     private static final org.slf4j.Logger myLogger = org.slf4j.LoggerFactory.getLogger(ResourceLoader.class);
     /*
       Reads a FHIR resource from a file
@@ -45,44 +46,54 @@ public class ResourceLoader {
     @Nullable
     public IBaseBundle loadResourceFromString(String resourceJson) throws IOException {
         JsonParser parser = new JsonParser();
+
         try {
             Resource resource = parser.parse(resourceJson);
             ResourceType resourceType = resource.getResourceType();
             IBaseBundle bundle;
+
             if (resourceType != ResourceType.Bundle) {
                 bundle = new Bundle();
                 bundle.setId(resource.getId());
+
                 List<Bundle.BundleEntryComponent> newEntries = new ArrayList<>();
                 Bundle.BundleEntryComponent entryComponent = new Bundle.BundleEntryComponent();
                 entryComponent.setResource(resource);
+
                 newEntries.add(entryComponent);
                 ((Bundle) bundle).setEntry(newEntries);
             } else {
                 bundle = (Bundle) resource;
             }
-            myLogger.debug("Read resources from {}: {}", resourceJson, FhirJsonExporter.getResourceAsJson(bundle));
+
+            myLogger.info("Read resources from {}: {}", resourceJson, FhirJsonExporter.getResourceAsJson(bundle));
             bundle = moveContainedResourcesToTopLevel(bundle);
+
             //noinspection ConstantConditions
             bundle = clean_and_fix_bundle(bundle);
-            myLogger.debug("Cleaned resources from {}: {}", resourceJson, FhirJsonExporter.getResourceAsJson(bundle));
+            myLogger.info("Cleaned resources from {}: {}", resourceJson, FhirJsonExporter.getResourceAsJson(bundle));
+
             return bundle;
-        } catch (FHIRFormatError e1) {
-            myLogger.error("Bad FHIR data {}: {}", resourceJson, e1.toString());
+        } catch (FHIRFormatError ex) {
+            myLogger.error("Bad FHIR data {}: {}", resourceJson, ex.toString());
             return new Bundle(); // bad FHIR.  log error and continue processing other records
-        } catch (IOException e) {
-            myLogger.error("Error parsing {}: {}", resourceJson, e.toString());
-            throw e;
+        } catch (IOException ex) {
+            myLogger.error("Error parsing {}: {}", resourceJson, ex.toString());
+            throw ex;
         }
     }
 
     private IBaseBundle moveContainedResourcesToTopLevel(IBaseBundle bundle) {
         if (bundle instanceof Bundle) {
             List<Bundle.BundleEntryComponent> newEntries = new ArrayList<>();
+
             List<Bundle.BundleEntryComponent> entries = ((Bundle) bundle).getEntry();
             for (Bundle.BundleEntryComponent entry : entries) {
                 Resource resource = entry.getResource();
+
                 if (resource instanceof DomainResource) {
                     List<Resource> contained = ((DomainResource) resource).getContained();
+
                     if (contained.size() > 0) {
                         for (Resource containedResource : contained) {
                             Bundle.BundleEntryComponent entryComponent = new Bundle.BundleEntryComponent();

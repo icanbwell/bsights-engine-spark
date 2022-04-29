@@ -48,9 +48,9 @@ public class MeasureService {
     ) throws Exception {
         String fhirVersion = "R4";
         List<LibraryParameter> libraries = new ArrayList<>();
+
         LibraryParameter libraryParameter = new LibraryParameter();
         libraryParameter.libraryName = libraryName;
-
         libraryParameter.libraryUrl = libraryUrl;
         libraryParameter.libraryVersion = libraryVersion;
         libraryParameter.terminologyUrl = terminologyUrl;
@@ -59,18 +59,14 @@ public class MeasureService {
         libraryParameter.model.modelBundle = fhirBundle;
         libraryParameter.context = new ContextParameter();
         if (contextName != null) {
-            libraryParameter.context = new ContextParameter();
             libraryParameter.context.contextName = contextName;
-            if (contextValue != null) {
-                libraryParameter.context.contextValue = contextValue;
-            }
+        }
+        if (contextValue != null) {
+            libraryParameter.context.contextValue = contextValue;
         }
 
-        myLogger.debug("Running with libraryUrl={}, terminologyUrl={}, fhir={}", libraryUrl, terminologyUrl, fhirBundle);
+        myLogger.info("Running with libraryUrl={}, terminologyUrl={}, fhir={}", libraryUrl, terminologyUrl, fhirBundle);
 
-        libraries.add(libraryParameter);
-
-        List<String> cqlVariables = Arrays.stream(cqlVariablesToReturn.split(",")).map(String::trim).collect(Collectors.toList());
         if (libraryUrlHeaders != null && !libraryUrlHeaders.equals("")) {
             libraryParameter.libraryUrlHeaders = Arrays.stream(libraryUrlHeaders.split(",")).map(String::trim).collect(Collectors.toList());
         }
@@ -78,36 +74,42 @@ public class MeasureService {
             libraryParameter.terminologyUrlHeaders = Arrays.stream(terminologyUrlHeaders.split(",")).map(String::trim).collect(Collectors.toList());
         }
 
+        libraries.add(libraryParameter);
+
+        List<String> cqlVariables = Arrays.stream(cqlVariablesToReturn.split(",")).map(String::trim).collect(Collectors.toList());
+
         Map<String, String> newMap = new HashMap<>();
 
         try {
             EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraries);
+
             Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
-            myLogger.debug("Received result from CQL Engine={} for bundle={}",
+
+            myLogger.info("Received result from CQL Engine={} for bundle={}",
                     FhirJsonExporter.getMapSetAsJson(entrySet),
                     fhirBundle);
+
             for (Map.Entry<String, Object> libraryEntry : entrySet) {
                 String key = libraryEntry.getKey();
                 Object value = libraryEntry.getValue();
 
                 if ("Patient".equals(key)) {
                     Patient patient = (Patient) value;
-                    myLogger.debug("Received Patient in CQL result={}",
+                    myLogger.info("Received Patient in CQL result={}",
                             patient != null ? FhirJsonExporter.getResourceAsJson(patient) : null);
                     newMap.put("PatientId", (patient != null) ? patient.getId() : null);
                 } else {
                     if (cqlVariables.contains(key)) {
                         newMap.put(key, value != null ? value.toString() : null);
                     }
-
                 }
             }
-        } catch (Exception e1) {
-            myLogger.error("Error={} for bundle={}", e1, fhirBundle);
-            throw e1;
+        } catch (Exception ex) {
+            myLogger.error("Error={} for bundle={}", ex, fhirBundle);
+            throw ex;
         }
 
-        myLogger.debug("Calculated CQL variables={} for bundle={}", FhirJsonExporter.getMapAsJson(newMap), fhirBundle);
+        myLogger.info("Calculated CQL variables={} for bundle={}", FhirJsonExporter.getMapAsJson(newMap), fhirBundle);
 
         return newMap;
     }
