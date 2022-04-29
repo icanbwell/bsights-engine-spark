@@ -25,6 +25,8 @@ import java.util.*;
 
 public class CqlService {
 
+    private static final org.slf4j.Logger myLogger = org.slf4j.LoggerFactory.getLogger(CqlService.class);
+
     private final Map<String, LibraryContentProvider> libraryContentProviderIndex = new HashMap<>();
     private final Map<String, TerminologyProvider> terminologyProviderIndex = new HashMap<>();
 
@@ -34,7 +36,7 @@ public class CqlService {
     // accessed by only by getInstance() method
     private static volatile FhirContext fhirContextSharedInstance;
 
-    public static FhirContext getFhirContext()
+    public static FhirContext getFhirContext(String fhirVersion)
     {
         if (fhirContextSharedInstance == null)
         {
@@ -43,7 +45,7 @@ public class CqlService {
             {
                 if(fhirContextSharedInstance ==null)
                 {
-                    FhirVersionEnum fhirVersionEnum = FhirVersionEnum.valueOf("R4");
+                    FhirVersionEnum fhirVersionEnum = FhirVersionEnum.valueOf(fhirVersion);
                     // if instance is null, initialize
                     fhirContextSharedInstance = fhirVersionEnum.newContext();
                 }
@@ -60,42 +62,51 @@ public class CqlService {
      * @return result of evaluation
      */
     public EvaluationResult runCqlLibrary(String fhirVersion, List<LibraryParameter> libraries) throws IOException {
-//        FhirVersionEnum fhirVersionEnum = FhirVersionEnum.valueOf(fhirVersion);
 
         // first create a FhirContext for this version
         // This is expensive so make it static lazy init
         // https://hapifhir.io/hapi-fhir/apidocs/hapi-fhir-base/ca/uhn/fhir/context/FhirContext.html
-        FhirContext fhirContext = getFhirContext();
+        FhirContext fhirContext = getFhirContext(fhirVersion);
 //        fhirContext.setRestfulClientFactory();
+
         // create an evaluator with the FhirContext
         CqlEvaluatorComponent cqlEvaluatorComponent = DaggerCqlEvaluatorComponent.builder()
                 .fhirContext(fhirContext).build();
 
         // load cql libraries
         for (LibraryParameter library : libraries) {
-            CqlEvaluator evaluator = buildCqlEvaluator(cqlEvaluatorComponent, library);
+            CqlEvaluator evaluator = null;
 
-            VersionedIdentifier identifier = new VersionedIdentifier().withId(library.libraryName);
-            if (library.libraryVersion != null) {
-                identifier = identifier.withVersion(library.libraryVersion);
-            }
-
-            // add any context parameters
-            Pair<String, Object> contextParameter = null;
-
-            if (library.context != null) {
-                contextParameter = Pair.of(library.context.contextName, library.context.contextValue);
+            //noinspection CaughtExceptionImmediatelyRethrown
+            try {
+                evaluator = buildCqlEvaluator(cqlEvaluatorComponent, library);
+            } catch (Exception ex) {
+                myLogger.error("Error runCqlLibrary:buildCqlEvaluator(): {}", ex.toString());
+                throw ex;
             }
 
             //noinspection CaughtExceptionImmediatelyRethrown
             try {
+                VersionedIdentifier identifier = new VersionedIdentifier().withId(library.libraryName);
+                if (library.libraryVersion != null) {
+                    identifier = identifier.withVersion(library.libraryVersion);
+                }
+
+                // add any context parameters
+                Pair<String, Object> contextParameter = null;
+                if (library.context != null) {
+                    contextParameter = Pair.of(library.context.contextName, library.context.contextValue);
+                }
+
                 // run evaluator and return result
                 return evaluator.evaluate(identifier, contextParameter);
-            } catch (Exception e) {
-                throw e;
+            } catch (Exception ex) {
+                myLogger.error("Error runCqlLibrary:evaluator.evaluate(): {}", ex.toString());
+                throw ex;
             }
 
         }
+
         return null;
     }
 

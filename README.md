@@ -97,11 +97,11 @@ To deploy to local dev docker: `make loadfhir`
     * ```
       <groupId>com.bwell</groupId>
       <artifactId>bsights-engine-spark</artifactId>
-      <version>1.0.3</version>
+      <version>1.0.4</version>
       ```
   * in Dockerfile - for the `cp` cli line,
     * ```
       ## skip running tests since it requires a fhir server
       RUN mvn -Dmaven.test.skip package && \
-      cp ./target/bsights-engine-spark-1.0.3.jar /opt/spark/jars/
+      cp ./target/bsights-engine-spark-1.0.4.jar /opt/spark/jars/
       ```
