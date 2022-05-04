@@ -19,8 +19,7 @@ public class FhirJsonExporter {
      * @param resource: resource
      * @return json
      */
-    public static String getResourceAsJson(IBaseResource resource) {
-        String fhirVersion = "R4";
+    public static String getResourceAsJson(String fhirVersion, IBaseResource resource) {
         FhirVersionEnum fhirVersionEnum = FhirVersionEnum.valueOf(fhirVersion);
         FhirContext fhirContext = fhirVersionEnum.newContext();
         return fhirContext.newJsonParser().encodeResourceToString(resource);
@@ -47,13 +46,13 @@ public class FhirJsonExporter {
      * @param entrySet: MapSet
      * @return json
      */
-    public static String getMapSetAsJson(Set<Map.Entry<String, Object>> entrySet) {
+    public static String getMapSetAsJson(String fhirVersion, Set<Map.Entry<String, Object>> entrySet) {
         Map<String, String> jsonMap = new HashMap<>();
         for (Map.Entry<String, Object> libraryEntry : entrySet) {
             String key = libraryEntry.getKey();
             Object value = libraryEntry.getValue();
             if (value instanceof IBaseResource) {
-                jsonMap.put(key, getResourceAsJson((IBaseResource) value));
+                jsonMap.put(key, getResourceAsJson(fhirVersion, (IBaseResource) value));
             } else {
                 jsonMap.put(key, value != null ? value.toString(): null);
             }

@@ -23,7 +23,7 @@ public class FileManager {
      * @return IBaseBundle
      */
     @Nullable
-    public static IBaseBundle loadResourceFromFile(String path) throws IOException {
+    public static IBaseBundle loadResourceFromFile(String fhirVersion, String path) throws IOException {
         File f = new File(path);
         String resource = null;
         try {
@@ -31,6 +31,6 @@ public class FileManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new ResourceLoader().loadResourceFromString(resource);
+        return new ResourceLoader().loadResourceFromString(fhirVersion, resource);
     }
 }

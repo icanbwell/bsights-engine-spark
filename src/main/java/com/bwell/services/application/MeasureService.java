@@ -86,7 +86,7 @@ public class MeasureService {
             Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
 
             myLogger.info("Received result from CQL Engine={} for bundle={}",
-                    FhirJsonExporter.getMapSetAsJson(entrySet),
+                    FhirJsonExporter.getMapSetAsJson(fhirVersion, entrySet),
                     fhirBundle);
 
             for (Map.Entry<String, Object> libraryEntry : entrySet) {
@@ -96,7 +96,7 @@ public class MeasureService {
                 if ("Patient".equals(key)) {
                     Patient patient = (Patient) value;
                     myLogger.info("Received Patient in CQL result={}",
-                            patient != null ? FhirJsonExporter.getResourceAsJson(patient) : null);
+                            patient != null ? FhirJsonExporter.getResourceAsJson(fhirVersion, patient) : null);
                     newMap.put("PatientId", (patient != null) ? patient.getId() : null);
                 } else {
                     if (cqlVariables.contains(key)) {

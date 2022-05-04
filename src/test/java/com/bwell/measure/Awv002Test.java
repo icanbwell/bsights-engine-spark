@@ -8,10 +8,10 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.*;
 
-public class AwvTest extends BaseTest {
-    private static final String folder = "awvcn001";
-    private static final String libraryName = "AWVCN001";
-    private static final String libraryVersion = "1.0.0";
+public class Awv002Test extends BaseTest {
+    private static final String folder = "awvcn";
+    private static final String libraryName = "AWVCN002";
+    private static final String libraryVersion = "1.1.0";
 
     @BeforeClass
     public void setUp() throws JSONException {
@@ -102,6 +102,37 @@ public class AwvTest extends BaseTest {
             System.out.println(key + ": " + needAWV1year);
             assertFalse(needAWV1year);
         }
+
+        // Newly added def variables for version 1.1.0
+
+        // EligiblePopulation
+        if (key.equals("EligiblePopulation")) {
+            Boolean isEligiblePopulation = (Boolean) value;
+            System.out.println(key + ": " + isEligiblePopulation);
+            assertTrue(isEligiblePopulation);
+        }
+
+        // Denominator
+        if (key.equals("Denominator")) {
+            Integer isDenominator = (Integer) value;
+            System.out.println(key + ": " + isDenominator);
+            assertEquals(isDenominator, 1);
+        }
+
+        // Numerator
+        if (key.equals("Numerator")) {
+            Integer isNumerator = (Integer) value;
+            System.out.println(key + ": " + isNumerator);
+            assertEquals(isNumerator, 1);
+        }
+
+        // RequiredExclusions
+        if (key.equals("RequiredExclusions")) {
+            Boolean requiredExclusions = (Boolean) value;
+            System.out.println(key + ": " + requiredExclusions);
+            assertFalse(requiredExclusions);
+        }
+
     }
 
     @Test

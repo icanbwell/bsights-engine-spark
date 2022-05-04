@@ -29,7 +29,7 @@ public class MeasureServiceTest {
         testResourcePath = file.getAbsolutePath();
         System.out.printf("Test resource directory: %s%n", testResourcePath);
 
-        folder = "bmi001";
+        folder = "bmi";
     }
 
     @BeforeMethod
@@ -56,13 +56,13 @@ public class MeasureServiceTest {
     @Test
     public void testRunCqlLibraryFromFile() throws Exception {
         String cqlLibraryName = "AWVCN001";
-        String cqllibraryUrl = testResourcePath + "/" + "awvcn001" + "/cql";
+        String cqllibraryUrl = testResourcePath + "/" + "awvcn" + "/cql";
         String cqllibraryVersion = "1.0.0";
-        String terminologyUrl = testResourcePath + "/" + "awvcn001" + "/terminology";
+        String terminologyUrl = testResourcePath + "/" + "awvcn" + "/terminology";
         String cqlVariablesToReturn = "InAgeCohort,AWCharges,AWDateCharge,AWVDates,AWVReminder,HadAWV1year,NeedAWV1year";
 
-        String bundleJson = Utilities.getBundle(testResourcePath, "awvcn001");
-        String rawContainedJson = Utilities.getRawJson(testResourcePath, "awvcn001", "rawJson.txt");
+        String bundleJson = Utilities.getBundle(testResourcePath, "awvcn");
+        String rawContainedJson = Utilities.getRawJson(testResourcePath, "awvcn", "rawJson.txt");
 
         try {
             Map<String, String> result = new MeasureService().runCqlLibrary(
@@ -171,7 +171,7 @@ public class MeasureServiceTest {
         String terminologyUrl = "http://fhir:3000/4_0_0";
         String cqlVariablesToReturn = "InAgeCohort,AWVDates,AWVReminder,HadAWV1year,NeedAWV1year";
 
-        String bundleJson = Utilities.getContainedBundle(testResourcePath, "awvcn001");
+        String bundleJson = Utilities.getContainedBundle(testResourcePath, "awvcn");
 
         try {
             Map<String, String> result = new MeasureService().runCqlLibrary(
@@ -186,11 +186,11 @@ public class MeasureServiceTest {
                     null,
                     null
             );
-            assertEquals(result.get("PatientId"), "unitypoint-eegf5bWyPXkfiquWgAid7W.saxiV7j4TrzYoOWsvANmc3");
+            assertEquals(result.get("PatientId"), "unitypoint-eFQWoGGaBo8dUJyl3DuS7lxGLvVFXjDVWEzu2h9X0DY43");
             assertEquals(result.get("HadAWV1year"), "true");
             assertEquals(result.get("NeedAWV1year"), "false");
-            assertEquals(result.get("AWVDates"), "2022-01-25");
-            assertEquals(result.get("AWVReminder"), "2022-10-25");
+            assertEquals(result.get("AWVDates"), "2021-09-01");
+            assertEquals(result.get("AWVReminder"), "2022-06-01");
         } catch (Exception e) {
             e.printStackTrace();
             throw e;

@@ -44,7 +44,7 @@ public class ResourceLoader {
      * @return IBaseBundle
      */
     @Nullable
-    public IBaseBundle loadResourceFromString(String resourceJson) throws IOException {
+    public IBaseBundle loadResourceFromString(String fhirVersion, String resourceJson) throws IOException {
         JsonParser parser = new JsonParser();
 
         try {
@@ -66,12 +66,12 @@ public class ResourceLoader {
                 bundle = (Bundle) resource;
             }
 
-            myLogger.info("Read resources from {}: {}", resourceJson, FhirJsonExporter.getResourceAsJson(bundle));
+            myLogger.info("Read resources from {}: {}", resourceJson, FhirJsonExporter.getResourceAsJson(fhirVersion, bundle));
             bundle = moveContainedResourcesToTopLevel(bundle);
 
             //noinspection ConstantConditions
             bundle = clean_and_fix_bundle(bundle);
-            myLogger.info("Cleaned resources from {}: {}", resourceJson, FhirJsonExporter.getResourceAsJson(bundle));
+            myLogger.info("Cleaned resources from {}: {}", resourceJson, FhirJsonExporter.getResourceAsJson(fhirVersion, bundle));
 
             return bundle;
         } catch (FHIRFormatError ex) {
