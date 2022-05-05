@@ -2,17 +2,15 @@ package com.bwell.measure;
 
 import org.hl7.fhir.r4.model.Patient;
 import org.json.JSONException;
+import org.opencds.cqf.cql.engine.runtime.Date;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
-public class BmiTest extends BaseTest {
-
-    private static final String folder = "bmi001";
-    private static final String libraryName = "BMI001";
+public class Awv001Test extends BaseTest {
+    private static final String folder = "awvcn";
+    private static final String libraryName = "AWVCN001";
     private static final String libraryVersion = "1.0.0";
 
     @BeforeClass
@@ -23,43 +21,91 @@ public class BmiTest extends BaseTest {
     // Override this method in the child class with assert logics in the method body
     public void assertExpressionResults(String key, Object value) {
         if (key.equals("Patient")) {
+
             Patient patient = (Patient) value;
 
-            // medical record number
-            String medicalRecordId = patient.getIdentifier().get(0).getValue();
-            System.out.println(key + ": Medical Record ID = " + medicalRecordId);
-            assertEquals(medicalRecordId, "12345");
+            // EMPI
+            String empiId = patient.getIdentifier().get(0).getValue();
+            System.out.println(key + ": EMPI ID = " + empiId);
+            assertEquals(empiId, "E900019216");
 
             // patient id
             String patientId = patient.getId();
             System.out.println(key + ": Patient ID = " + patientId);
-            assertEquals(patientId, "1");
+            assertEquals(patientId, "unitypoint-eFQWoGGaBo8dUJyl3DuS7lxGLvVFXjDVWEzu2h9X0DY43");
 
             // patient active flag
             boolean isActive = patient.getActive();
             System.out.println(key + ": Patient Active = " + isActive);
             assertTrue(isActive);
-
         }
+
+        // InAgeCohort - true
         if (key.equals("InAgeCohort")) {
             Boolean isInAgeCohort = (Boolean) value;
             System.out.println(key + ": " + isInAgeCohort);
             assertTrue(isInAgeCohort);
         }
-        if (key.equals("InObservationCohort")) {
-            Boolean isInObservationCohort = (Boolean) value;
-            System.out.println(key + ": " + isInObservationCohort);
-            assertTrue(isInObservationCohort);
+
+        // AWEncounters - false
+        if (key.equals("AWEncounters")) {
+            Boolean awEncounters = (Boolean) value;
+            System.out.println(key + ": " + awEncounters);
+            assertFalse(awEncounters);
         }
-        if (key.equals("InDemographic")) {
-            Boolean isInDemographic = (Boolean) value;
-            System.out.println(key + ": " + isInDemographic);
-            assertTrue(isInDemographic);
+
+        // AWDateEnc - null
+        if (key.equals("AWDateEnc")) {
+            Date awDateEnd = (Date) value;
+            System.out.println(key + ": " + awDateEnd);
+            assertNull(awDateEnd);
+        }
+
+        // AWCharges - true
+        if (key.equals("AWCharges")) {
+            Boolean awCharges = (Boolean) value;
+            System.out.println(key + ": " + awCharges);
+            assertTrue(awCharges);
+        }
+
+        // AWDateCharge - 2021-09-01
+        if (key.equals("AWDateCharge")) {
+            Date awDateCharge = (Date) value;
+            System.out.println(key + ": " + awDateCharge);
+            assertEquals(awDateCharge.toString(), "2021-09-01");
+        }
+
+        // AWVDates - 2021-09-01
+        if (key.equals("AWVDates")) {
+            Date awvDates = (Date) value;
+            System.out.println(key + ": " + awvDates);
+            assertEquals(awvDates.toString(), "2021-09-01");
+        }
+
+        // AWVReminder - 2022-06-01
+        if (key.equals("AWVReminder")) {
+            Date awvReminder = (Date) value;
+            System.out.println(key + ": " + awvReminder);
+            assertEquals(awvReminder.toString(), "2022-06-01");
+        }
+
+        // HadAWV1year - true
+        if (key.equals("HadAWV1year")) {
+            Boolean hadAWV1year = (Boolean) value;
+            System.out.println(key + ": " + hadAWV1year);
+            assertTrue(hadAWV1year);
+        }
+
+        // NeedAWV1year - false
+        if (key.equals("NeedAWV1year")) {
+            Boolean needAWV1year = (Boolean) value;
+            System.out.println(key + ": " + needAWV1year);
+            assertFalse(needAWV1year);
         }
     }
 
     @Test
-    public void testBmi_Bundle_WithLocalMockupJson() throws Exception {
+    public void testAwv_Bundle_WithLocalMockupJson() throws Exception {
         Boolean useMockTerminologyJson = true;
         Boolean useMockCqlJson = true;
         Boolean useBundleJson = true;
@@ -74,8 +120,7 @@ public class BmiTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    public void testBmi_Bundle_WithTerminologyFromFhirServer() throws Exception {
+    public void testAwv_Bundle_WithTerminologyFromFhirServer() throws Exception {
         Boolean useMockTerminologyJson = false; // terminology will be fetched from the fhir server
         Boolean useMockCqlJson = true;
         Boolean useBundleJson = true;
@@ -90,7 +135,7 @@ public class BmiTest extends BaseTest {
     }
 
     @Test
-    public void testBmi_Bundle_WithCqlFromFhirServer() throws Exception {
+    public void testAwv_Bundle_WithCqlFromFhirServer() throws Exception {
         Boolean useMockTerminologyJson = true;
         Boolean useMockCqlJson = false;         // cql will be fetched from the fhir server
         Boolean useBundleJson = true;
@@ -105,8 +150,7 @@ public class BmiTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    public void testBmi_Bundle_WithCqlAndTerminologyFromFhirServer() throws Exception {
+    public void testAwv_Bundle_WithCqlAndTerminologyFromFhirServer() throws Exception {
         Boolean useMockTerminologyJson = false; // terminology will be fetched from the fhir server
         Boolean useMockCqlJson = false;         // cql will be fetched from the fhir server
         Boolean useBundleJson = true;
@@ -121,8 +165,7 @@ public class BmiTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    public void testBmi_ContainedBundle_WithCqlAndTerminologyFromFhirServer() throws Exception {
+    public void testAwv_ContainedBundle_WithCqlAndTerminologyFromFhirServer() throws Exception {
         Boolean useMockTerminologyJson = false; // terminology will be fetched from the fhir server
         Boolean useMockCqlJson = false;         // cql will be fetched from the fhir server
         Boolean useBundleJson = false;

@@ -3,13 +3,16 @@ package com.bwell.measure;
 import org.hl7.fhir.r4.model.Patient;
 import org.json.JSONException;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
-public class DiabTest extends BaseTest {
-    private static final String folder = "diab001";
-    private static final String libraryName = "DIAB001";
+public class Bmi001Test extends BaseTest {
+
+    private static final String folder = "bmi";
+    private static final String libraryName = "BMI001";
     private static final String libraryVersion = "1.0.0";
 
     @BeforeClass
@@ -20,7 +23,6 @@ public class DiabTest extends BaseTest {
     // Override this method in the child class with assert logics in the method body
     public void assertExpressionResults(String key, Object value) {
         if (key.equals("Patient")) {
-
             Patient patient = (Patient) value;
 
             // medical record number
@@ -37,14 +39,18 @@ public class DiabTest extends BaseTest {
             boolean isActive = patient.getActive();
             System.out.println(key + ": Patient Active = " + isActive);
             assertTrue(isActive);
-        }
 
+        }
+        if (key.equals("InAgeCohort")) {
+            Boolean isInAgeCohort = (Boolean) value;
+            System.out.println(key + ": " + isInAgeCohort);
+            assertTrue(isInAgeCohort);
+        }
         if (key.equals("InObservationCohort")) {
             Boolean isInObservationCohort = (Boolean) value;
             System.out.println(key + ": " + isInObservationCohort);
             assertTrue(isInObservationCohort);
         }
-
         if (key.equals("InDemographic")) {
             Boolean isInDemographic = (Boolean) value;
             System.out.println(key + ": " + isInDemographic);
@@ -53,7 +59,7 @@ public class DiabTest extends BaseTest {
     }
 
     @Test
-    public void testDiab_Bundle_WithLocalMockupJson() throws Exception {
+    public void testBmi_Bundle_WithLocalMockupJson() throws Exception {
         Boolean useMockTerminologyJson = true;
         Boolean useMockCqlJson = true;
         Boolean useBundleJson = true;
@@ -68,7 +74,8 @@ public class DiabTest extends BaseTest {
     }
 
     @Test
-    public void testDiab_Bundle_WithTerminologyFromFhirServer() throws Exception {
+    @Ignore
+    public void testBmi_Bundle_WithTerminologyFromFhirServer() throws Exception {
         Boolean useMockTerminologyJson = false; // terminology will be fetched from the fhir server
         Boolean useMockCqlJson = true;
         Boolean useBundleJson = true;
@@ -83,7 +90,7 @@ public class DiabTest extends BaseTest {
     }
 
     @Test
-    public void testDiab_Bundle_WithCqlFromFhirServer() throws Exception {
+    public void testBmi_Bundle_WithCqlFromFhirServer() throws Exception {
         Boolean useMockTerminologyJson = true;
         Boolean useMockCqlJson = false;         // cql will be fetched from the fhir server
         Boolean useBundleJson = true;
@@ -98,7 +105,8 @@ public class DiabTest extends BaseTest {
     }
 
     @Test
-    public void testDiab_Bundle_WithCqlAndTerminologyFromFhirServer() throws Exception {
+    @Ignore
+    public void testBmi_Bundle_WithCqlAndTerminologyFromFhirServer() throws Exception {
         Boolean useMockTerminologyJson = false; // terminology will be fetched from the fhir server
         Boolean useMockCqlJson = false;         // cql will be fetched from the fhir server
         Boolean useBundleJson = true;
@@ -113,7 +121,8 @@ public class DiabTest extends BaseTest {
     }
 
     @Test
-    public void testDiab_ContainedBundle_WithCqlAndTerminologyFromFhirServer() throws Exception {
+    @Ignore
+    public void testBmi_ContainedBundle_WithCqlAndTerminologyFromFhirServer() throws Exception {
         Boolean useMockTerminologyJson = false; // terminology will be fetched from the fhir server
         Boolean useMockCqlJson = false;         // cql will be fetched from the fhir server
         Boolean useBundleJson = false;

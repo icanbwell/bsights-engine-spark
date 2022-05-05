@@ -79,7 +79,7 @@ public class CqlService {
 
             //noinspection CaughtExceptionImmediatelyRethrown
             try {
-                evaluator = buildCqlEvaluator(cqlEvaluatorComponent, library);
+                evaluator = buildCqlEvaluator(fhirVersion, cqlEvaluatorComponent, library);
             } catch (Exception ex) {
                 myLogger.error("Error runCqlLibrary:buildCqlEvaluator(): {}", ex.toString());
                 throw ex;
@@ -118,7 +118,7 @@ public class CqlService {
      * @param library               library configuration
      * @return a CqlEvaluator built with the passed in configuration
      */
-    private CqlEvaluator buildCqlEvaluator(CqlEvaluatorComponent cqlEvaluatorComponent, LibraryParameter library) throws IOException {
+    private CqlEvaluator buildCqlEvaluator(String fhirVersion, CqlEvaluatorComponent cqlEvaluatorComponent, LibraryParameter library) throws IOException {
         synchronized (lock) {
             // create a cql evaluator builder
             CqlEvaluatorBuilder cqlEvaluatorBuilder = cqlEvaluatorComponent.createBuilder();
@@ -173,7 +173,7 @@ public class CqlService {
             if (library.model != null) {
                 // if model is provided as text then use it
                 if (library.model.modelBundle != null) {
-                    IBaseBundle bundle = new ResourceLoader().loadResourceFromString(library.model.modelBundle);
+                    IBaseBundle bundle = new ResourceLoader().loadResourceFromString(fhirVersion, library.model.modelBundle);
                     dataProvider = dataProviderFactory.create(bundle);
                 } else {
                     // load model from url

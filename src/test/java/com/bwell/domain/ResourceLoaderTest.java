@@ -23,6 +23,8 @@ import static org.testng.Assert.assertNotNull;
 public class ResourceLoaderTest {
     private static final String testResourceRelativePath = "src/test/resources";
     private static String testResourcePath = null;
+    private static final String fhirVersion = "R4";
+    private static final String folder = "bmi";
 
     @BeforeClass
     public void setup() {
@@ -31,12 +33,10 @@ public class ResourceLoaderTest {
         System.out.printf("Test resource directory: %s%n", testResourcePath);
     }
 
-    @Test
-    public void testLoadingBundle() throws JSONException, IOException {
-        String folder = "bmi001";
-        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected.json");
+    private String loadBundleJson(String fileName) throws JSONException, IOException  {
         String bundleJson = null;
 
+        File f = new File(testResourcePath + "/" + folder + "/bundles/" + fileName);
         try {
             bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
         } catch (IOException e) {
@@ -47,7 +47,14 @@ public class ResourceLoaderTest {
         JSONObject firstItem = (JSONObject) jsonArray.get(0);
         bundleJson = firstItem.getJSONObject("bundle").toString();
 
-        IBaseBundle bundle = new ResourceLoader().loadResourceFromString(bundleJson);
+        return bundleJson;
+    }
+
+    @Test
+    public void testLoadingBundle() throws JSONException, IOException {
+        String bundleJson = loadBundleJson("expected.json");
+
+        IBaseBundle bundle = new ResourceLoader().loadResourceFromString(fhirVersion, bundleJson);
         assertNotNull(bundle);
         ArrayList<Bundle.BundleEntryComponent> entry = (ArrayList<Bundle.BundleEntryComponent>) ((Bundle) bundle).getEntry();
         Bundle.BundleEntryComponent bundleEntryComponent = entry.get(0);
@@ -60,21 +67,9 @@ public class ResourceLoaderTest {
 
     @Test
     public void testLoadingBundleContainedResources() throws JSONException, IOException {
-        String folder = "bmi001";
-        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/expected_contained.json");
-        String bundleJson = null;
+        String bundleJson = loadBundleJson("expected_contained.json");
 
-        try {
-            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        JSONArray jsonArray = new JSONArray(bundleJson);
-        JSONObject firstItem = (JSONObject) jsonArray.get(0);
-        bundleJson = firstItem.getJSONObject("bundle").toString();
-
-        IBaseBundle bundle = new ResourceLoader().loadResourceFromString(bundleJson);
+        IBaseBundle bundle = new ResourceLoader().loadResourceFromString(fhirVersion, bundleJson);
         assertNotNull(bundle);
         ArrayList<Bundle.BundleEntryComponent> entry = (ArrayList<Bundle.BundleEntryComponent>) ((Bundle) bundle).getEntry();
         Bundle.BundleEntryComponent bundleEntryComponent = entry.get(0);
@@ -87,21 +82,9 @@ public class ResourceLoaderTest {
 
     @Test
     public void testLoadingBundleWithBadFhirDiv() throws JSONException, IOException {
-        String folder = "bmi001";
-        File f = new File(testResourcePath + "/" + folder + "/bundles" + "/bad_fhir_div.json");
-        String bundleJson = null;
+        String bundleJson = loadBundleJson("bad_fhir_div.json");
 
-        try {
-            bundleJson = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        JSONArray jsonArray = new JSONArray(bundleJson);
-        JSONObject firstItem = (JSONObject) jsonArray.get(0);
-        bundleJson = firstItem.getJSONObject("bundle").toString();
-
-        IBaseBundle bundle = new ResourceLoader().loadResourceFromString(bundleJson);
+        IBaseBundle bundle = new ResourceLoader().loadResourceFromString(fhirVersion, bundleJson);
         assertNotNull(bundle);
         ArrayList<Bundle.BundleEntryComponent> entry = (ArrayList<Bundle.BundleEntryComponent>) ((Bundle) bundle).getEntry();
         assertEquals(0, entry.size());

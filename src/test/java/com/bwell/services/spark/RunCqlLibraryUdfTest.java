@@ -36,7 +36,7 @@ public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
                 new RunCqlLibrary(),
                 DataTypes.createMapType(DataTypes.StringType, DataTypes.StringType)
         );
-        String folder = "bmi001";
+        String folder = "bmi";
         String pathName = testResourcePath + "/" + folder + "/bundles" + "/expected.json";
 
         Dataset<Row> df = sqlContext.read().option("multiLine", true).json(pathName);
@@ -94,7 +94,7 @@ public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
                 new RunCqlLibrary(),
                 DataTypes.createMapType(DataTypes.StringType, DataTypes.StringType)
         );
-        String folder = "diab001";
+        String folder = "diab";
         String pathName = testResourcePath + "/" + folder + "/bundles" + "/expected.json";
 
         Dataset<Row> df = sqlContext.read().option("multiLine", true).json(pathName);
