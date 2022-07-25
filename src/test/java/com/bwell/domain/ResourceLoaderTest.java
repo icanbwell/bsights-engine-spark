@@ -79,14 +79,4 @@ public class ResourceLoaderTest {
         String patient_first_identifier = identifier1.getValue();
         assertEquals("12345", patient_first_identifier);
     }
-
-    @Test
-    public void testLoadingBundleWithBadFhirDiv() throws JSONException, IOException {
-        String bundleJson = loadBundleJson("bad_fhir_div.json");
-
-        IBaseBundle bundle = new ResourceLoader().loadResourceFromString(fhirVersion, bundleJson);
-        assertNotNull(bundle);
-        ArrayList<Bundle.BundleEntryComponent> entry = (ArrayList<Bundle.BundleEntryComponent>) ((Bundle) bundle).getEntry();
-        assertEquals(0, entry.size());
-    }
 }

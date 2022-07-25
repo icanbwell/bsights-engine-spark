@@ -25,6 +25,12 @@ public class FhirJsonExporter {
         return fhirContext.newJsonParser().encodeResourceToString(resource);
     }
 
+    public static IBaseResource getResourceFromJson(String fhirVersion, String json) {
+        FhirVersionEnum fhirVersionEnum = FhirVersionEnum.valueOf(fhirVersion);
+        FhirContext fhirContext = fhirVersionEnum.newContext();
+        return fhirContext.newJsonParser().parseResource(json);
+    }
+
     /**
      * Export the Map to JSON
      * @param map: map
