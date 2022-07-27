@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: [self-hosted,dev-ue1]
+    runs-on: [self-hosted, services]
 
     steps:
       - uses: actions/checkout@v2
