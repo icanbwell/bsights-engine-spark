@@ -388,7 +388,7 @@
 
     <repositories>
         <repository>
-            <id>bwell</id>
+            <id>internal-repository</id>
             <url>https://nexus.services.bwell.zone/repository/combined-maven/</url>
         </repository>
     </repositories>
