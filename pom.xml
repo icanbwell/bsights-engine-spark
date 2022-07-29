@@ -389,7 +389,7 @@
     <repositories>
         <repository>
             <id>bwell</id>
-            <url>https://nexus.services.bwell.zone/repository/bwell-maven</url>
+            <url>https://nexus.services.bwell.zone/repository/combined-maven/</url>
         </repository>
     </repositories>
 </project>
