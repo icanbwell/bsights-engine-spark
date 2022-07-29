@@ -32,7 +32,7 @@ public class Awv001Test extends BaseTest {
             // patient id
             String patientId = patient.getId();
             System.out.println(key + ": Patient ID = " + patientId);
-            assertEquals(patientId, "unitypoint-eFQWoGGaBo8dUJyl3DuS7lxGLvVFXjDVWEzu2h9X0DY43");
+            assertEquals(patientId, "Patient/unitypoint-eFQWoGGaBo8dUJyl3DuS7lxGLvVFXjDVWEzu2h9X0DY43/_history/5");
 
             // patient active flag
             boolean isActive = patient.getActive();

@@ -66,8 +66,8 @@ public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
 
         result_df.selectExpr("ruleResults['PatientId'] as PatientId").show();
         List<Row> rows = result_df.selectExpr("ruleResults['PatientId'] as PatientId").collectAsList();
-        Assert.assertEquals(rows.get(0).get(0), "1");
-        Assert.assertEquals(rows.get(1).get(0), "2");
+        Assert.assertEquals(rows.get(0).get(0), "Patient/1");
+        Assert.assertEquals(rows.get(1).get(0), "Patient/2");
 
         result_df.selectExpr("ruleResults['InAgeCohort'] as InAgeCohort").show();
         rows = result_df.selectExpr("ruleResults['InAgeCohort'] as InAgeCohort").collectAsList();
@@ -124,8 +124,8 @@ public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
 
         result_df.selectExpr("ruleResults['PatientId'] as PatientId").show();
         List<Row> rows = result_df.selectExpr("ruleResults['PatientId'] as PatientId").collectAsList();
-        Assert.assertEquals(rows.get(0).get(0), "1");
-        Assert.assertEquals(rows.get(1).get(0), "2");
+        Assert.assertEquals(rows.get(0).get(0), "Patient/1");
+        Assert.assertEquals(rows.get(1).get(0), "Patient/2");
 
         result_df.selectExpr("ruleResults['InObservationCohort'] as InObservationCohort").show();
         rows = result_df.selectExpr("ruleResults['InObservationCohort'] as InObservationCohort").collectAsList();

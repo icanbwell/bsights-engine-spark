@@ -6,7 +6,7 @@
 
     <groupId>com.bwell</groupId>
     <artifactId>bsights-engine-spark</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -339,6 +339,13 @@
             <artifactId>evaluator.dagger</artifactId>
             <version>${cql-evaluator.version}</version>
         </dependency>
+
+        <!-- bwell FHIR -->
+        <dependency>
+            <groupId>com.bwell</groupId>
+            <artifactId>FhirLib</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -378,4 +385,11 @@
             <url>https://maven.pkg.github.com/icanbwell/bsights-engine-spark</url>
         </repository>
     </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>internal-repository</id>
+            <url>https://nexus.services.bwell.zone/repository/combined-maven/</url>
+        </repository>
+    </repositories>
 </project>

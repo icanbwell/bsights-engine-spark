@@ -50,6 +50,19 @@ public class ResourceLoaderTest {
         return bundleJson;
     }
 
+    private String loadJson(String fileName)  {
+        String json = null;
+
+        File f = new File(testResourcePath + "/" + folder + "/bundles/" + fileName);
+        try {
+            json = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return json;
+    }
+
     @Test
     public void testLoadingBundle() throws JSONException, IOException {
         String bundleJson = loadBundleJson("expected.json");
@@ -81,12 +94,17 @@ public class ResourceLoaderTest {
     }
 
     @Test
-    public void testLoadingBundleWithBadFhirDiv() throws JSONException, IOException {
-        String bundleJson = loadBundleJson("bad_fhir_div.json");
+    public void testPatientContainedUseIssue() throws IOException {
+        String patientJson = loadJson("contained.json");
 
-        IBaseBundle bundle = new ResourceLoader().loadResourceFromString(fhirVersion, bundleJson);
+        IBaseBundle bundle = new ResourceLoader().loadResourceFromString(fhirVersion, patientJson);
         assertNotNull(bundle);
         ArrayList<Bundle.BundleEntryComponent> entry = (ArrayList<Bundle.BundleEntryComponent>) ((Bundle) bundle).getEntry();
-        assertEquals(0, entry.size());
+        Bundle.BundleEntryComponent bundleEntryComponent = entry.get(0);
+        Patient patient = (Patient) bundleEntryComponent.getResource();
+        ArrayList<org.hl7.fhir.r4.model.Identifier> identifier = (ArrayList<org.hl7.fhir.r4.model.Identifier>) patient.getIdentifier();
+        Identifier identifier1 = identifier.get(0);
+        String patient_first_identifier = identifier1.getValue();
+        assertEquals("1N39JR8VD44", patient_first_identifier);
     }
 }

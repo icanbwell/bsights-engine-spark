@@ -1,10 +1,17 @@
 package com.bwell.services.domain;
 
+import ca.uhn.fhir.context.FhirVersionEnum;
+import com.bwell.fhir.exception.FhirException;
+import com.bwell.fhir.model.SupportedResourceType;
+import com.bwell.fhir.parser.Parser;
 import com.bwell.infrastructure.FhirJsonExporter;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.hl7.fhir.exceptions.FHIRFormatError;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
-import org.hl7.fhir.r4.formats.JsonParser;
-import org.hl7.fhir.r4.model.*;
+import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.DomainResource;
+import org.hl7.fhir.r4.model.Resource;
+import org.hl7.fhir.r4.model.ResourceType;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -45,25 +52,48 @@ public class ResourceLoader {
      */
     @Nullable
     public IBaseBundle loadResourceFromString(String fhirVersion, String resourceJson) throws IOException {
-        JsonParser parser = new JsonParser();
-
         try {
-            Resource resource = parser.parse(resourceJson);
-            ResourceType resourceType = resource.getResourceType();
-            IBaseBundle bundle;
+            Resource baseResource;
+            try {
+                baseResource = (Resource) FhirJsonExporter.getResourceFromJson(fhirVersion, resourceJson);
+            }catch (Exception e) {
+                /*
+                    The Resource failed to parse on its own - check to see
+                    if we support the ResourceType and have special parsing
+                 */
+                //Parse the FHIR String
+                JsonNode rootNode = Parser.readTree(resourceJson);
 
+                //Grab the Contained off of it
+                JsonNode node = Parser.findJsonNode(rootNode, Parser.RESOURCE_TYPE);
+
+                //Check if we support this ResourceType and try to parse it
+                com.bwell.fhir.resource.BaseResource supportedResource = SupportedResourceType.getNewResource(node.asText());
+                if(supportedResource == null){
+                    //We do not support this ResourceType
+                    throw e;
+                }
+
+                //We support the ResourceType, so let's parse
+                com.bwell.fhir.resource.BaseResource resource = supportedResource.parse(FhirVersionEnum.forVersionString(fhirVersion), resourceJson);
+
+                baseResource = (Resource) resource.getBaseResource();
+            }
+
+            ResourceType resourceType = baseResource.getResourceType();
+            IBaseBundle bundle;
             if (resourceType != ResourceType.Bundle) {
                 bundle = new Bundle();
-                bundle.setId(resource.getId());
+                bundle.setId(baseResource.getIdElement().getValue());
 
                 List<Bundle.BundleEntryComponent> newEntries = new ArrayList<>();
                 Bundle.BundleEntryComponent entryComponent = new Bundle.BundleEntryComponent();
-                entryComponent.setResource(resource);
+                entryComponent.setResource(baseResource);
 
                 newEntries.add(entryComponent);
                 ((Bundle) bundle).setEntry(newEntries);
             } else {
-                bundle = (Bundle) resource;
+                bundle = (Bundle) baseResource;
             }
 
             myLogger.info("Read resources from {}: {}", resourceJson, FhirJsonExporter.getResourceAsJson(fhirVersion, bundle));
@@ -74,7 +104,7 @@ public class ResourceLoader {
             myLogger.info("Cleaned resources from {}: {}", resourceJson, FhirJsonExporter.getResourceAsJson(fhirVersion, bundle));
 
             return bundle;
-        } catch (FHIRFormatError ex) {
+        } catch (FHIRFormatError | FhirException ex) {
             myLogger.error("Bad FHIR data {}: {}", resourceJson, ex.toString());
             return new Bundle(); // bad FHIR.  log error and continue processing other records
         } catch (IOException ex) {

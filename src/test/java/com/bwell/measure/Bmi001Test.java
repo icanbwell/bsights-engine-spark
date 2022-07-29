@@ -33,7 +33,7 @@ public class Bmi001Test extends BaseTest {
             // patient id
             String patientId = patient.getId();
             System.out.println(key + ": Patient ID = " + patientId);
-            assertEquals(patientId, "1");
+            assertEquals(patientId, "Patient/1");
 
             // patient active flag
             boolean isActive = patient.getActive();

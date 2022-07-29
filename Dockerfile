@@ -25,16 +25,17 @@ ENV CLASSPATH=/bsights-engine-spark/jars:/opt/spark/jars/:$CLASSPATH
 
 # first get just the pom.xml and download dependencies (so we don't do this again when the code changes)
 COPY ./pom.xml /bsights-engine-spark/
+COPY ./settings.xml /bsights-engine-spark/
 WORKDIR /bsights-engine-spark
 
-RUN mvn --batch-mode verify
+RUN mvn --batch-mode verify -s ./settings.xml
 #RUN mvn --batch-mode --update-snapshots verify clean
 
 # now get the rest of the code and create the package
 COPY ./src/ /bsights-engine-spark/src/
 
 ## skip running tests since it requires a fhir server
-RUN mvn -Dmaven.test.skip package && \
-    cp ./target/bsights-engine-spark-1.0.5.jar /opt/spark/jars/
+RUN mvn -Dmaven.test.skip package -s ./settings.xml && \
+    cp ./target/bsights-engine-spark-1.0.6.jar /opt/spark/jars/
 
 # USER 1001
