@@ -17,7 +17,7 @@ services:
   fhir:
     depends_on:
       - mongo
-    image: imranq2/node-fhir-server-mongo:2.1.76
+    image: dockerhub.nexus.bwell.zone/imranq2/node-fhir-server-mongo:2.1.76
      # To use local fhir code, comment above line and uncomment below
 #    build:
 #        dockerfile: Dockerfile
@@ -50,7 +50,7 @@ services:
       test: ["CMD-SHELL", "curl --silent --fail localhost:3000/health || exit 1"]
 
   mongo:
-    image: docker.io/bitnami/mongodb:4.4.12
+    image: dockerhub.nexus.bwell.zone/bitnami/mongodb:4.4.12
     container_name: 'bsights_engine_spark_mongodb'
     ports:
       - '27017:27017'
@@ -62,7 +62,7 @@ services:
       test: echo 'db.runCommand("ping").ok' | mongo mongo:27017/test --quiet
 
   scriptrunner:
-    image: python:3.8.12-slim-buster
+    image: dockerhub.nexus.bwell.zone/python:3.8.12-slim-buster
     container_name: 'bsights-engine-spark-scriptrunner'
     volumes:
       - ./scripts/load_fhir_server.py:/scripts/load_fhir_server.py

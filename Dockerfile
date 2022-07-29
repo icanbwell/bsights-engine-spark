@@ -1,4 +1,4 @@
-FROM imranq2/spark-py:3.0.27
+FROM dockerhub.nexus.bwell.zone/imranq2/spark-py:3.0.27
 # https://github.com/imranq2/docker.spark_python
 USER root
 
@@ -25,16 +25,17 @@ ENV CLASSPATH=/bsights-engine-spark/jars:/opt/spark/jars/:$CLASSPATH
 
 # first get just the pom.xml and download dependencies (so we don't do this again when the code changes)
 COPY ./pom.xml /bsights-engine-spark/
+COPY ./settings.xml /bsights-engine-spark/
 WORKDIR /bsights-engine-spark
 
-RUN mvn --batch-mode verify
+RUN mvn --batch-mode verify -s ./settings.xml
 #RUN mvn --batch-mode --update-snapshots verify clean
 
 # now get the rest of the code and create the package
 COPY ./src/ /bsights-engine-spark/src/
 
 ## skip running tests since it requires a fhir server
-RUN mvn -Dmaven.test.skip package && \
+RUN mvn -Dmaven.test.skip package -s ./settings.xml && \
     cp ./target/bsights-engine-spark-1.0.5.jar /opt/spark/jars/
 
 # USER 1001

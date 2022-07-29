@@ -9,12 +9,10 @@ on:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, main]
     permissions:
       contents: read
       packages: write
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 15
@@ -26,7 +24,7 @@ jobs:
         settings-path: ${{ github.workspace }} # location for the settings.xml file
 
     - name: Build with Maven
-      run: mvn -Dmaven.test.skip -B package --file pom.xml
+      run: mvn -Dmaven.test.skip -B package --file pom.xml -s ./settings.xml
 
     - name: Publish to GitHub Packages Apache Maven
       run: mvn deploy --batch-mode -Dmaven.test.skip -DpomFile=$GITHUB_WORKSPACE/pom.xml -s $GITHUB_WORKSPACE/settings.xml
