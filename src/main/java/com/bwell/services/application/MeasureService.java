@@ -97,7 +97,7 @@ public class MeasureService {
                     Patient patient = (Patient) value;
                     myLogger.info("Received Patient in CQL result={}",
                             patient != null ? FhirJsonExporter.getResourceAsJson(fhirVersion, patient) : null);
-                    newMap.put("PatientId", (patient != null) ? patient.getId() : null);
+                    newMap.put("PatientId", (patient != null) ? patient.getIdElement().getIdPart() : null);
                 } else {
                     if (cqlVariables.contains(key)) {
                         newMap.put(key, value != null ? value.toString() : null);

@@ -77,7 +77,7 @@ public class MeasureServiceTest {
                     null,
                     null
             );
-            assertEquals(result.get("PatientId"), "Patient/unitypoint-eegf5bWyPXkfiquWgAid7W.saxiV7j4TrzYoOWsvANmc3/_history/6");
+            assertEquals(result.get("PatientId"), "unitypoint-eegf5bWyPXkfiquWgAid7W.saxiV7j4TrzYoOWsvANmc3");
             assertEquals(result.get("InAgeCohort"), "true");
             assertEquals(result.get("AWCharges"), "true");
             assertEquals(result.get("AWDateCharge"), "2022-01-25");
@@ -116,7 +116,7 @@ public class MeasureServiceTest {
                     null,
                     null
             );
-            assertEquals(result.get("PatientId"), "Patient/1");
+            assertEquals(result.get("PatientId"), "1");
             assertEquals(result.get("InAgeCohort"), "true");
 //            assertEquals(result.get("InObservationCohort"), "true");
 //            assertEquals(result.get("InDemographic"), "true");
@@ -151,7 +151,7 @@ public class MeasureServiceTest {
                     null,
                     null
             );
-            assertEquals(result.get("PatientId"), "Patient/1");
+            assertEquals(result.get("PatientId"), "1");
             assertEquals(result.get("InAgeCohort"), "true");
 //            assertEquals(result.get("InObservationCohort"), "true");
 //            assertEquals(result.get("InDemographic"), "true");
@@ -186,7 +186,7 @@ public class MeasureServiceTest {
                     null,
                     null
             );
-            assertEquals(result.get("PatientId"), "Patient/unitypoint-eFQWoGGaBo8dUJyl3DuS7lxGLvVFXjDVWEzu2h9X0DY43/_history/5");
+            assertEquals(result.get("PatientId"), "unitypoint-eFQWoGGaBo8dUJyl3DuS7lxGLvVFXjDVWEzu2h9X0DY43");
             assertEquals(result.get("HadAWV1year"), "true");
             assertEquals(result.get("NeedAWV1year"), "false");
             assertEquals(result.get("AWVDates"), "2021-09-01");
