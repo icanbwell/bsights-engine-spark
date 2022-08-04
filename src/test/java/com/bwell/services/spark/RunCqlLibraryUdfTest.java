@@ -50,15 +50,13 @@ public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
 
         String cqlLibraryName = "BMI001";
         String cqllibraryUrl = "http://fhir:3000/4_0_0";
-        String cqlLibraryHeaders = "";
         String cqllibraryVersion = "1.0.0";
         String terminologyUrl = "http://fhir:3000/4_0_0";
-        String terminologyHeaders = "";
         String cqlVariablesToReturn = "InAgeCohort,InObservationCohort,InDemographic";
 
         String command = String.format(
-                "runCqlLibrary('%s', '%s', '%s','%s','%s', '%s', '%s', %s, %s, %s)",
-                cqllibraryUrl, cqlLibraryHeaders, cqlLibraryName, cqllibraryVersion, terminologyUrl, terminologyHeaders, cqlVariablesToReturn, patientBundleColumn, null, null);
+                "runCqlLibrary('%s', '%s', '%s','%s','%s',%s, %s, %s, %s, %s, %s, %s)",
+                cqllibraryUrl, cqlLibraryName, cqllibraryVersion, terminologyUrl, cqlVariablesToReturn, patientBundleColumn, null, null, null, null, null, null);
 
         Dataset<Row> result_df = sqlContext.sql("SELECT " + command + " As ruleResults from numbersdata");
         result_df.printSchema();
@@ -108,15 +106,13 @@ public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
 
         String cqlLibraryName = "DIAB001";
         String cqllibraryUrl = "http://fhir:3000/4_0_0";
-        String cqlLibraryHeaders = "";
         String cqllibraryVersion = "1.0.0";
         String terminologyUrl = "http://fhir:3000/4_0_0";
-        String terminologyHeaders = "";
         String cqlVariablesToReturn = "InObservationCohort,InDemographic";
 
         String command = String.format(
-                "runCqlLibrary('%s', '%s', '%s','%s','%s', '%s', '%s', %s, %s, %s)",
-                cqllibraryUrl, cqlLibraryHeaders, cqlLibraryName, cqllibraryVersion, terminologyUrl, terminologyHeaders, cqlVariablesToReturn, patientBundleColumn, null, null);
+                "runCqlLibrary('%s','%s','%s','%s','%s', %s, %s, %s, %s, %s, %s, %s)",
+                cqllibraryUrl, cqlLibraryName, cqllibraryVersion, terminologyUrl, cqlVariablesToReturn, patientBundleColumn, null, null, null, null, null, null);
 
         Dataset<Row> result_df = sqlContext.sql("SELECT " + command + " As ruleResults from numbersdata");
         result_df.printSchema();

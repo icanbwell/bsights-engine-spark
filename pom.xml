@@ -6,7 +6,7 @@
 
     <groupId>com.bwell</groupId>
     <artifactId>bsights-engine-spark</artifactId>
-    <version>1.0.6</version>
+    <version>1.0.7</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -48,7 +48,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}.1</version>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -271,6 +271,11 @@
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
 
         <!-- test dependencies -->
         <dependency>
@@ -345,6 +350,13 @@
             <groupId>com.bwell</groupId>
             <artifactId>FhirLib</artifactId>
             <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- Apache -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.4</version>
         </dependency>
     </dependencies>
 
