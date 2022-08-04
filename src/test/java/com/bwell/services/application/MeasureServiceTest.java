@@ -67,13 +67,15 @@ public class MeasureServiceTest {
         try {
             Map<String, String> result = new MeasureService().runCqlLibrary(
                     cqllibraryUrl,
-                    null,
                     cqlLibraryName,
                     cqllibraryVersion,
                     terminologyUrl,
-                    null,
                     cqlVariablesToReturn,
                     rawContainedJson, // bundleJson,
+                    null,
+                    null,
+                    null,
+                    null,
                     null,
                     null
             );
@@ -106,13 +108,15 @@ public class MeasureServiceTest {
         try {
             Map<String, String> result = new MeasureService().runCqlLibrary(
                     cqllibraryUrl,
-                    null,
                     cqlLibraryName,
                     cqllibraryVersion,
                     terminologyUrl,
-                    null,
                     cqlVariablesToReturn,
                     bundleJson,
+                    null,
+                    null,
+                    null,
+                    null,
                     null,
                     null
             );
@@ -141,13 +145,15 @@ public class MeasureServiceTest {
         try {
             Map<String, String> result = new MeasureService().runCqlLibrary(
                     cqllibraryUrl,
-                    null,
                     cqlLibraryName,
                     cqllibraryVersion,
                     terminologyUrl,
-                    null,
                     cqlVariablesToReturn,
                     bundleJson,
+                    null,
+                    null,
+                    null,
+                    null,
                     null,
                     null
             );
@@ -176,13 +182,15 @@ public class MeasureServiceTest {
         try {
             Map<String, String> result = new MeasureService().runCqlLibrary(
                     cqllibraryUrl,
-                    null,
                     cqlLibraryName,
                     cqllibraryVersion,
                     terminologyUrl,
-                    null,
                     cqlVariablesToReturn,
                     bundleJson,
+                    null,
+                    null,
+                    null,
+                    null,
                     null,
                     null
             );
@@ -195,8 +203,5 @@ public class MeasureServiceTest {
             e.printStackTrace();
             throw e;
         }
-
-        System.out.println();
     }
-
 }

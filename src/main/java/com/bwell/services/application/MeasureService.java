@@ -1,12 +1,16 @@
 package com.bwell.services.application;
 
+import com.bwell.auth.model.Client;
+import com.bwell.auth.service.AuthService;
 import com.bwell.core.entities.ContextParameter;
 import com.bwell.core.entities.LibraryParameter;
 import com.bwell.core.entities.ModelParameter;
 import com.bwell.infrastructure.FhirJsonExporter;
 import com.bwell.services.domain.CqlService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.hl7.fhir.r4.model.Patient;
 import org.opencds.cqf.cql.engine.execution.EvaluationResult;
+import org.springframework.http.HttpHeaders;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,13 +26,15 @@ public class MeasureService {
      * Runs the CQL Library
      *
      * @param libraryUrl:            URL to FHIR server containing the cql library to run
-     * @param libraryUrlHeaders:     HTTP headers for call to the fhir server - auth
      * @param libraryName:           name of the CQL library to run
      * @param libraryVersion:        version of the CQL library to run
      * @param terminologyUrl:        URL to FHIR server that has value sets
-     * @param terminologyUrlHeaders: HTTP headers for the call to the terminology server - auth
      * @param cqlVariablesToReturn:  list of the CQL variables that we should return the values for
      * @param fhirBundle:            FHIR resource bundle as a string
+     * @param authUrl:               URL for Auth Server
+     * @param authId:                Client ID for Auth Server
+     * @param authSecret:            Client Secret for Auth Server
+     * @param authScope:             Client Scope for Auth Server
      * @param contextName:           Optional context name
      * @param contextValue:          Optional context value
      * @return map (dictionary) of CQL variable name, value
@@ -36,13 +42,15 @@ public class MeasureService {
      */
     public Map<String, String> runCqlLibrary(
             String libraryUrl,
-            String libraryUrlHeaders,
             String libraryName,
             String libraryVersion,
             String terminologyUrl,
-            String terminologyUrlHeaders,
             String cqlVariablesToReturn,
             String fhirBundle,
+            String authUrl,
+            String authId,
+            String authSecret,
+            String authScope,
             String contextName,
             String contextValue
     ) throws Exception {
@@ -67,11 +75,10 @@ public class MeasureService {
 
         myLogger.info("Running with libraryUrl={}, terminologyUrl={}, fhir={}", libraryUrl, terminologyUrl, fhirBundle);
 
-        if (libraryUrlHeaders != null && !libraryUrlHeaders.equals("")) {
-            libraryParameter.libraryUrlHeaders = Arrays.stream(libraryUrlHeaders.split(",")).map(String::trim).collect(Collectors.toList());
-        }
-        if (terminologyUrlHeaders != null && !terminologyUrlHeaders.equals("")) {
-            libraryParameter.terminologyUrlHeaders = Arrays.stream(terminologyUrlHeaders.split(",")).map(String::trim).collect(Collectors.toList());
+        if(authUrl != null){
+            List<String> headers = headers(authUrl, authId, authSecret, authScope);
+            libraryParameter.libraryUrlHeaders = headers;
+            libraryParameter.terminologyUrlHeaders = headers;
         }
 
         libraries.add(libraryParameter);
@@ -112,5 +119,29 @@ public class MeasureService {
         myLogger.info("Calculated CQL variables={} for bundle={}", FhirJsonExporter.getMapAsJson(newMap), fhirBundle);
 
         return newMap;
+    }
+
+    private List<String> headers(String authUrl,
+                                 String authId,
+                                 String authSecret,
+                                 String authScope) throws JsonProcessingException {
+        //Grab Token and turn into Header
+        AuthService authService = new AuthService();
+
+        Client client = new Client();
+        client.setId(authId);
+        client.setSecret(authSecret);
+        client.setScope(authScope);
+        client.setUrl(authUrl);
+
+        //Get Token
+        String token = authService.token(client);
+
+        //Set Header
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+
+        //Return Auth header
+        return headers.getValuesAsList("Authorization");
     }
 }
