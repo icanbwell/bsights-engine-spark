@@ -135,7 +135,7 @@ public class MeasureService {
         client.setAuthServerUrl(authUrl);
 
         //Get Token
-        String token = authService.token(client);
+        String token = authService.getToken(client);
 
         //Set Header
         HttpHeaders headers = new HttpHeaders();

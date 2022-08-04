@@ -37,7 +37,7 @@ public class AuthService {
         restTemplate = new RestTemplate();
     }
 
-    public String token(Client client) throws JsonProcessingException {
+    public String getToken(Client client) throws JsonProcessingException {
         //Only grab new token if Cache is empty
         if(cache.isEmpty()){
             //Set Headers
