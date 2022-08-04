@@ -48,13 +48,13 @@ public class AuthService {
             //Set Params
             MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
             map.put(GRANT_TYPE, Collections.singletonList(CLIENT_CREDENTIALS));
-            map.put(SCOPE, Collections.singletonList(client.getScope()));
+            map.put(SCOPE, Collections.singletonList(client.getAuthScopes()));
 
             //Set Request
             HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 
             //Make call
-            ResponseEntity<String> response = restTemplate.postForEntity(client.getUrl(), request, String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity(client.getAuthServerUrl(), request, String.class);
 
             //Parse Token
             JsonNode jsonNode = objectMapper.readTree(response.getBody());

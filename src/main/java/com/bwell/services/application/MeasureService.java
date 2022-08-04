@@ -131,8 +131,8 @@ public class MeasureService {
         Client client = new Client();
         client.setId(authId);
         client.setSecret(authSecret);
-        client.setScope(authScope);
-        client.setUrl(authUrl);
+        client.setAuthScopes(authScope);
+        client.setAuthServerUrl(authUrl);
 
         //Get Token
         String token = authService.token(client);

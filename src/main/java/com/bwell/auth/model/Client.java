@@ -1,17 +1,17 @@
 package com.bwell.auth.model;
 
 public class Client {
-    private String url;
+    private String authServerUrl;
     private String id;
     private String secret;
-    private String scope;
+    private String authScopes;
 
-    public String getUrl() {
-        return url;
+    public String getAuthServerUrl() {
+        return authServerUrl;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setAuthServerUrl(String authServerUrl) {
+        this.authServerUrl = authServerUrl;
     }
 
     public String getId() {
@@ -30,11 +30,11 @@ public class Client {
         this.secret = secret;
     }
 
-    public String getScope() {
-        return scope;
+    public String getAuthScopes() {
+        return authScopes;
     }
 
-    public void setScope(String scope) {
-        this.scope = scope;
+    public void setAuthScopes(String authScopes) {
+        this.authScopes = authScopes;
     }
 }
