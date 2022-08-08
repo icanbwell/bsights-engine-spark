@@ -134,14 +134,12 @@ public class MeasureService {
         client.setAuthScopes(authScope);
         client.setAuthServerUrl(authUrl);
 
-        //Get Token
-        String token = authService.getToken(client);
+        /*
+            Build Header with Auth
 
-        //Set Header
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-
-        //Return Auth header
-        return headers.getValuesAsList("Authorization");
+            Building our own way of Header here, as Spring builds the Bearer header without a :
+            but, the CQL Code requires the : - so, catch 22
+         */
+        return List.of(String.format("%s: Bearer %s", HttpHeaders.AUTHORIZATION, authService.getToken(client)));
     }
 }
