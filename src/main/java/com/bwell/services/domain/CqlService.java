@@ -27,9 +27,6 @@ public class CqlService {
 
     private static final org.slf4j.Logger myLogger = org.slf4j.LoggerFactory.getLogger(CqlService.class);
 
-    private final Map<String, LibraryContentProvider> libraryContentProviderIndex = new HashMap<>();
-    private final Map<String, TerminologyProvider> terminologyProviderIndex = new HashMap<>();
-
     private static final Object lock = new Object();
 
     // private instance, so that it can be
@@ -125,21 +122,12 @@ public class CqlService {
 
             // load CQL library
             if (library.libraryUrl != null) {
-                // check if it is in the cache
-                LibraryContentProvider libraryContentProvider = libraryContentProviderIndex.get(library.libraryUrl);
-
-                // if not in cache then load it
-                if (libraryContentProvider == null) {
-                    EndpointInfo endpointInfo = new EndpointInfo().setAddress(library.libraryUrl);
-                    if (library.libraryUrlHeaders != null && library.libraryUrlHeaders.size() > 0) {
-                        endpointInfo.setHeaders(library.libraryUrlHeaders);
-                    }
-
-                    libraryContentProvider = cqlEvaluatorComponent.createLibraryContentProviderFactory()
-                            .create(endpointInfo);
-                    // add it to cache
-                    libraryContentProviderIndex.put(library.libraryUrl, libraryContentProvider);
+                EndpointInfo endpointInfo = new EndpointInfo().setAddress(library.libraryUrl);
+                if (library.libraryUrlHeaders != null && library.libraryUrlHeaders.size() > 0) {
+                    endpointInfo.setHeaders(library.libraryUrlHeaders);
                 }
+
+                LibraryContentProvider libraryContentProvider = cqlEvaluatorComponent.createLibraryContentProviderFactory().create(endpointInfo);
 
                 // add libraries to cql evaluator builder
                 cqlEvaluatorBuilder.withLibraryContentProvider(libraryContentProvider);
@@ -147,21 +135,12 @@ public class CqlService {
 
             // load terminology
             if (library.terminologyUrl != null) {
-                // check if terminology is in cache
-                TerminologyProvider terminologyProvider = terminologyProviderIndex.get(library.terminologyUrl);
-
-                // if not in cache then load it
-                if (terminologyProvider == null) {
-                    EndpointInfo endpointInfo = new EndpointInfo().setAddress(library.terminologyUrl);
-                    if (library.terminologyUrlHeaders != null && library.terminologyUrlHeaders.size() > 0) {
-                        endpointInfo.setHeaders(library.terminologyUrlHeaders);
-                    }
-
-                    terminologyProvider = cqlEvaluatorComponent.createTerminologyProviderFactory()
-                            .create(endpointInfo);
-                    // add it to cache
-                    terminologyProviderIndex.put(library.terminologyUrl, terminologyProvider);
+                EndpointInfo endpointInfo = new EndpointInfo().setAddress(library.terminologyUrl);
+                if (library.terminologyUrlHeaders != null && library.terminologyUrlHeaders.size() > 0) {
+                    endpointInfo.setHeaders(library.terminologyUrlHeaders);
                 }
+
+                TerminologyProvider terminologyProvider = cqlEvaluatorComponent.createTerminologyProviderFactory().create(endpointInfo);
 
                 // add terminology to cql evaluator builder
                 cqlEvaluatorBuilder.withTerminologyProvider(terminologyProvider);

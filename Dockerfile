@@ -36,6 +36,6 @@ COPY ./src/ /bsights-engine-spark/src/
 
 ## skip running tests since it requires a fhir server
 RUN mvn -Dmaven.test.skip package -s ./settings.xml && \
-    cp ./target/bsights-engine-spark-1.0.7.jar /opt/spark/jars/
+    cp ./target/bsights-engine-spark-1.0.8.jar /opt/spark/jars/
 
 # USER 1001
