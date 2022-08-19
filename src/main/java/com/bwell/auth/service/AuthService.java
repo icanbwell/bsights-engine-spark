@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 public class AuthService {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AuthService.class);
     private static final String SCOPE = "scope";
     private static final String GRANT_TYPE = "grant_type";
     private static final String CLIENT_CREDENTIALS = "client_credentials";
@@ -40,6 +41,9 @@ public class AuthService {
     public String getToken(Client client) throws JsonProcessingException {
         //Only grab new token if Cache is empty
         if(cache.isEmpty()){
+            //Log Request
+            log.info("Requesting Auth token: client_id={} URL={} scope={} grant_type={}", client.getId(), client.getAuthServerUrl(), client.getAuthScopes(), CLIENT_CREDENTIALS);
+
             //Set Headers
             HttpHeaders headers = new HttpHeaders();
             headers.setBasicAuth(Base64.getUrlEncoder().encodeToString(String.format("%s:%s", client.getId(), client.getSecret()).getBytes()));
