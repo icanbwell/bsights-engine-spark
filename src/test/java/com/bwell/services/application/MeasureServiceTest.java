@@ -76,6 +76,7 @@ public class MeasureServiceTest {
                     null,
                     null,
                     null,
+                    "300000",
                     null,
                     null
             );
@@ -117,6 +118,7 @@ public class MeasureServiceTest {
                     null,
                     null,
                     null,
+                    "300000",
                     null,
                     null
             );
@@ -154,6 +156,7 @@ public class MeasureServiceTest {
                     null,
                     null,
                     null,
+                    "300000",
                     null,
                     null
             );
@@ -191,6 +194,7 @@ public class MeasureServiceTest {
                     null,
                     null,
                     null,
+                    "300000",
                     null,
                     null
             );
