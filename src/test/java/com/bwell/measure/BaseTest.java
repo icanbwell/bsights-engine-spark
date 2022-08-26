@@ -88,7 +88,6 @@ public class BaseTest {
     ) throws Exception {
 
         ModelParameter modelParameter = new ModelParameter();
-        List<LibraryParameter> libraries = new ArrayList<>();
 
         LibraryParameter libraryParameter = new LibraryParameter();
         libraryParameter.libraryName = this.libraryName;
@@ -98,12 +97,11 @@ public class BaseTest {
         libraryParameter.model = modelParameter;
         libraryParameter.model.modelName = modelName;
         libraryParameter.model.modelBundle = useBundleJson ? bundleJson : ( useContainedBundleJson ? bundleContainedJson : null);
-
-        libraries.add(libraryParameter);
+        libraryParameter.clientTimeout = 300000;
 
         try {
 
-            EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraries);
+            EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraryParameter);
 
             Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
 

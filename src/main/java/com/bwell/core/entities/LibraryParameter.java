@@ -44,4 +44,6 @@ public class LibraryParameter {
      * The library context parameter
      */
     public ContextParameter context;
+
+    public int clientTimeout;
 }

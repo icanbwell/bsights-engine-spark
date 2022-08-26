@@ -1,14 +1,5 @@
 package com.bwell.services.application;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.bwell.core.entities.ContextParameter;
 import com.bwell.core.entities.LibraryParameter;
 import com.bwell.core.entities.ModelParameter;
@@ -23,7 +14,14 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Map;
+import java.util.Set;
+
+import static org.testng.Assert.assertEquals;
 
 public class ResourceRunnerTest {
     private ByteArrayOutputStream outContent;
@@ -65,7 +63,6 @@ public class ResourceRunnerTest {
     @Test
     public void testR4() throws IOException {
         String fhirVersion = "R4";
-        List<LibraryParameter> libraries = new ArrayList<>();
         LibraryParameter libraryParameter = new LibraryParameter();
         libraryParameter.libraryName = "TestFHIR";
         libraryParameter.libraryUrl = testResourcePath + "/r4";
@@ -83,9 +80,7 @@ public class ResourceRunnerTest {
         //  when running this testR4 method, you will see only the FHIR data under this context, "example-unitypoint" will be loaded
         libraryParameter.context.contextValue = "example-unitypoint"; // previously, "example"
 
-        libraries.add(libraryParameter);
-
-        EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraries);
+        EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraryParameter);
 
         Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
         for (Map.Entry<String, Object> libraryEntry : entrySet) {
@@ -107,7 +102,6 @@ public class ResourceRunnerTest {
     @Test
     public void testR4WithHelpers() throws IOException {
         String fhirVersion = "R4";
-        List<LibraryParameter> libraries = new ArrayList<>();
         LibraryParameter libraryParameter = new LibraryParameter();
         libraryParameter.libraryName = "TestFHIRWithHelpers";
         libraryParameter.libraryUrl = testResourcePath + "/r4";
@@ -120,9 +114,7 @@ public class ResourceRunnerTest {
         libraryParameter.context.contextName = "Patient";
         libraryParameter.context.contextValue = "example";
 
-        libraries.add(libraryParameter);
-
-        EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraries);
+        EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraryParameter);
 
         Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
         for (Map.Entry<String, Object> libraryEntry : entrySet) {

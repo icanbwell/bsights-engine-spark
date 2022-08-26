@@ -35,6 +35,7 @@ public class MeasureService {
      * @param authId:                Client ID for Auth Server
      * @param authSecret:            Client Secret for Auth Server
      * @param authScope:             Client Scope for Auth Server
+     * @param clientTimeout:         Timeout for the FHIR Server
      * @param contextName:           Optional context name
      * @param contextValue:          Optional context value
      * @return map (dictionary) of CQL variable name, value
@@ -51,11 +52,11 @@ public class MeasureService {
             String authId,
             String authSecret,
             String authScope,
+            String clientTimeout,
             String contextName,
             String contextValue
     ) throws Exception {
         String fhirVersion = "R4";
-        List<LibraryParameter> libraries = new ArrayList<>();
 
         LibraryParameter libraryParameter = new LibraryParameter();
         libraryParameter.libraryName = libraryName;
@@ -65,6 +66,7 @@ public class MeasureService {
         libraryParameter.model = new ModelParameter();
         libraryParameter.model.modelName = "FHIR";
         libraryParameter.model.modelBundle = fhirBundle;
+        libraryParameter.clientTimeout = Integer.parseInt(clientTimeout);
         libraryParameter.context = new ContextParameter();
         if (contextName != null) {
             libraryParameter.context.contextName = contextName;
@@ -81,14 +83,12 @@ public class MeasureService {
             libraryParameter.terminologyUrlHeaders = headers;
         }
 
-        libraries.add(libraryParameter);
-
         List<String> cqlVariables = Arrays.stream(cqlVariablesToReturn.split(",")).map(String::trim).collect(Collectors.toList());
 
         Map<String, String> newMap = new HashMap<>();
 
         try {
-            EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraries);
+            EvaluationResult result = new CqlService().runCqlLibrary(fhirVersion, libraryParameter);
 
             Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
 

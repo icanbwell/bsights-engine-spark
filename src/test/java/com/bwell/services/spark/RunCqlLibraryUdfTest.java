@@ -55,8 +55,8 @@ public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
         String cqlVariablesToReturn = "InAgeCohort,InObservationCohort,InDemographic";
 
         String command = String.format(
-                "runCqlLibrary('%s', '%s', '%s','%s','%s',%s, %s, %s, %s, %s, %s, %s)",
-                cqllibraryUrl, cqlLibraryName, cqllibraryVersion, terminologyUrl, cqlVariablesToReturn, patientBundleColumn, null, null, null, null, null, null);
+                "runCqlLibrary('%s', '%s', '%s','%s','%s',%s, %s, %s, %s, %s, '%s', %s, %s)",
+                cqllibraryUrl, cqlLibraryName, cqllibraryVersion, terminologyUrl, cqlVariablesToReturn, patientBundleColumn, null, null, null, null, "300000", null, null);
 
         Dataset<Row> result_df = sqlContext.sql("SELECT " + command + " As ruleResults from numbersdata");
         result_df.printSchema();
@@ -111,8 +111,8 @@ public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
         String cqlVariablesToReturn = "InObservationCohort,InDemographic";
 
         String command = String.format(
-                "runCqlLibrary('%s','%s','%s','%s','%s', %s, %s, %s, %s, %s, %s, %s)",
-                cqllibraryUrl, cqlLibraryName, cqllibraryVersion, terminologyUrl, cqlVariablesToReturn, patientBundleColumn, null, null, null, null, null, null);
+                "runCqlLibrary('%s','%s','%s','%s','%s', %s, %s, %s, %s, %s, '%s', %s, %s)",
+                cqllibraryUrl, cqlLibraryName, cqllibraryVersion, terminologyUrl, cqlVariablesToReturn, patientBundleColumn, null, null, null, null, "300000", null, null);
 
         Dataset<Row> result_df = sqlContext.sql("SELECT " + command + " As ruleResults from numbersdata");
         result_df.printSchema();

@@ -1,14 +1,14 @@
 package com.bwell.services.spark;
 
 import com.bwell.services.application.MeasureService;
-import org.apache.spark.sql.api.java.UDF12;
+import org.apache.spark.sql.api.java.UDF13;
 
 import java.util.Map;
 
 /**
  * This class implements a Spark UDF that takes in 10 string parameters and returns a map of key, value
  */
-public class RunCqlLibrary implements UDF12<String, String, String, String, String, String, String, String, String, String, String, String, Map<String, String>> {
+public class RunCqlLibrary implements UDF13<String, String, String, String, String, String, String, String, String, String, String, String, String, Map<String, String>> {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -23,6 +23,7 @@ public class RunCqlLibrary implements UDF12<String, String, String, String, Stri
      * @param authId:                   Client ID for Auth Server
      * @param authSecret:               Client Secret for Auth Server
      * @param authScope:                Client Scope for Auth Server
+     * @param clientTimeout:            Timeout for the FHIR Server
      * @param contextName:              Optional context name
      * @param contextValue:             Optional context value
      * @return Map of cql variable name, value
@@ -39,6 +40,7 @@ public class RunCqlLibrary implements UDF12<String, String, String, String, Stri
                                               String authId,
                                               String authSecret,
                                               String authScope,
+                                              String clientTimeout,
                                               String contextName,
                                               String contextValue) throws Exception {
         return new MeasureService().runCqlLibrary(
@@ -52,6 +54,7 @@ public class RunCqlLibrary implements UDF12<String, String, String, String, Stri
                 authId,
                 authSecret,
                 authScope,
+                clientTimeout,
                 contextName,
                 contextValue
         );
