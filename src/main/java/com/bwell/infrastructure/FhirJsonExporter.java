@@ -5,6 +5,7 @@ import ca.uhn.fhir.context.FhirVersionEnum;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.Patient;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,10 +58,12 @@ public class FhirJsonExporter {
         for (Map.Entry<String, Object> libraryEntry : entrySet) {
             String key = libraryEntry.getKey();
             Object value = libraryEntry.getValue();
+
+            // IF the value is FHIR resource, just get the Id of this resource object
             if (value instanceof IBaseResource) {
-                jsonMap.put(key, getResourceAsJson(fhirVersion, (IBaseResource) value));
+                jsonMap.put(key + "Id", ((IBaseResource) value).getIdElement().getIdPart());
             } else {
-                jsonMap.put(key, value != null ? value.toString(): null);
+                jsonMap.put(key, value != null ? value.toString() : null);
             }
         }
         return getMapAsJson(jsonMap);
