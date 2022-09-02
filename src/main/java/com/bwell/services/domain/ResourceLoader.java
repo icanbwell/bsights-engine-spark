@@ -96,12 +96,18 @@ public class ResourceLoader {
                 bundle = (Bundle) baseResource;
             }
 
-            myLogger.info("Read resources from {}: {}", resourceJson, FhirJsonExporter.getResourceAsJson(fhirVersion, bundle));
+            String resourceId = null;
+            List<Bundle.BundleEntryComponent> entries = ((Bundle)bundle).getEntry();
+            if (entries.size() > 0) {
+                resourceId = entries.get(0).getResource().getIdElement().getIdPart();
+            }
+
+            myLogger.info("Read resources for resource Id: {}", resourceId);
             bundle = moveContainedResourcesToTopLevel(bundle);
 
             //noinspection ConstantConditions
-            bundle = clean_and_fix_bundle(bundle);
-            myLogger.info("Cleaned resources from {}: {}", resourceJson, FhirJsonExporter.getResourceAsJson(fhirVersion, bundle));
+            bundle = cleanFixBundle(bundle);
+            myLogger.info("Cleaned resources for resource Id: {}", resourceId);
 
             return bundle;
         } catch (FHIRFormatError | FhirException ex) {
@@ -139,7 +145,7 @@ public class ResourceLoader {
         return bundle;
     }
 
-    private IBaseBundle clean_and_fix_bundle(IBaseBundle bundle) {
+    private IBaseBundle cleanFixBundle(IBaseBundle bundle) {
         // some data we get is bad FHIR ,so we have to fix it
         return bundle;
     }

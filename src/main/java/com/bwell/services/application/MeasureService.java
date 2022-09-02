@@ -75,7 +75,8 @@ public class MeasureService {
             libraryParameter.context.contextValue = contextValue;
         }
 
-        myLogger.info("Running with libraryUrl={}, terminologyUrl={}, fhir={}", libraryUrl, terminologyUrl, fhirBundle);
+        myLogger.info("Running with libraryName={}, libraryVersion={}, libraryUrl={}, terminologyUrl={}",
+                libraryName, libraryVersion, libraryUrl, terminologyUrl);
 
         if(authUrl != null){
             List<String> headers = headers(authUrl, authId, authSecret, authScope);
@@ -92,9 +93,8 @@ public class MeasureService {
 
             Set<Map.Entry<String, Object>> entrySet = result.expressionResults.entrySet();
 
-            myLogger.info("Received result from CQL Engine={} for bundle={}",
-                    FhirJsonExporter.getMapSetAsJson(fhirVersion, entrySet),
-                    fhirBundle);
+            myLogger.info("Received result from CQL Engine={}",
+                    FhirJsonExporter.getMapSetAsJson(fhirVersion, entrySet));
 
             for (Map.Entry<String, Object> libraryEntry : entrySet) {
                 String key = libraryEntry.getKey();
@@ -102,9 +102,11 @@ public class MeasureService {
 
                 if ("Patient".equals(key)) {
                     Patient patient = (Patient) value;
-                    myLogger.info("Received Patient in CQL result={}",
-                            patient != null ? FhirJsonExporter.getResourceAsJson(fhirVersion, patient) : null);
-                    newMap.put("PatientId", (patient != null) ? patient.getIdElement().getIdPart() : null);
+
+                    String patientId = (patient != null) ? patient.getIdElement().getIdPart() : null;
+                    myLogger.info("Received Patient in CQL result, Patient Id={}", patientId);
+
+                    newMap.put("PatientId", patientId);
                 } else {
                     if (cqlVariables.contains(key)) {
                         newMap.put(key, value != null ? value.toString() : null);
@@ -112,11 +114,11 @@ public class MeasureService {
                 }
             }
         } catch (Exception ex) {
-            myLogger.error("Error={} for bundle={}", ex, fhirBundle);
+            myLogger.error("Error={}", ex);
             throw ex;
         }
 
-        myLogger.info("Calculated CQL variables={} for bundle={}", FhirJsonExporter.getMapAsJson(newMap), fhirBundle);
+        myLogger.info("Calculated CQL variables={}", FhirJsonExporter.getMapAsJson(newMap));
 
         return newMap;
     }
