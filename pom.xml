@@ -13,7 +13,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>15</maven.compiler.source>
         <maven.compiler.target>15</maven.compiler.target>
-        <spark.version>3.1.1</spark.version>
+        <spark.version>3.3.0</spark.version>
         <cqframework.version>1.5.6</cqframework.version>
         <cql-translator.version>1.5.6</cql-translator.version>
         <cql-engine.version>1.5.4</cql-engine.version>
@@ -330,7 +330,7 @@
         <dependency>
             <groupId>com.holdenkarau</groupId>
             <artifactId>spark-testing-base_2.12</artifactId>
-            <version>${spark.version}_1.1.1</version>
+            <version>${spark.version}_1.2.0</version>
             <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->
@@ -399,6 +399,10 @@
     </distributionManagement>
 
     <repositories>
+        <repository>
+            <id>external-repository</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
         <repository>
             <id>internal-repository</id>
             <url>https://nexus.services.bwell.zone/repository/combined-maven/</url>
