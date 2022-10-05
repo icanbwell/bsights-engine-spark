@@ -38,7 +38,7 @@ def send_resource_to_fhir_server(data) -> None:
     print("Printing Entire Post Request")
     print(json_content)
 
-    response = requests.post(f'http://fhir:3000/4_0_0/{resourceType}/0/$merge', json=json_content, headers=headers)
+    response = requests.post(f'http://localhost:3000/4_0_0/{resourceType}/0/$merge', json=json_content, headers=headers)
     print("Status code: ", response.status_code)
     print("Printing Entire Post Request")
     print(response.json())

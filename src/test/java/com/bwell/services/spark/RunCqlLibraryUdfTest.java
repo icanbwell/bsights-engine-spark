@@ -49,9 +49,9 @@ public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
         df.createOrReplaceTempView("numbersdata");
 
         String cqlLibraryName = "BMI001";
-        String cqllibraryUrl = "http://fhir:3000/4_0_0";
+        String cqllibraryUrl = "http://localhost:3000/4_0_0";
         String cqllibraryVersion = "1.0.0";
-        String terminologyUrl = "http://fhir:3000/4_0_0";
+        String terminologyUrl = "http://localhost:3000/4_0_0";
         String cqlVariablesToReturn = "InAgeCohort,InObservationCohort,InDemographic";
 
         String command = String.format(
@@ -105,9 +105,9 @@ public class RunCqlLibraryUdfTest extends SharedJavaSparkContext {
         df.createOrReplaceTempView("numbersdata");
 
         String cqlLibraryName = "DIAB001";
-        String cqllibraryUrl = "http://fhir:3000/4_0_0";
+        String cqllibraryUrl = "http://localhost:3000/4_0_0";
         String cqllibraryVersion = "1.0.0";
-        String terminologyUrl = "http://fhir:3000/4_0_0";
+        String terminologyUrl = "http://localhost:3000/4_0_0";
         String cqlVariablesToReturn = "InObservationCohort,InDemographic";
 
         String command = String.format(
