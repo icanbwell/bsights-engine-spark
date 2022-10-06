@@ -155,8 +155,10 @@
             <artifactId>cql-to-elm</artifactId>
             <version>${cqframework.version}</version>
             <!-- The scope of this dependency must remain as test.
-        There is an intentional separation between the CQL translator and the CQL engine -->
-            <scope>test</scope>
+                There is an intentional separation between the CQL translator and the CQL engine -->
+            <!-- Commented out this test scope due to an error,
+                java.lang.NoClassDefFoundError: org/cqframework/cql/cql2elm/ModelManager-->
+            <!-- <scope>test</scope> -->
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>
